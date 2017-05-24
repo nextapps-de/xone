@@ -1,0 +1,219 @@
+html, body{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    margin:0;
+    padding:0;
+}
+body {
+    /* prevent callout to copy image, etc when tap to hold */
+    -webkit-touch-callout: none;
+    /* prevent webkit from resizing text to fit */
+    -webkit-text-size-adjust: none;
+    /* prevent copy paste, to allow, change 'none' to 'text' */
+    -webkit-user-select: none;
+    /*  Default Font */
+    font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, 'SFUID', 'Lato', 'Helvetica Neue', 'HelveticaNeue-Light', Helvetica, Arial, 'Lucida Grande', SansSerif, sans-serif;
+    /*  Default Style */
+    background-color:#252525;
+    background-image:linear-gradient(top, #333 0%, #111 51%);
+    background-image:-webkit-linear-gradient(top, #333 0%, #111 51%);
+    background-image:-ms-linear-gradient(top, #333 0%, #111 51%);
+    /*
+    background-image:-webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(0, #111),
+        color-stop(0.51, #333)
+    );
+    */
+    /* Try Radial Gradient */
+    /*
+    background-image:radial-gradient(ellipse at center, rgba(30, 30, 30, 1) 0%, rgba(45, 45, 45, 1) 47%, rgba(55, 55, 55, 1) 100%);
+    background-image:-webkit-radial-gradient(ellipse at center, rgba(30, 30, 30, 1) 0%, rgba(45, 45, 45, 1) 47%, rgba(55, 55, 55, 1) 100%);
+    */
+}
+body *{
+    /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+img, .img{
+    -webkit-image-orientation: from-image;
+    image-orientation: from-image;
+}
+table, tr, td, th, thead, tbody{
+    padding:0;
+    margin:0;
+    border: none;
+}
+input{
+    -webkit-user-select: text;
+}
+.clear{
+    clear:both;
+}
+.sticky {
+    position: fixed;
+    position: -webkit-sticky;
+    position: -moz-sticky;
+    position: -ms-sticky;
+    position: -o-sticky;
+    position: sticky;
+}
+.sticky:before,
+.sticky:after {
+    content: '';
+    display: table;
+}
+
+
+.zoom-in-wrapper{
+    opacity:0;
+    -webkit-transform: scale(0.8);
+    -webkit-transition: -webkit-transform 0.3s ease-out, opacity 0.3s ease-out;
+    -moz-transform: scale(0.8);
+    -moz-transition: -moz-transform 0.3s ease-out, opacity 0.3s ease-out;
+    transform: scale(0.8);
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    will-change: transform, opacity;
+}
+.slide-left-wrapper{
+    opacity: 1 !important;
+    -webkit-transform: translateX(100%);
+    -webkit-transition: -webkit-transform 0.25s ease-out;
+    -moz-transform: translateX(100%);
+    -moz-transition: -moz-transform 0.25s ease-out;
+    transform: translateX(100%);
+    transition: transform 0.25s ease-out;
+    will-change: transform;
+}
+.slide-top-wrapper{
+    -webkit-transform: translateY(100%);
+    -webkit-transition: -webkit-transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    -moz-transform: translateY(100%);
+    -moz-transition: -moz-transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    will-change: transform;
+}
+.no-transition{
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    transition: none !important;
+}
+
+/* Default Layout Definitions */
+
+.view{
+    position: absolute;
+    top:0;
+    right:0;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:100%;
+    margin:0;
+    padding:0;
+    visibility: hidden;
+    transition: all 0.25s ease-out;
+}
+
+/* Demo Screen */
+
+#xone-demo{
+    position: relative;
+    border:2em solid #444;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-family: "Open Sans", Helvetica, Arial, sans-serif;
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);
+    z-index: 1;
+}
+#xone-demo div:nth-of-type(1){
+    font-weight: 600;
+    font-size: 5em;
+}
+#xone-demo div:nth-of-type(2){
+    color: #eee;
+    font-weight: 100;
+    font-size: 2em;
+}
+
+/* Confirmation Box */
+
+#confirmation-wrapper{
+    z-index: 100;
+    background-color: rgba(255, 255, 255, 0.8);
+    opacity: 0;
+    transition: all 0.25s ease-out;
+    display: none;
+}
+#confirmation-inner{
+    position: absolute;
+    top:25px;
+    bottom:25px;
+    left:25px;
+    right:25px;
+    text-align: center;
+    vertical-align: middle;
+    transform: scale(0.9);
+    transition: all 0.25s ease-out;
+}
+#confirmation-inner table.confirmation-table-outer{
+    width: auto;
+    max-width:50%;
+    height: 100%;
+    table-layout: fixed;
+    margin: auto;
+    position: relative;
+}
+#confirmation-inner table.confirmation-table-outer table{
+    width: 100%;
+    height: auto;
+    table-layout: fixed;
+    margin: auto;
+    position: relative;
+}
+#confirmation-inner table.confirmation-table-outer table td{
+    background-color: #fff;
+    padding: 2em;
+    border-radius: 8px;
+    height: auto;
+    max-height: 80%;
+    position: relative;
+    overflow: hidden;
+}
+#confirmation-content{
+    height: auto;
+    max-height: 420px;
+    text-align: center;
+    line-height: 20px;
+    color: #555;
+    margin-bottom: 2em;
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+#confirmation-yes,
+#confirmation-no{
+    text-align: center;
+    line-height: 45px;
+    height: 45px;
+    border-radius: 4px;
+    margin: auto;
+    background: #555;
+    color: #fff;
+    font-weight: 500;
+    display: inline-block;
+    width: 46%;
+}
+#confirmation-yes{
+    float:left;
+}
+#confirmation-no{
+    float:right;
+}

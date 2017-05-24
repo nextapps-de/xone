@@ -1,0 +1,38 @@
+{
+  "name": "xone",
+  "version": "0.0.500",
+  "description": "Open source Javascript framework for building modern web applications.",
+  "keywords": [
+    "Javascript",
+    "MVC",
+    "Mobile App",
+    "Web Application"
+  ],
+  "bugs": {
+    "url": "https://github.com/next-apps/xone/issues",
+    "email": "info@nextapps.de"
+  },
+  "main": "app.js",
+  "preferGlobal": true,
+  "bin": {
+    "xone": "./cli/cli.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/next-apps/xone.git"
+  },
+  "scripts": {},
+  "homepage": "http://nextapps.de",
+  "author": "Thomas Wilkerling",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "benchmark": "^2.1.4",
+    "csso": "^3.1.1",
+    "google-closure-compiler": "^20170521.0.0",
+    "google-closure-compiler-js": "^20170521.0.0",
+    "http-server": "^0.10.0",
+    "jasmine": "^2.6.0",
+    "jsdoc": "^3.4.3",
+    "less-plugin-clean-css": "^1.5.1"
+  }
+}

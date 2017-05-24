@@ -1,0 +1,80 @@
+#debug-log{
+    padding:5px;
+    position:absolute;
+    top:0px;
+    bottom:0px;
+    right:0px;
+    width:185px;
+    font-size:8px;
+    line-height:8px;
+    z-index:998;
+    font-family: monospace;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow-y: auto;
+    overflow-x: hidden;
+    color: #fff;
+    pointer-events: none;
+    font-weight: 300;
+    display:none;
+}
+#debug-stats{
+    padding:5px;
+    position:absolute;
+    bottom:0px;
+    left:0px;
+    width:185px;
+    height:auto;
+    font-size:8px;
+    line-height:8px;
+    z-index:999;
+    font-family: monospace;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow-y: auto;
+    overflow-x: hidden;
+    color: #fff;
+    pointer-events: none;
+    font-weight: 300;
+    display:none;
+    text-align: left;
+}
+#debug-stats span:nth-of-type(odd) {
+    display: inline-block;
+    width: 70px;
+}
+#debug-graph {
+    padding: 5px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index:999;
+    font-family: monospace;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    pointer-events: none;
+    font-weight: 300;
+    display:none;
+    text-align: left;
+    opacity:0.2;
+    font-size:8px;
+    line-height:8px;
+}
+#debug-graph-count{
+    position:absolute;
+    bottom:0;
+    left:0;
+    right:200px;
+    top:0;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+#debug-graph-trace{
+    position:absolute;
+    bottom:0;
+    left:200px;
+    right:200px;
+    top:0;
+    overflow-y: auto;
+    overflow-x: auto;
+}

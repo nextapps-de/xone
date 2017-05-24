@@ -1,0 +1,47 @@
+{
+    "name": "Xone Project",
+    "node_modules_path": "node_modules/",
+    "closure_compiler_lib": "js", // accepted values: jar, js
+    "closure_compiler_level": "advanced", // accepted values: simple, whitespace, advanced, none
+    "closure_compiler_js": {
+        "path" : "node_modules/google-closure-compiler-js/",
+        "options": {
+            "useTypesForOptimization": true,
+            "generateExports": true,
+            "exportLocalPropertyDefinitions": true,
+            "languageIn": "ECMASCRIPT5_STRICT",
+            "languageOut": "ECMASCRIPT5",
+            "processCommonJsModules": true,
+            "processClosurePrimitives": true,
+            "assumeFunctionWrapper": true,
+            "warningLevel": "VERBOSE",
+            "outputWrapper": "(function(){\n%output%\n}).call(this);"
+            //newTypeInf: true,
+            //dependencyMode: "STRICT",
+            //entryPoint: "goog:INIT",
+        }
+    },
+    "closure_compiler_jar": {
+        "path" : "node_modules/google-closure-compiler/",
+        "options": {
+            "use_types_for_optimization": true,
+            "generate_exports": true,
+            "export_local_property_definitions": true,
+            "language_in": "ECMASCRIPT5_STRICT",
+            "language_out": "ECMASCRIPT5",
+            "dependency_mode": "STRICT",
+            "entry_point": "goog:INIT",
+            "process_closure_primitives": true,
+            "summary_detail_level": 3,
+            "warning_level": "VERBOSE",
+            "emit_use_strict": true,
+            "output_wrapper": "'(function(){%output%}).call(this);'",
+            "output_manifest": "log/manifest.log",
+            "output_module_dependencies": "log/module_dependencies.log",
+            "property_renaming_report": "log/renaming_report.log"
+            //"new_type_inf": true",
+            //"debug",
+            //"formatting PRETTY_PRINT"
+        }
+    }
+}
