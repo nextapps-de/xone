@@ -1,3 +1,0 @@
-describe("Check Administration", function() {
-
-});

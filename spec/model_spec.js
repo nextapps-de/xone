@@ -2,7 +2,7 @@ describe("Check Model Implementation", function() {
 
     it("Check if model is registered", function() {
 
-        expect(APP.MODEL).toBeDefined();
+        expect(APP).toHaveObject("MODEL");
         expect(APP.MODEL.TestRecord).toBeUndefined();
 
         (function registerModel(MODEL) {

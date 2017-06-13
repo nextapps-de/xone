@@ -3,10 +3,12 @@
   "version": "0.0.500",
   "description": "Open source Javascript framework for building modern web applications.",
   "keywords": [
-    "Javascript",
+    "Javascript Framework",
     "MVC",
-    "Mobile App",
-    "Web Application"
+    "Mobile Apps",
+    "Web Apps",
+    "Hybrid Apps",
+    "Development Environment"
   ],
   "bugs": {
     "url": "https://github.com/next-apps/xone/issues",

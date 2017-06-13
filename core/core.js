@@ -1144,7 +1144,7 @@ var CORE = {};
 
         for(var i = 0, length = array.length; i < length; i++){
 
-            var value = array[i][field];
+            var value = field ? array[i][field] : array[i];
 
             checkDuplicates[value] || ((checkDuplicates[value] = true) && (
 
@@ -1153,6 +1153,27 @@ var CORE = {};
         }
 
         return unqiue_array;
+    };
+
+    /**
+     * @param {Array<*>} array_1
+     * @param {Array<*>} array_2
+     * @returns {Array<*>}
+     */
+
+    CORE.merge = function(array_1, array_2){
+
+        var args = arguments || [array_1, array_2], arg;
+
+        for(var i = 1; i < args.length; i++){
+
+            if(arg = args[i]) {
+
+                array_1 = (array_1 || []).concat(arg);
+            }
+        }
+
+        return array_1;
     };
 
     /**
