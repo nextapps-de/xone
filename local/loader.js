@@ -94,6 +94,7 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
             /*CONFIG.XONE_PATH +*/ 'lib/xone/spec/dom_spec.js',
             /*CONFIG.XONE_PATH +*/ 'lib/xone/spec/paint_spec.js',
             /*CONFIG.XONE_PATH +*/ 'lib/xone/spec/array_spec.js',
+            /*CONFIG.XONE_PATH +*/ 'lib/xone/spec/check_spec.js',
             /*CONFIG.XONE_PATH +*/ 'lib/xone/spec/model_spec.js'
         ];
 

@@ -1,6 +1,13 @@
 ### Xone API
 
-> __Note:__ Uppercase names helps you to determine static identifiers (e.g. API namespaces, global config, flags, switches) and read-only constants.
+Uppercase identifiers helps you to determine:
+
+* __static vars__ (e.g. API namespaces, global configs, constants, flags, switches)
+* __read-only values__
+* __special definitions__ in object notation to fulfill conventions of Xone automated system
+* __special members__ and classes also used by the automated system
+
+> __Note:__ Therefore all members of `APP.*` are uppercase to symbolize that they a part of the automated concept. Corresponding types are described by its interfaces. The descision to use these concept is open to you, also most of them can be used directly outside the automated chain.
 
 ## Global Constants
 
@@ -259,7 +266,6 @@ _read full description [here](app_config.md)_
 
 * CORE.__`replace`__: function(string, find, replace)
 * CORE.__`count`__: function(string, find)
-* CORE.__`shuffle`__: function(string<, times>)
 
 #### Process
 
@@ -470,7 +476,7 @@ _read full description [here](app_config.md)_
 
 #### Storage implements StorageInterface
 
-> A storage can be on of both: __persistent__ or __temporary__.
+> A storage can be one of both: __persistent__ or __temporary__.
 
 * Storage.__`get`__
 * Storage.__`set`__
@@ -481,7 +487,7 @@ _read full description [here](app_config.md)_
 
 #### FileSystem implements FilesystemInterface
 
-> The filesystem provides access to __larger capacity__ and can also be on of both: __persistent__ or __temporary__.
+> The filesystem provides access to __larger capacity__ and can also be one of both: __persistent__ or __temporary__.
 
 * FileSystem.__`init`__
 * FileSystem.__`load`__

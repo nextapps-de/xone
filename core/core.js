@@ -101,7 +101,7 @@ var CORE = {};
 
         if(DEBUG) GRAPH.register('CORE.hasValue');
 
-        return CORE.isType(value) && (value !== null);
+        return value || value === 0 || value === false || value === '';
     };
 
     /**
@@ -153,7 +153,15 @@ var CORE = {};
 
         if(DEBUG) GRAPH.register('CORE.hasValues');
 
-        return value && value.length ? true : false;
+        if(value && value.length){
+
+            for(var i = 0; i < value.length; i++){
+
+                if(CORE.hasValue(value[i])) return true;
+            }
+        }
+
+        return false;
     };
 
     /**
@@ -1203,19 +1211,32 @@ var CORE = {};
 
     var compare_desc = function(a, b){
 
-        var result = ("" + a).localeCompare(b);
-
-        return result === 1 ? 1 : result === -1 ? 1 : 0;
+        return ("" + b).localeCompare(a);
     };
 
     var compare_numeric_asc = function(a, b){
 
+        //if(a === void 0) return 1;
+        //if(b === void 0) return -1;
+        if(a === null) return 1;
+        if(b === null) return -1;
+        if(isNaN(a)) return 1;
+        if(isNaN(b)) return -1;
+
         return a - b;
     };
 
-    var compare_numeric_desc = function(a, b){
+    var compare_numeric_desc = function(b, a){
 
-        return b - a;
+        // NOTE: native Array.sort() does not traverse through undefined indizes
+        //if(a === void 0) return 1;
+        //if(b === void 0) return -1;
+        if(a === null) return -1;
+        if(b === null) return 1;
+        if(isNaN(a)) return -1;
+        if(isNaN(b)) return 1;
+
+        return a - b;
     };
 
     /**
@@ -1236,7 +1257,7 @@ var CORE = {};
 
     CORE.sortAsc = function(array){
 
-        return CORE.sort(array);
+        return array.sort(compare_asc);
     };
 
     /**
@@ -1267,7 +1288,7 @@ var CORE = {};
 
     CORE.sortNumAsc = function(array){
 
-        return CORE.sortNum(array);
+        return array.sort(compare_numeric_asc);
     };
 
     /**
@@ -1548,7 +1569,7 @@ var CORE = {};
             }
         }
 
-        else if(CORE.isArray(find)){
+        else if(CORE.isArray(source)){
 
             var length = source.length;
 
@@ -1562,7 +1583,7 @@ var CORE = {};
         }
         else{
 
-            if(DEBUG) throw new Error("'CORE.countBy' unsupported type passed.");
+            if(DEBUG) throw new Error("'CORE.count' unsupported type passed.");
         }
 
         return count;
@@ -1658,9 +1679,11 @@ var CORE = {};
                 'for(var $i = 0; $i < $length; $i++){' +
 
                     parameter + ' = this[$i];' +
-                    parsed_fn[1] +
+                    parsed_fn[2] +
 
                 '}' +
+
+                'return this;' +
 
             '}).call(' + parameter + ');'
         );
@@ -1756,15 +1779,29 @@ var CORE = {};
 
     /**
      * @param {!Array} array
-     * @param {!*} content
+     * @param {*} content
+     * @param {number=} start
+     * @param {number=} count
+     * @return {!Array}
      */
 
-    CORE.fill = function(array, content){
+    CORE.fill = function(array, content, start, count){
 
-        for(var i = 0; i < array.length; i++){
+        var length = (
+
+            count >= 0 ?
+
+                Math.min(start + count, array.length)
+            :
+                array.length
+        );
+
+        for(var i = start || 0; i < length; i++){
 
             array[i] = content;
         }
+
+        return array;
     };
 
     /**

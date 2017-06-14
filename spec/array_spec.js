@@ -24,7 +24,7 @@ describe("Array Tests", function() {
         expect(CORE).toHaveMethod("count");
     });
 
-    it("Check CORE.merge()", function() {
+    it("CORE.merge([array])", function() {
 
         var test_arrays = [
 
@@ -50,7 +50,7 @@ describe("Array Tests", function() {
             ]);
     });
 
-    it("Check CORE.unique()", function() {
+    it("CORE.unique(array)", function() {
 
         var test_array = [
 
@@ -88,7 +88,7 @@ describe("Array Tests", function() {
             ]);
     });
 
-    it("Check CORE.reverse()", function() {
+    it("CORE.reverse(array)", function() {
 
         var test_array = [
 
@@ -130,5 +130,364 @@ describe("Array Tests", function() {
                 undefined,
                 1
             ]);
+    });
+
+    it("CORE.fill(array)", function() {
+
+        var test_array = new Array(3);
+
+        expect(CORE.fill(test_array, {foo: 'bar'}))
+            .toEqual([
+
+                {foo: 'bar'},
+                {foo: 'bar'},
+                {foo: 'bar'}
+            ]);
+
+        test_array = new Array(3);
+
+        expect(CORE.fill(test_array, {bar: 'foo'}, 1, 1))
+            .toEqual([
+
+                undefined,
+                {bar: 'foo'},
+                undefined
+            ]);
+
+        test_array = new Array(3);
+
+        expect(CORE.fill(test_array, {bar: 'foo'}, 2, 0))
+            .toEqual([
+
+                undefined,
+                undefined,
+                undefined
+            ]);
+
+        test_array = new Array(3);
+
+        expect(CORE.fill(test_array, {bar: 'foo'}, 0, 20))
+            .toEqual([
+
+                {bar: 'foo'},
+                {bar: 'foo'},
+                {bar: 'foo'}
+            ]);
+    });
+
+    it("CORE.shuffle(array)", function() {
+
+        var test_array = Array.apply(null, Array(100)).map(function(value){
+
+            return ("" + Math.random()).substring(2);
+        });
+
+        expect(CORE.shuffle(test_array.slice(0)))
+            .not.toEqual(test_array);
+    });
+
+    it("CORE.sort(array), CORE.sortAsc(array), CORE.sortDesc(array)", function() {
+
+        var test_array = [
+
+            1,
+            ,
+            [5],
+            void 0,
+            "3",
+            {
+                foo: 'bar'
+            },
+            ,
+            1,
+            NaN,
+            "3",
+            null,
+            [5],
+            {
+                foo: 'bar'
+            },
+            null
+        ];
+
+        expect(CORE.sort(test_array.slice(0)))
+            .toEqual([
+
+                Object({ foo: 'bar' }),
+                Object({ foo: 'bar' }),
+                1,
+                1,
+                '3',
+                '3',
+                [5],
+                [5],
+                NaN,
+                null,
+                null,
+                undefined,
+                undefined,
+                undefined
+            ]);
+
+        expect(CORE.sortAsc(test_array.slice(0)))
+            .toEqual([
+
+                Object({ foo: 'bar' }),
+                Object({ foo: 'bar' }),
+                1,
+                1,
+                '3',
+                '3',
+                [5],
+                [5],
+                NaN,
+                null,
+                null,
+                undefined,
+                undefined,
+                undefined
+            ]);
+
+        expect(CORE.sortDesc(test_array.slice(0)))
+            .toEqual([
+
+                null,
+                null,
+                NaN,
+                [5],
+                [5],
+                '3',
+                '3',
+                1,
+                1,
+                Object({ foo: 'bar' }),
+                Object({ foo: 'bar' }),
+                undefined,
+                undefined,
+                undefined
+            ]);
+    });
+
+    it("CORE.sortNum(array), CORE.sortNumAsc(array), CORE.sortNumDesc(array)", function() {
+
+        var test_array = [
+
+            1,
+            ,
+            5,
+            25,
+            0,
+            3,
+            NaN,
+            ,
+            1,
+            -25,
+            NaN,
+            3,
+            null,
+            0,
+            5,
+            2,
+            null
+        ];
+
+        expect(CORE.sortNum(test_array.slice(0)))
+            .toEqual([
+
+                -25,
+                0,
+                0,
+                1,
+                1,
+                2,
+                3,
+                3,
+                5,
+                5,
+                25,
+                NaN,
+                NaN,
+                null,
+                null,
+                undefined,
+                undefined
+            ]);
+
+        expect(CORE.sortNumAsc(test_array.slice(0)))
+            .toEqual([
+
+                -25,
+                0,
+                0,
+                1,
+                1,
+                2,
+                3,
+                3,
+                5,
+                5,
+                25,
+                NaN,
+                NaN,
+                null,
+                null,
+                undefined,
+                undefined
+            ]);
+
+        expect(CORE.sortNumDesc(test_array.slice(0)))
+            .toEqual([
+
+                25,
+                5,
+                5,
+                3,
+                3,
+                2,
+                1,
+                1,
+                0,
+                0,
+                -25,
+                NaN,
+                NaN,
+                null,
+                null,
+                undefined,
+                undefined
+            ]);
+    });
+
+    it("CORE.getKeys(array)", function() {
+
+        var test_array = {
+
+            key_1: true,
+            'key_1': true,
+            'key_2': true,
+            3: true,
+            '4': true,
+            null: true,
+            NaN: true,
+            "": true
+        };
+
+        expect(CORE.getKeys(test_array))
+            .toEqual(Object.keys(test_array));
+
+        expect(CORE.getKeys(test_array))
+            .toEqual([
+
+                '3',
+                '4',
+                'key_1',
+                'key_2',
+                'null',
+                'NaN',
+                ''
+            ]);
+    });
+
+    it("CORE.replace(array)", function() {
+
+        var test_array = [
+
+            'key',
+            'key',
+            ,
+            3,
+            '4',
+            null,
+            'key',
+            NaN,
+            ""
+        ];
+
+        expect(CORE.replace(test_array.slice(0), 'key', 'foobar'))
+            .toEqual([
+
+                'foobar',
+                'foobar',
+                undefined,
+                3,
+                '4',
+                null,
+                'foobar',
+                NaN,
+                ''
+            ]);
+    });
+
+    it("CORE.replace(string)", function() {
+
+        var str = 'key' + 'key' + 3 + '4' + null + 'key' + NaN + '';
+
+        expect(CORE.replace(str, 'key', 'foobar'))
+            .toEqual('foobar' + 'foobar' + 3 + '4' + null + 'foobar' + NaN + '');
+    });
+
+    it("CORE.count(array)", function() {
+
+        var test_array = [
+
+            'key',
+            'key',
+            ,
+            3,
+            '4',
+            null,
+            'key',
+            NaN,
+            ""
+        ];
+
+        expect(CORE.count(test_array.slice(0), 'key'))
+            .toBe(3);
+    });
+
+    it("CORE.count(string)", function() {
+
+        var str = 'key' + 'key' + 3 + '4' + null + 'key' + NaN + '';
+
+        expect(CORE.count(str, 'key'))
+            .toBe(3);
+    });
+
+    it("CORE.registerMap(function)", function() {
+
+        var map = CORE.registerMap(function(value){
+
+            return value * 2;
+        });
+
+        expect(map([1, 2, 3, 4, 5, , null, ""]))
+            .toEqual([2, 4, 6, 8, 10, NaN, 0, 0]);
+    });
+
+    it("CORE.registerFilter(function)", function() {
+
+        var filter = CORE.registerFilter(function(value){
+
+            return value % 2;
+        });
+
+        expect(filter([1, 2, 3, 4, 5, , null, ""]))
+            .toEqual([1, 3, 5]);
+    });
+
+    it("CORE.registerEach(function)", function() {
+
+        // TODO: cannot access to local context
+        str = '';
+
+        var each = CORE.registerEach(function(value){
+
+            str += value;
+        });
+
+        each([1, 2, 3, 4, 5, , null, ""]);
+
+        expect(str)
+            .toEqual("12345undefinednull");
     });
 });
