@@ -424,19 +424,27 @@ var xone_config = lib.loadJSON('xone.json');
 
 var path_to_lessc;
 
-if(fs.existsSync(path.resolve(xone_config.node_modules_path, 'less-plugin-clean-css'))){
+if(fs.existsSync(path.resolve(xone_config.node_modules_path, 'less'))){
 
-    path_to_lessc = path.resolve(xone_config.node_modules_path, 'less-plugin-clean-css');
+    path_to_lessc = path.resolve(xone_config.node_modules_path, 'less');
 }
 else{
 
-    path_to_lessc = path.resolve(xone_config.node_modules_path, '..', '..', 'less-plugin-clean-css');
+    path_to_lessc = path.resolve(xone_config.node_modules_path, '..', '..', 'less');
 }
 
 if(fs.existsSync("app/css/build.less")) {
 
+    /*
+    if(!fs.existsSync('app/css/build.css')){
+
+        fs.writeFileSync('app/css/build.css', "", 'utf8');
+    }
+    */
+
     lib.exec((
 
-        'node "' + path_to_lessc + '/lib/clean-css-processor" --clean-css="--advanced" app/css/build.less app/css/build.css'
+        //'node "' + path.resolve(path_to_lessc, 'node_modules/clean-css/bin/cleancss') + '" app/css/build.less --clean-css="-s1 --advanced --rebase" app/css/build.css'
+        'node "' + path.resolve(path_to_lessc, 'bin/lessc') + '" --clean-css="--s1 --advanced --rebase" app/css/build.less app/css/build.css'
     ));
 }

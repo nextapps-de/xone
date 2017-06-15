@@ -1,6 +1,6 @@
 {
   "name": "xone",
-  "version": "0.0.500",
+  "version": "0.0.501",
   "description": "Open source Javascript framework for building modern web applications.",
   "keywords": [
     "Javascript Framework",
@@ -35,6 +35,7 @@
     "http-server": "^0.10.0",
     "jasmine": "^2.6.0",
     "jsdoc": "^3.4.3",
+    "less": "^2.7.2",
     "less-plugin-clean-css": "^1.5.1"
   }
 }

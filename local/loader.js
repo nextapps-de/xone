@@ -41,14 +41,14 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
             /*CONFIG.XONE_PATH +*/ 'lib/xone/core/controller.js',
             /*CONFIG.XONE_PATH +*/ 'lib/xone/lib/layout.js',
             /*CONFIG.XONE_PATH +*/ 'lib/xone/lib/viewport.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/lib/worker.js'
+            /*CONFIG.XONE_PATH +*/ 'lib/xone/lib/worker.js',
+            /*CONFIG.XONE_PATH +*/ 'lib/xone/lib/validate.js'
         ];
 
         MANIFEST.dependencies.js_inject = [
 
             /* INJECT XONE LOADER */
 
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/lib/validate.js',
             /*CONFIG.XONE_PATH +*/ 'lib/xone/core/init.js'
         ];
 

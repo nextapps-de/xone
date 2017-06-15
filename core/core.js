@@ -1858,6 +1858,24 @@ var CORE = {};
         return [];
     };
 
+    CORE.assign = function(target, source){
+
+        if(!source || typeof source !== 'object'){
+
+            return target;
+        }
+
+        var props = Object.keys(source);
+        var prop;
+        var length = props.length;
+
+        for(var i = 0; i < length; i++){
+
+            prop = props[i];
+            target[prop] = source[prop];
+        }
+    };
+
     /**
      * @param {!string} src
      * @param {!Function} callback

@@ -135,7 +135,6 @@ APP.VALIDATE['whitespace'] = function(value){
 
 Usage:
 
-*app/js/helper/validate.js*
 ```html
 <input class="form-validate" 
        type="text" 

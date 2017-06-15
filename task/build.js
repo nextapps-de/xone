@@ -184,7 +184,8 @@ if(fs.existsSync(__dirname + '/build.js')){
             /*app_config.XONE_PATH +*/ 'lib/xone/core/controller.js',
             /*app_config.XONE_PATH +*/ 'lib/xone/lib/layout.js',
             /*app_config.XONE_PATH +*/ 'lib/xone/lib/viewport.js',
-            /*app_config.XONE_PATH +*/ 'lib/xone/lib/worker.js'
+            /*app_config.XONE_PATH +*/ 'lib/xone/lib/worker.js',
+            /*app_config.XONE_PATH +*/ 'lib/xone/lib/validate.js'
         ];
 
         xone_config.closure_compiler_jar.options.js = xone_config.closure_compiler_jar.options.js.concat(
@@ -307,7 +308,6 @@ if(fs.existsSync(__dirname + '/build.js')){
             compiler_options.externs = xone_manifest.dependencies.js_extern;
 
             // xone injection
-            compiler_options.jsCode.push({path: "app/lib/xone/lib/validate.js"});
             compiler_options.jsCode.push({path: "app/lib/xone/core/init.js"});
 
             var tmp_code = "";
@@ -344,7 +344,6 @@ if(fs.existsSync(__dirname + '/build.js')){
             */
 
             // xone injection
-            xone_config.closure_compiler_jar.options.js.push("'app/lib/xone/lib/validate.js'");
             xone_config.closure_compiler_jar.options.js.push("'app/lib/xone/core/init.js'");
 
             var config_parameters = "";

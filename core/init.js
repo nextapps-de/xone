@@ -11,7 +11,7 @@ goog.require('APP.SETUP');
 goog.require('APP.MAIN');
 goog.require('APP.VIEW');
 goog.require('APP.HTML');
-goog.require('APP.VALIDATE');
+goog.require('APP.LAYOUT');
 
 /*goog.require('CORE.RETINA');*/
 /*goog.require('APP.VIEWPORT');*/
@@ -118,6 +118,11 @@ goog.require('APP.VALIDATE');
 
     /** @type {Function|null} */
     var initialize_settings = function(){
+
+        if(DEBUG){
+
+            CORE.console.log('Initialize Settings');
+        }
 
         /** @type {_storage_interface} */
         (APP.SETTINGS = new CORE.Storage('app_settings'));
@@ -484,7 +489,7 @@ goog.require('APP.VALIDATE');
 
                 var node = (
 
-                    key === 'document' ?
+                    key === 'document' || key === '_document' ?
 
                         document
                     :
@@ -678,15 +683,15 @@ goog.require('APP.VALIDATE');
 
         // var models = APP.MODEL;
         //
-        // for(var model in models){
+        // for(var model in APP.MODEL){
         //
-        //     if(model !== 'register' && model !== 'new' && models.hasOwnProperty(model)){
+        //     if(model !== 'register' && model !== 'new' && model !== 'create' && APP.MODEL.hasOwnProperty(model)){
         //
+        //         APP.MODEL[model] = APP.MODEL.register.call(APP.MODEL, model, APP.MODEL[model]);
+        //
+        //         console.log(this);
         //         console.log(model);
-        //         console.log(models[model]);
-        //
-        //
-        //         models.register.call(this, models, models[model]);
+        //         console.log(APP.MODEL[model]);
         //     }
         // }
     };
