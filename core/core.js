@@ -101,7 +101,7 @@ var CORE = {};
 
         if(DEBUG) GRAPH.register('CORE.hasValue');
 
-        return value || value === 0 || value === false || value === '';
+        return (value || value === 0 || value === false || value === '') ? true : false;
     };
 
     /**
@@ -1138,6 +1138,26 @@ var CORE = {};
     };
 
     /**
+     * @param {!number} length
+     * @param {string=} charset
+     * @returns {string}
+     */
+
+    CORE.randomString = function(length, charset) {
+
+        charset || (charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789');
+
+        var str = '', len = charset.length + 0.4999999;
+
+        for(var i = 0; i < length; i++) {
+
+            str += charset.charAt((Math.random() * len - 0.5) | 0);
+        }
+
+        return str;
+    }
+
+    /**
      * @param {Array<string|number>} array
      * @param {string} field
      * @returns {Array<string|number>}
@@ -1963,7 +1983,10 @@ var CORE = {};
         rad: window.Math.PI / 180,
         cos: window.Math.cos,
         sin: window.Math.sin,
-        rnd: window.Math.random,
+        round: function(number){
+            return number >= 0 ? (number + 0.5) | 0 : (number - 0.5) | 0;
+        },
+        rand: window.Math.random,
         abs: function abs(a){
             if(DEBUG) GRAPH.register('CORE.Math.abs');
             return (a < 0 ? -a : a);

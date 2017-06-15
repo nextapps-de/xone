@@ -55,6 +55,7 @@ var MANIFEST = {
         ],
         "production": [],
         "development": [],
+        "benchmark": [],
         "test": [],
         "spec": [
 

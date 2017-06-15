@@ -48,6 +48,7 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
 
             /* INJECT XONE LOADER */
 
+            /*CONFIG.XONE_PATH +*/ 'lib/xone/lib/validate.js',
             /*CONFIG.XONE_PATH +*/ 'lib/xone/core/init.js'
         ];
 

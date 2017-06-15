@@ -11,6 +11,7 @@ goog.require('APP.SETUP');
 goog.require('APP.MAIN');
 goog.require('APP.VIEW');
 goog.require('APP.HTML');
+goog.require('APP.VALIDATE');
 
 /*goog.require('CORE.RETINA');*/
 /*goog.require('APP.VIEWPORT');*/

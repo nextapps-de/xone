@@ -243,6 +243,12 @@ var APP = {
     REQUIRE: {},
 
     /**
+     * @name APP.VALIDATE
+     * @namespace APP
+     */
+    VALIDATE: {},
+
+    /**
      * @name APP.CHANGELOG
      * @namespace APP
      */

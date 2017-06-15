@@ -7,7 +7,7 @@ Uppercase identifiers helps you to determine:
 * __special definitions__ in object notation to fulfill conventions of Xone automated system
 * __special members__ and classes also used by the automated system
 
-> __Note:__ Therefore all members of `APP.*` are uppercase to symbolize that they a part of the automated concept. Corresponding types are described by its interfaces. The descision to use these concept is open to you, also most of them can be used directly outside the automated chain.
+> __Note:__ Therefore all members of `APP.*` are uppercase to symbolize that they are connected each other a part of the automated concept. Corresponding types are described by its interfaces. The descision to use these concept is open to you, also most of them can be used directly outside the automated chain.
 
 ## Global Constants
 
