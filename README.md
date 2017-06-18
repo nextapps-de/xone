@@ -25,7 +25,8 @@ __Xone__ provides a lightweight full stack environment to develop beautiful appl
 * [Basic Examples: MVC Pattern / Routes / Events / Templates / Dev Tools](doc/xone.md)
 * [Persistent Models](doc/xone_model.md)
 * [Core Library](doc/xone_core.md)
-* [Xone Validations](doc/xone_validate.md)
+* [AMD Loader, Build Plugin & Depedency Sorting](doc/xone_amd.md)
+* [Validations](doc/xone_validate.md)
 
 ---
 
