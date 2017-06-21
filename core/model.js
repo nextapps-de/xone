@@ -127,7 +127,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
         /* Creates a key map for faster loops through all model instances */
 
-        this.keys = (this.data.keys());
+        this.keys = this.data.keys();
     }
 
     /**

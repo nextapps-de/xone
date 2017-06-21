@@ -3,6 +3,8 @@ describe("Check Model Implementation", function() {
     it("Check if model is registered", function() {
 
         expect(APP).toHaveObject("MODEL");
+        expect(APP.MODEL).toHaveMethod("register");
+        expect(APP.MODEL.constructor.prototype).toHaveMethod("register");
         expect(APP.MODEL.TestRecord).toBeUndefined();
 
         (function registerModel(MODEL) {
@@ -75,6 +77,7 @@ describe("Check Model Implementation", function() {
             expect(test_record.version).toBe('version');
             expect(APP.MODEL.TestRecord.count()).toBe(1);
             expect(APP.MODEL.TestRecord.all().length).toBe(1);
+            expect(APP.MODEL.TestRecord.all()[0].modelPrototype()).toBe("ModelPrototype");
 
             APP.MODEL.TestRecord.deleteAll();
 
@@ -101,6 +104,7 @@ describe("Check Model Implementation", function() {
             expect(test_record.version).toBe('version');
             expect(APP.MODEL.TestRecord.count()).toBe(1);
             expect(APP.MODEL.TestRecord.all().length).toBe(1);
+            expect(APP.MODEL.TestRecord.all()[0].modelPrototype()).toBe("ModelPrototype");
 
             APP.MODEL.TestRecord.deleteAll();
 
@@ -127,6 +131,7 @@ describe("Check Model Implementation", function() {
             expect(test_record.version).toBe('version');
             expect(APP.MODEL.TestRecord.count()).toBe(1);
             expect(APP.MODEL.TestRecord.all().length).toBe(1);
+            expect(APP.MODEL.TestRecord.all()[0].modelPrototype()).toBe("ModelPrototype");
 
             APP.MODEL.TestRecord.deleteAll();
 

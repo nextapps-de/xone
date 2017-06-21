@@ -29,15 +29,20 @@ goog.require('APP.LAYOUT');
 
 (function(){
 
-    var onload_triggered = false;
+    var onload_already_triggered = false;
 
-    /* Triggers main script execution */
+    var window_onload = function(){
 
-    document.addEventListener("deviceready", window.onload = function(){
+        /* FIX: Handle Multiple Calls */
 
-        /* Switch Cordova Callback */
+        if(onload_already_triggered) {
 
-        if(onload_triggered) return; else onload_triggered = true;
+            return;
+        }
+        else {
+
+            onload_already_triggered = true;
+        }
 
         /* CALL CUSTOM INIT */
 
@@ -61,10 +66,28 @@ goog.require('APP.LAYOUT');
 
             /* START MAIN */
 
-            runApp
-        ]);
+            runApp,
 
-    }, false);
+            /* CLEANUP */
+
+            function(){
+
+                runApp = null;
+            }
+        ]);
+    };
+
+    /* Triggers main script execution */
+
+    if(CORE.System.isCordova){
+
+        document.addEventListener("deviceready", window_onload, false);
+    }
+    else{
+
+        window.addEventListener("load", window_onload, false);
+        document.addEventListener("ready", window_onload, false);
+    }
 
     /**
      * @type {function()|number|null}
@@ -87,12 +110,19 @@ goog.require('APP.LAYOUT');
 
         /* Clean Up & Register to Garbage Collector */
 
-        document.removeEventListener("deviceready", window.onload);
-        window.onload = null;
+        if(CORE.System.isCordova){
 
-        delete APP.INIT;
-        delete APP.SETUP;
-        delete APP.MAIN;
+            document.removeEventListener("deviceready", window_onload);
+        }
+        else{
+
+            document.removeEventListener("ready", window_onload);
+            window.removeEventListener("load", window_onload);
+        }
+
+        APP.INIT = null;
+        APP.SETUP = null;
+        APP.MAIN = null;
 
         /* CLEANUP */
 
@@ -108,12 +138,7 @@ goog.require('APP.LAYOUT');
         initialize_events = null;
         initialize_models = null;
         //determine_storage_size = null;
-
-        CORE.async(function(){
-
-            runApp = null;
-
-        }, 1);
+        window_onload = null;
     };
 
     /** @type {Function|null} */

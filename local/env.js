@@ -1,5 +1,6 @@
 goog.provide("ENV");
 goog.require("CONFIG");
+goog.require("PLATFORM");
 
 /** @define {string} */
 var PLATFORM = CONFIG.PLATFORM = MANIFEST.platform;

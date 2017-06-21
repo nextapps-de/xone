@@ -1,5 +1,5 @@
 goog.provide('LOADER');
-goog.provide('CONFIG');
+//goog.provide('CONFIG');
 
 // TODO: auto sort deps
 
@@ -26,6 +26,7 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
 
         MANIFEST.dependencies.js_xone = [
 
+            /*CONFIG.XONE_PATH +*/ 'lib/xone/lib/amd.js',
             /*CONFIG.XONE_PATH +*/ 'lib/xone/core/polyfill.js',
             /*CONFIG.XONE_PATH +*/ 'lib/xone/core/interface.js',
             /*CONFIG.XONE_PATH +*/ 'lib/xone/lib/graph.js',
@@ -65,9 +66,24 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
         }
 
         html += load_deps(/* field: */ 'js_extern');
-        html += load_deps(/* field: */ 'js_xone');
-        html += load_deps(/* field: */ 'js');
-        html += load_deps(/* field: */ 'js_inject');
+
+        if(DEPS){
+
+            //console.log(DEPS);
+            //console.log(MANIFEST.dependencies.js_xone);
+            //console.log(MANIFEST.dependencies.js);
+
+            MANIFEST.dependencies.js_deps = DEPS;
+
+            html += load_deps(/* field: */ 'js_deps');
+        }
+        else{
+
+            html += load_deps(/* field: */ 'js_xone');
+            html += load_deps(/* field: */ 'js');
+            html += load_deps(/* field: */ 'js_inject');
+        }
+
         html += load_deps(/* field: */ CONFIG.ENV);
     }
 
@@ -96,7 +112,9 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
             /*CONFIG.XONE_PATH +*/ 'lib/xone/spec/paint_spec.js',
             /*CONFIG.XONE_PATH +*/ 'lib/xone/spec/array_spec.js',
             /*CONFIG.XONE_PATH +*/ 'lib/xone/spec/check_spec.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/spec/model_spec.js'
+            /*CONFIG.XONE_PATH +*/ 'lib/xone/spec/model_spec.js',
+            /*CONFIG.XONE_PATH +*/ 'lib/xone/spec/async_spec.js',
+            /*CONFIG.XONE_PATH +*/ 'lib/xone/spec/amd_spec.js'
         ];
 
         html += (

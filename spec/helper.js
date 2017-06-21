@@ -8,7 +8,7 @@ var customMatchers = {
 
                 return {
 
-                    pass: actual.hasOwnProperty(expected) && (typeof actual[expected] === 'function'), // true || false
+                    pass: typeof actual[expected] === 'function', // true || false
                     message: "Expected " + actual.__name + " to have method '" + expected + "'"
                 };
             }
@@ -23,7 +23,7 @@ var customMatchers = {
 
                 return {
 
-                    pass: actual.hasOwnProperty(expected) && (typeof actual[expected] === 'object'), // true || false
+                    pass: typeof actual[expected] === 'object', // true || false
                     message: "Expected " + actual.__name + " to have object '" + expected + "'"
                 };
             }
@@ -38,7 +38,7 @@ var customMatchers = {
 
                 return {
 
-                    pass: actual.hasOwnProperty(expected) && (actual[expected].constructor === Array), // true || false
+                    pass: actual[expected].constructor === Array, // true || false
                     message: "Expected " + actual.__name + " to have array '" + expected + "'"
                 };
             }

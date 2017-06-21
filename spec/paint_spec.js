@@ -565,7 +565,7 @@ describe("Check Paint Initialize Status", function() {
             .toBe('100px');
         expect(window.getComputedStyle(CORE.getById('test_wrapper'), null).getPropertyValue('position'))
             .toBe('absolute');
-        expect(window.getComputedStyle(CORE.getById('test_wrapper'), null).getPropertyValue('height'))
+        expect(roundStyleValue(window.getComputedStyle(CORE.getById('test_wrapper'), null).getPropertyValue('height')))
             // NOTE: Cascade Style Converted To Computed Style
             .toBe(CORE.getById('test_wrapper').clientHeight + 'px');
 
@@ -575,7 +575,7 @@ describe("Check Paint Initialize Status", function() {
             .toBe('100px');
         expect(CORE.getStyle('#test_wrapper', 'position'))
             .toBe('absolute');
-        expect(CORE.getStyle('#test_wrapper', 'height'))
+        expect(roundStyleValue(CORE.getStyle('#test_wrapper', 'height')))
             // NOTE: Cascade Style Converted To Computed Style
             .toBe(CORE.getById('test_wrapper').clientHeight + 'px');
 
@@ -594,7 +594,7 @@ describe("Check Paint Initialize Status", function() {
             .toBe('200px');
         expect(window.getComputedStyle(CORE.getById('test_content'), null).getPropertyValue('position'))
             .toBe('relative');
-        expect(window.getComputedStyle(CORE.getById('test_content'), null).getPropertyValue('height'))
+        expect(roundStyleValue(window.getComputedStyle(CORE.getById('test_content'), null).getPropertyValue('height')))
             // NOTE: Cascade Style Converted To Computed Style
             .toBe(CORE.getById('test_content').clientHeight + 'px');
 
@@ -637,7 +637,7 @@ describe("Check Paint Initialize Status", function() {
             .toBe('5px');
         expect(window.getComputedStyle(CORE.getByTag('ul', 'test_content')[1], null).getPropertyValue('position'))
             .toBe('relative');
-        expect(window.getComputedStyle(CORE.getByTag('ul', 'test_content')[1], null).getPropertyValue('height'))
+        expect(roundStyleValue(window.getComputedStyle(CORE.getByTag('ul', 'test_content')[1], null).getPropertyValue('height')))
             // NOTE: Cascade Style Converted To Computed Style
             .toBe(CORE.getByTag('ul', 'test_content')[1].clientHeight + 'px');
 
@@ -655,7 +655,7 @@ describe("Check Paint Initialize Status", function() {
             .toBe('5px');
         expect(CORE.getStyle(CORE.getByTag('ul', 'test_content')[1], 'position'))
             .toBe('relative');
-        expect(CORE.getStyle(CORE.getByTag('ul', 'test_content')[1], 'height'))
+        expect(roundStyleValue(CORE.getStyle(CORE.getByTag('ul', 'test_content')[1], 'height')))
             // TODO:
             // NOTE: Cascade Style Was Converted To Computed Style
             .toBe(CORE.getByTag('ul', 'test_content')[1].clientHeight + 'px');
@@ -805,7 +805,7 @@ describe("Check Paint Initialize Status", function() {
             .toBe('101px');
         expect(window.getComputedStyle(CORE.getById('test_wrapper'), null).getPropertyValue('position'))
             .toBe('absolute');
-        expect(window.getComputedStyle(CORE.getById('test_wrapper'), null).getPropertyValue('height'))
+        expect(roundStyleValue(window.getComputedStyle(CORE.getById('test_wrapper'), null).getPropertyValue('height')))
         // NOTE: Cascade Style Converted To Computed Style
             .toBe(CORE.getById('test_wrapper').clientHeight + 'px');
 
@@ -815,7 +815,7 @@ describe("Check Paint Initialize Status", function() {
             .toBe('101px');
         expect(CORE.getStyle('#test_wrapper', 'position'))
             .toBe('absolute');
-        expect(CORE.getStyle('#test_wrapper', 'height'))
+        expect(roundStyleValue(CORE.getStyle('#test_wrapper', 'height')))
         // NOTE: Cascade Style Converted To Computed Style
             .toBe(CORE.getById('test_wrapper').clientHeight + 'px');
 
@@ -825,7 +825,7 @@ describe("Check Paint Initialize Status", function() {
             .toBe('200px');
         expect(CORE.getById('test_content').style.position)
             .toBe('relative');
-        expect(CORE.getById('test_content').style.height)
+        expect(roundStyleValue(CORE.getById('test_content').style.height))
             .toBe('111px');
 
         /* Computed Styles */
@@ -834,7 +834,7 @@ describe("Check Paint Initialize Status", function() {
             .toBe('200px');
         expect(window.getComputedStyle(CORE.getById('test_content'), null).getPropertyValue('position'))
             .toBe('relative');
-        expect(window.getComputedStyle(CORE.getById('test_content'), null).getPropertyValue('height'))
+        expect(roundStyleValue(window.getComputedStyle(CORE.getById('test_content'), null).getPropertyValue('height')))
             // NOTE: Cascade Style Converted To Computed Style
             .toBe('111px');
 
@@ -877,7 +877,7 @@ describe("Check Paint Initialize Status", function() {
             .toBe('7px');
         expect(window.getComputedStyle(CORE.getByTag('ul', 'test_content')[1], null).getPropertyValue('position'))
             .toBe('absolute');
-        expect(window.getComputedStyle(CORE.getByTag('ul', 'test_content')[1], null).getPropertyValue('height'))
+        expect(roundStyleValue(window.getComputedStyle(CORE.getByTag('ul', 'test_content')[1], null).getPropertyValue('height')))
             // NOTE: Cascade Style Converted To Computed Style
             .toBe(CORE.getByTag('ul', 'test_content')[1].clientHeight + 'px');
 
@@ -895,7 +895,7 @@ describe("Check Paint Initialize Status", function() {
             .toBe('7px');
         expect(CORE.getStyle(CORE.getByTag('ul', 'test_content')[1], 'position'))
             .toBe('absolute');
-        expect(CORE.getStyle(CORE.getByTag('ul', 'test_content')[1], 'height'))
+        expect(roundStyleValue(CORE.getStyle(CORE.getByTag('ul', 'test_content')[1], 'height')))
             // TODO:
             // NOTE: Cascade Style Was Converted To Computed Style
             .toBe(CORE.getByTag('ul', 'test_content')[1].clientHeight + 'px');
@@ -933,28 +933,28 @@ describe("Check Paint Initialize Status", function() {
             .toBe('400px');
         expect(window.getComputedStyle(CORE.getByTag('li', 'test_content')[0], null).getPropertyValue('position'))
             .toBe('absolute');
-        expect(window.getComputedStyle(CORE.getByTag('li', 'test_content')[0], null).getPropertyValue('height'))
+        expect(roundStyleValue(window.getComputedStyle(CORE.getByTag('li', 'test_content')[0], null).getPropertyValue('height')))
             // NOTE: Cascade Style Converted To Computed Style
             .toBe(CORE.getByTag('li', 'test_content')[0].clientHeight + 'px');
         expect(window.getComputedStyle(CORE.getByTag('li', 'test_content')[1], null).getPropertyValue('top'))
             .toBe('8px');
         expect(window.getComputedStyle(CORE.getByTag('li', 'test_content')[1], null).getPropertyValue('position'))
             .toBe('absolute');
-        expect(window.getComputedStyle(CORE.getByTag('li', 'test_content')[1], null).getPropertyValue('height'))
+        expect(roundStyleValue(window.getComputedStyle(CORE.getByTag('li', 'test_content')[1], null).getPropertyValue('height')))
             // NOTE: Cascade Style Converted To Computed Style
             .toBe(CORE.getByTag('li', 'test_content')[1].clientHeight + 'px');
         expect(window.getComputedStyle(CORE.getByTag('li', 'test_content')[2], null).getPropertyValue('top'))
             .toBe('555px');
         expect(window.getComputedStyle(CORE.getByTag('li', 'test_content')[2], null).getPropertyValue('position'))
             .toBe('absolute');
-        expect(window.getComputedStyle(CORE.getByTag('li', 'test_content')[2], null).getPropertyValue('height'))
+        expect(roundStyleValue(window.getComputedStyle(CORE.getByTag('li', 'test_content')[2], null).getPropertyValue('height')))
             // NOTE: Cascade Style Converted To Computed Style
             .toBe(CORE.getByTag('li', 'test_content')[2].clientHeight + 'px');
         expect(window.getComputedStyle(CORE.getByTag('li', 'test_content')[3], null).getPropertyValue('top'))
             .toBe('9px');
         expect(window.getComputedStyle(CORE.getByTag('li', 'test_content')[3], null).getPropertyValue('position'))
             .toBe('absolute');
-        expect(window.getComputedStyle(CORE.getByTag('li', 'test_content')[3], null).getPropertyValue('height'))
+        expect(roundStyleValue(window.getComputedStyle(CORE.getByTag('li', 'test_content')[3], null).getPropertyValue('height')))
             // NOTE: Cascade Style Converted To Computed Style
             .toBe(CORE.getByTag('li', 'test_content')[3].clientHeight + 'px');
 
@@ -964,7 +964,7 @@ describe("Check Paint Initialize Status", function() {
             .toBe('400px');
         expect(CORE.getStyle(CORE.getByTag('li', 'test_content')[0], 'position'))
             .toBe('absolute');
-        expect(CORE.getStyle(CORE.getByTag('li', 'test_content')[0], 'height'))
+        expect(roundStyleValue(CORE.getStyle(CORE.getByTag('li', 'test_content')[0], 'height')))
             // TODO:
             // NOTE: Cascade Style Was Converted To Computed Style
             .toBe(CORE.getByTag('li', 'test_content')[0].clientHeight + 'px');
@@ -972,7 +972,7 @@ describe("Check Paint Initialize Status", function() {
             .toBe('8px');
         expect(CORE.getStyle(CORE.getByTag('li', 'test_content')[1], 'position'))
             .toBe('absolute');
-        expect(CORE.getStyle(CORE.getByTag('li', 'test_content')[1], 'height'))
+        expect(roundStyleValue(CORE.getStyle(CORE.getByTag('li', 'test_content')[1], 'height')))
             // TODO:
             // NOTE: Cascade Style Was Converted To Computed Style
             .toBe(CORE.getByTag('li', 'test_content')[1].clientHeight + 'px');
@@ -980,7 +980,7 @@ describe("Check Paint Initialize Status", function() {
             .toBe('555px');
         expect(CORE.getStyle(CORE.getByTag('li', 'test_content')[2], 'position'))
             .toBe('absolute');
-        expect(CORE.getStyle(CORE.getByTag('li', 'test_content')[2], 'height'))
+        expect(roundStyleValue(CORE.getStyle(CORE.getByTag('li', 'test_content')[2], 'height')))
             // TODO:
             // NOTE: Cascade Style Was Converted To Computed Style
             .toBe(CORE.getByTag('li', 'test_content')[2].clientHeight + 'px');
@@ -988,7 +988,7 @@ describe("Check Paint Initialize Status", function() {
             .toBe('9px');
         expect(CORE.getStyle(CORE.getByTag('li', 'test_content')[3], 'position'))
             .toBe('absolute');
-        expect(CORE.getStyle(CORE.getByTag('li', 'test_content')[3], 'height'))
+        expect(roundStyleValue(CORE.getStyle(CORE.getByTag('li', 'test_content')[3], 'height')))
             // TODO:
             // NOTE: Cascade Style Was Converted To Computed Style
             .toBe(CORE.getByTag('li', 'test_content')[3].clientHeight + 'px');
@@ -1051,7 +1051,7 @@ describe("Check Paint Initialize Status", function() {
                     .toBe('101px');
                 expect(window.getComputedStyle(CORE.getById('test_wrapper'), null).getPropertyValue('position'))
                     .toBe('absolute');
-                expect(window.getComputedStyle(CORE.getById('test_wrapper'), null).getPropertyValue('height'))
+                expect(roundStyleValue(window.getComputedStyle(CORE.getById('test_wrapper'), null).getPropertyValue('height')))
                 // NOTE: Cascade Style Converted To Computed Style
                     .toBe(CORE.getById('test_wrapper').clientHeight + 'px');
 
@@ -1061,7 +1061,7 @@ describe("Check Paint Initialize Status", function() {
                     .toBe('101px');
                 expect(CORE.getStyle('#test_wrapper', 'position'))
                     .toBe('absolute');
-                expect(CORE.getStyle('#test_wrapper', 'height'))
+                expect(roundStyleValue(CORE.getStyle('#test_wrapper', 'height')))
                 // NOTE: Cascade Style Converted To Computed Style
                     .toBe(CORE.getById('test_wrapper').clientHeight + 'px');
 
@@ -1123,7 +1123,7 @@ describe("Check Paint Initialize Status", function() {
                     .toBe('7px');
                 expect(window.getComputedStyle(CORE.getByTag('ul', 'test_content')[1], null).getPropertyValue('position'))
                     .toBe('absolute');
-                expect(window.getComputedStyle(CORE.getByTag('ul', 'test_content')[1], null).getPropertyValue('height'))
+                expect(roundStyleValue(window.getComputedStyle(CORE.getByTag('ul', 'test_content')[1], null).getPropertyValue('height')))
                 // NOTE: Cascade Style Converted To Computed Style
                     .toBe(CORE.getByTag('ul', 'test_content')[1].clientHeight + 'px');
 
@@ -1141,7 +1141,7 @@ describe("Check Paint Initialize Status", function() {
                     .toBe('7px');
                 expect(CORE.getStyle(CORE.getByTag('ul', 'test_content')[1], 'position'))
                     .toBe('absolute');
-                expect(CORE.getStyle(CORE.getByTag('ul', 'test_content')[1], 'height'))
+                expect(roundStyleValue(CORE.getStyle(CORE.getByTag('ul', 'test_content')[1], 'height')))
                 // TODO:
                 // NOTE: Cascade Style Was Converted To Computed Style
                     .toBe(CORE.getByTag('ul', 'test_content')[1].clientHeight + 'px');
@@ -1179,28 +1179,28 @@ describe("Check Paint Initialize Status", function() {
                     .toBe('400px');
                 expect(window.getComputedStyle(CORE.getByTag('li', 'test_content')[0], null).getPropertyValue('position'))
                     .toBe('absolute');
-                expect(window.getComputedStyle(CORE.getByTag('li', 'test_content')[0], null).getPropertyValue('height'))
+                expect(roundStyleValue(window.getComputedStyle(CORE.getByTag('li', 'test_content')[0], null).getPropertyValue('height')))
                 // NOTE: Cascade Style Converted To Computed Style
                     .toBe(CORE.getByTag('li', 'test_content')[0].clientHeight + 'px');
                 expect(window.getComputedStyle(CORE.getByTag('li', 'test_content')[1], null).getPropertyValue('top'))
                     .toBe('8px');
                 expect(window.getComputedStyle(CORE.getByTag('li', 'test_content')[1], null).getPropertyValue('position'))
                     .toBe('absolute');
-                expect(window.getComputedStyle(CORE.getByTag('li', 'test_content')[1], null).getPropertyValue('height'))
+                expect(roundStyleValue(window.getComputedStyle(CORE.getByTag('li', 'test_content')[1], null).getPropertyValue('height')))
                 // NOTE: Cascade Style Converted To Computed Style
                     .toBe(CORE.getByTag('li', 'test_content')[1].clientHeight + 'px');
                 expect(window.getComputedStyle(CORE.getByTag('li', 'test_content')[2], null).getPropertyValue('top'))
                     .toBe('555px');
                 expect(window.getComputedStyle(CORE.getByTag('li', 'test_content')[2], null).getPropertyValue('position'))
                     .toBe('absolute');
-                expect(window.getComputedStyle(CORE.getByTag('li', 'test_content')[2], null).getPropertyValue('height'))
+                expect(roundStyleValue(window.getComputedStyle(CORE.getByTag('li', 'test_content')[2], null).getPropertyValue('height')))
                 // NOTE: Cascade Style Converted To Computed Style
                     .toBe(CORE.getByTag('li', 'test_content')[2].clientHeight + 'px');
                 expect(window.getComputedStyle(CORE.getByTag('li', 'test_content')[3], null).getPropertyValue('top'))
                     .toBe('9px');
                 expect(window.getComputedStyle(CORE.getByTag('li', 'test_content')[3], null).getPropertyValue('position'))
                     .toBe('absolute');
-                expect(window.getComputedStyle(CORE.getByTag('li', 'test_content')[3], null).getPropertyValue('height'))
+                expect(roundStyleValue(window.getComputedStyle(CORE.getByTag('li', 'test_content')[3], null).getPropertyValue('height')))
                 // NOTE: Cascade Style Converted To Computed Style
                     .toBe(CORE.getByTag('li', 'test_content')[3].clientHeight + 'px');
 
@@ -1210,7 +1210,7 @@ describe("Check Paint Initialize Status", function() {
                     .toBe('400px');
                 expect(CORE.getStyle(CORE.getByTag('li', 'test_content')[0], 'position'))
                     .toBe('absolute');
-                expect(CORE.getStyle(CORE.getByTag('li', 'test_content')[0], 'height'))
+                expect(roundStyleValue(CORE.getStyle(CORE.getByTag('li', 'test_content')[0], 'height')))
                 // TODO:
                 // NOTE: Cascade Style Was Converted To Computed Style
                     .toBe(CORE.getByTag('li', 'test_content')[0].clientHeight + 'px');
@@ -1218,7 +1218,7 @@ describe("Check Paint Initialize Status", function() {
                     .toBe('8px');
                 expect(CORE.getStyle(CORE.getByTag('li', 'test_content')[1], 'position'))
                     .toBe('absolute');
-                expect(CORE.getStyle(CORE.getByTag('li', 'test_content')[1], 'height'))
+                expect(roundStyleValue(CORE.getStyle(CORE.getByTag('li', 'test_content')[1], 'height')))
                 // TODO:
                 // NOTE: Cascade Style Was Converted To Computed Style
                     .toBe(CORE.getByTag('li', 'test_content')[1].clientHeight + 'px');
@@ -1226,7 +1226,7 @@ describe("Check Paint Initialize Status", function() {
                     .toBe('555px');
                 expect(CORE.getStyle(CORE.getByTag('li', 'test_content')[2], 'position'))
                     .toBe('absolute');
-                expect(CORE.getStyle(CORE.getByTag('li', 'test_content')[2], 'height'))
+                expect(roundStyleValue(CORE.getStyle(CORE.getByTag('li', 'test_content')[2], 'height')))
                 // TODO:
                 // NOTE: Cascade Style Was Converted To Computed Style
                     .toBe(CORE.getByTag('li', 'test_content')[2].clientHeight + 'px');
@@ -1234,7 +1234,7 @@ describe("Check Paint Initialize Status", function() {
                     .toBe('9px');
                 expect(CORE.getStyle(CORE.getByTag('li', 'test_content')[3], 'position'))
                     .toBe('absolute');
-                expect(CORE.getStyle(CORE.getByTag('li', 'test_content')[3], 'height'))
+                expect(roundStyleValue(CORE.getStyle(CORE.getByTag('li', 'test_content')[3], 'height')))
                 // TODO:
                 // NOTE: Cascade Style Was Converted To Computed Style
                     .toBe(CORE.getByTag('li', 'test_content')[3].clientHeight + 'px');
@@ -1243,6 +1243,18 @@ describe("Check Paint Initialize Status", function() {
             });
         });
     });
+
+    /* HELPER */
+
+    function roundStyleValue(value){
+
+        if(value.indexOf('px')){
+
+            value = ((parseFloat(value) + 0.5) | 0) + 'px';
+        }
+
+        return value;
+    }
 
     // '<div id="test_wrapper" style="top: 100px;">' +
     // '<div id="test_content" style="position: relative; top: 200px; height:auto;">' +

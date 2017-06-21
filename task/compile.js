@@ -448,3 +448,6 @@ if(fs.existsSync("app/css/build.less")) {
         'node "' + path.resolve(path_to_lessc, 'bin/lessc') + '" --clean-css="--s1 --advanced --rebase" app/css/build.less app/css/build.css'
     ));
 }
+
+
+lib.exec('node "' + __dirname + '/deps" --silent');

@@ -223,6 +223,7 @@ var CORE = {};
 
     /** @type {?Node} */
     var dom_console;
+    /** @type {string} */
     var log = "";
 
     /**
@@ -2030,6 +2031,8 @@ var CORE = {};
 
     /** @type {boolean} */
     CORE.Browser.isChrome = !!window['chrome'] && !CORE.Browser.isOpera; // Chrome 1+
+    /** @type {function(string):boolean} */
+    CORE.Browser.is = fn_is;
 
     /**
      * @const
@@ -2045,12 +2048,36 @@ var CORE = {};
         /** @type {boolean} */
         isIpad: !!navigator.userAgent.match(/iPad/i),
         /** @type {boolean} */
-        isAndroid: !!navigator.userAgent.match(/Android/i)
+        isAndroid: !!navigator.userAgent.match(/Android/i),
+        /** @type {boolean} */
+        isCordova: !!window['cordova']
     }
 
     /** @type {boolean} */
     CORE.System.isIOS = CORE.System.isIphone || CORE.System.isIpod || CORE.System.isIpad;
     /** @type {boolean} */
     CORE.System.isMobile = CORE.System.isIOS || CORE.System.isAndroid;
+    /** @type {function(string):boolean} */
+    CORE.System.is = fn_is;
+
+    /**
+     * @param {!string} type
+     * @returns {boolean}
+     */
+
+    function fn_is(type){
+
+        var fn_name = 'is' + type[0].toUpperCase() + type.substring(1);
+
+        if(DEBUG){
+
+            if(typeof this[fn_name] === 'undefined'){
+
+                CORE.console.warn("WARNING: The passed type '" + type + "' is not defined!");
+            }
+        }
+
+        return this[fn_name];
+    };
 
 })();

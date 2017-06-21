@@ -10,7 +10,7 @@ window.goog || (function(modules){
         },
         require: function(a){
 
-            modules[a] || (DEBUG && CORE.console.warn('WARNING: Dependency is missing: ' + a));
+            modules[a] || console.warn('WARNING: Dependency is missing: ' + a);
         },
         scope: function(fn){
 

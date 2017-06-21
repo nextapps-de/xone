@@ -168,6 +168,7 @@ if(fs.existsSync(__dirname + '/build.js')){
 
         var xone_dependencies = [
 
+            /*app_config.XONE_PATH +*/ 'lib/xone/lib/amd.js',
             /*app_config.XONE_PATH +*/ 'lib/xone/core/polyfill.js',
             ///*app_config.XONE_PATH +*/ 'lib/xone/core/interface.js',
             /*app_config.XONE_PATH +*/ 'lib/xone/core/env.js',
