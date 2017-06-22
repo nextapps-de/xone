@@ -374,8 +374,8 @@ if(fs.existsSync(__dirname + '/build.js')){
             console.log(out.errors.length + " error(s), " + out.warnings.length + " warning(s), " + (((ratio * 10) | 0) / 10) + "% typed");
 
             //console.info(out.compiledCode);
-            if(out.errors.length) console.info("\n" + out.errors);
-            if(out.warnings.length) console.info("\n" + out.warnings);
+            if(out.errors.length) console.info(out.errors);
+            if(out.warnings.length) console.info(out.warnings);
 
             build_callback_success();
         }
