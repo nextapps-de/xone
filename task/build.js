@@ -14,6 +14,51 @@ var fs = require('fs');
 var path = require('path');
 var lib = require('./lib.js');
 
+// var jsdom = require("jsdom");
+// var dom = new jsdom.JSDOM('<!DOCTYPE html>');
+//
+// root.DEBUG = false;
+// root.window = dom.window;
+// root.document = dom.window.document;
+// root.navigator = dom.window.navigator;
+// root.window.Math = root.Math;
+// root.goog = {
+//
+//     require: function(){},
+//     provide: function(){}
+// };
+//
+// require('./../local/stub.js');
+// var amd = require('./../lib/amd.js');
+// //console.log(amd);
+//
+// require('./../lib/amd.js');
+// require('./../core/polyfill.js');
+// require('./../core/interface.js');
+// require('./../lib/graph.js');
+// require('./../core/core.js');
+// require('./../core/app.js');
+// require('./../lib/debug.js');
+// require('./../lib/paint.js');
+// require('./../lib/event.js');
+// require('./../lib/retina.js');
+// require('./../lib/compress.js');
+// require('./../lib/storage.js');
+// require('./../core/model.js');
+// require('./../core/controller.js');
+// require('./../lib/layout.js');
+// require('./../lib/viewport.js');
+// require('./../lib/worker.js');
+// require('./../lib/validate.js');
+//
+// amd.define('test', function(){
+//
+//     return function(){
+//
+//       crazy;
+//     };
+// });
+
 var compress = false;
 
 if(platform) {
@@ -177,6 +222,7 @@ if(fs.existsSync(__dirname + '/build.js')){
             /*app_config.XONE_PATH +*/ 'lib/xone/core/app.js',
             /*app_config.XONE_PATH +*/ 'lib/xone/lib/debug.js',
             /*app_config.XONE_PATH +*/ 'lib/xone/lib/paint.js',
+            /*app_config.XONE_PATH +*/ 'lib/xone/lib/animate.js',
             /*app_config.XONE_PATH +*/ 'lib/xone/lib/event.js',
             /*app_config.XONE_PATH +*/ 'lib/xone/lib/retina.js',
             /*app_config.XONE_PATH +*/ 'lib/xone/lib/compress.js',

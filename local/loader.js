@@ -34,6 +34,7 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
             /*CONFIG.XONE_PATH +*/ 'lib/xone/core/app.js',
             /*CONFIG.XONE_PATH +*/ 'lib/xone/lib/debug.js',
             /*CONFIG.XONE_PATH +*/ 'lib/xone/lib/paint.js',
+            /*CONFIG.XONE_PATH +*/ 'lib/xone/lib/animate.js',
             /*CONFIG.XONE_PATH +*/ 'lib/xone/lib/event.js',
             /*CONFIG.XONE_PATH +*/ 'lib/xone/lib/retina.js',
             /*CONFIG.XONE_PATH +*/ 'lib/xone/lib/compress.js',
@@ -72,6 +73,8 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
             //console.log(DEPS);
             //console.log(MANIFEST.dependencies.js_xone);
             //console.log(MANIFEST.dependencies.js);
+
+            DEPS.unshift('lib/xone/lib/amd.js');
 
             MANIFEST.dependencies.js_deps = DEPS;
 

@@ -70,7 +70,8 @@ beforeEach(function() {
 
         'CONFIG',
         'CORE',
-        'APP'
+        'APP',
+        'AMD'
     ]);
 });
 

@@ -372,27 +372,29 @@ CORE.paint(function(){
 - [x] Use npm modules for system tasks (supports all platforms)
 - [ ] Improve Environment Mappings
 - [x] Improve Worker Integration
-- [x] ~~Provide Plugin Management~~ (was replaced by dependency management)
-- [ ] Replace Closure Dependency Loader
+- [x] ~~Provide Plugin Management~~
+- [x] Replace Closure Dependency Loader
 - [x] Improve Dependency Management
 - [x] Improve Platform Management
 - [ ] Support Hooks
-- [ ] Support Animations
-- [ ] Support Asynchronous Module Definitions
+- [x] Support Animations
+- [x] Support Asynchronous Module Definitions
 - [x] Improve Versioning
 - [ ] Improve Migration
-- [ ] Improve Benchmark Integration
-- [ ] Refactor API
+- [x] Improve Benchmark Integration Part 1/2
+- [ ] Improve Benchmark Integration Part 2/2
+- [x] Refactor API
 - [ ] Add Documentation
 - [ ] Add Demos / Examples
 - [ ] Add JSDoc
 - [ ] Add Unit Tets
-    - [ ] Core Tests
+    - [x] Core Tests
+    - [x] AMD Tests
+    - [x] Async Tests
+    - [x] Paint Tests
+    - [x] Model Tests
     - [ ] MVC Tests
-    - [ ] Plugin Tests
-    - [ ] Compiler Tests
-    - [ ] Build Tests
-    - [ ] Support Xone Standalone
+    - [ ] Test Xone Standalone
 - [x] Platform Support
     - [x] MacOS
     - [x] Windows
