@@ -44,8 +44,18 @@ function loadJSON(path_to_file, parse_from_js){
 
     if(parse_from_js){
 
-        json = json.substring(json.indexOf('var ' + parse_from_js));
-        json = json.substring(json.indexOf('{'), json.lastIndexOf('};') + 1);
+        var pos_var = json.indexOf('var ' + parse_from_js);
+        var pos_brackets = json.indexOf('{', pos_var);
+        var pos_square = json.indexOf('[', pos_var);
+
+        if((pos_brackets > -1) && ((pos_square === -1) || (pos_brackets < pos_square))){
+
+            json = json.substring(pos_brackets, json.lastIndexOf('};') + 1);
+        }
+        else{
+
+            json = json.substring(pos_square, json.lastIndexOf('];') + 1);
+        }
     }
 
     return JSON.parse(json.replace(/\/\*[\s\S]*?\*\/|([^\\:]|^)\/\/.*$/gm, '$1'));

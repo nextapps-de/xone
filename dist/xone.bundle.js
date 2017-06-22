@@ -3,6 +3,8 @@
  * Copyright (c) 2017 NextApps, All rights reserved.
  */
 
+/** @define {string} */ var PLATFORM = "";
+
 /**
  @const
  @interface
@@ -50,7 +52,7 @@ function _model_class(data) {
 /** @type {Function} */ _model_class.prototype.update;
 /** @type {Function} */ _model_class.prototype.restore;
 /** @type {Function} */ _model_class.prototype.delete;
-/** @type {string} */ _model_class.prototype.model_name;
+/** @type {string} */ _model_class.prototype.modelName;
 /** @type {Function} */ _model_class.constructor.prototype.mapToView;
 /** @type {Function} */ _model_class.constructor.prototype.mapToPayload;
 /** @type {Function} */ _model_class.constructor.prototype.mapToData;
@@ -119,13 +121,849 @@ function _storage_interface(store_id) {
 /** @type {Function} */ _storage_interface.prototype.del;
 /** @type {Function} */ _storage_interface.prototype.clear;
 /** @type {Function} */ _storage_interface.prototype.keys;
+/**
+ @public
+ @interface
+ @param {HTMLElement} obj
+ @param {string} style
+ @param {(CSSStyleDeclaration|Object)} css
+ @param {number} from
+ @param {(number|string)} to
+ @param {string} metric
+ @param {number} duration
+ @param {string} easeStr
+ @param {Array<number>} ease
+ @param {number} RES
+ @param {number} start
+ @param {(Function|undefined)} callback
+ @param {(Function|undefined)} step
+ */
+function _fatjob_interface(obj, style, css, from, to, metric, duration, easeStr, ease, RES, start, callback, step) {
+}
+/**
+ @this {_fatjob_interface}
+ @param {number} time
+ @return {boolean}
+ */
+_fatjob_interface.prototype.animate;
+/**
+ @param {string} tmp
+ @param {string} to
+ */
+_fatjob_interface.prototype.colorHandler;
+/** @public @interface */ function FAT_CLASS() {
+  /** @type {boolean} */ this.isRender;
+  /** @type {boolean} */ this.EXEC;
+}
+/**
+ @public
+ @interface
+ @param {HTMLCanvasElement=} canvas
+ @param {number=} width
+ @param {number=} height
+ @param {boolean=} useOffscreen
+ */
+function FAT_CANVAS_CLASS(canvas, width, height, useOffscreen) {
+}
+/**
+ @param {FAT_SHAPE_CLASS} obj
+ */
+FAT_CANVAS_CLASS.prototype.add;
+/**
+ @param {number} time
+ */
+FAT_CANVAS_CLASS.prototype.render;
+/**
+ @public
+ @interface
+ @param {CSSStyleDeclaration} css
+ @param {string} style
+ @param {(string|number)} val
+ */
+function CSSJOB_CLASS(css, style, val) {
+  /** @type {(CSSStyleDeclaration|Object)} */ this.css;
+  /** @type {string} */ this.style;
+  /** @type {(string|number)} */ this.val;
+}
+/** @type {Function} */ CSSJOB_CLASS.prototype.set;
+/**
+ @public
+ @interface
+ @param {number=} x
+ @param {number=} y
+ @param {number=} width
+ @param {number=} height
+ @param {string=} fillStyle
+ @param {number=} lineWidth
+ @param {string=} strokeStyle
+ @param {boolean=} useBuffer
+ */
+function FAT_SHAPE_CLASS(x, y, width, height, fillStyle, lineWidth, strokeStyle, useBuffer) {
+}
+/**
+ @param {number} x
+ @param {number} y
+ */
+FAT_SHAPE_CLASS.prototype.moveTo;
+/**
+ @param {number} x
+ @param {number} y
+ */
+FAT_SHAPE_CLASS.prototype.moveBy;
+/**
+ @param {number} w
+ @param {number} h
+ */
+FAT_SHAPE_CLASS.prototype.resize;
+/**
+ @param {CanvasRenderingContext2D} context
+ */
+FAT_SHAPE_CLASS.prototype.draw;
+
+/** @const */ var AMD = function() {
+  var DEBUG = this.DEBUG || false;
+  /** @const @type {Window} */ var window = this;
+  /** @const */ var document = window.document || {};
+  /** @const */ var body = document.body || {};
+  var sources = {};
+  /** @type {Object<string,*>} */ var modules = {};
+  /** @private @type {Array} */ var cache = [];
+  /**
+ @private
+ @const
+ @param {*} val
+ @param {*} type
+ @return {boolean}
+ */
+var isType = function(val, type) {
+    return typeof val === (type || "undefined");
+  };
+  /** @const */ var isArrayType = function(val, type) {
+    return Object.prototype.toString.call(val) === "[object " + type + "]";
+  };
+  /** @const */ var isArray = function(val) {
+    return isArrayType(val, "Array") || isArrayType(val, "Object");
+  };
+  var imported = {};
+  var moduleCounts = {};
+  var require_order = [];
+  var js = [];
+  /** @const */ var register = function(name, module) {
+    this[name] = module;
+  };
+  /** @const */ var out = function(build_arr, target) {
+    if (target === "window" || isType(target, "undefined")) {
+      window.open("data:text/plain;charset=utf-8," + encodeURIComponent(build_arr.join("\n")), "ASAP Build", "width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0");
+    } else {
+      if (target === "text") {
+        return build_arr.join("\n");
+      } else {
+        if (target === "console") {
+          console.log(build_arr.join("\n"));
+        } else {
+          if (target === "file") {
+            var pom = document.createElement("a");
+            pom.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(build_arr.join("\n")));
+            pom.setAttribute("download", "build.js");
+            pom.style.display = "none";
+            body.appendChild(pom);
+            pom.click();
+            body.removeChild(pom);
+          } else {
+            if (target === "popup") {
+              var pom = document.createElement("pre");
+              var style = document.createAttribute("style");
+              style.value = "position:absolute;z-index:999999;background-color:#fff;color:#000;width:100%;height:100%;overflow:auto;text-align:left;font:monospace;";
+              style.id = "asap-debug";
+              pom.setAttributeNode(style);
+              pom.innerHTML = build_arr.join("\n");
+              body.appendChild(pom);
+            }
+          }
+        }
+      }
+    }
+  };
+  /** @const */ var build = function(namespace, _convert) {
+    var build_check = {};
+    var namespace_requires = [];
+    var str_final;
+    js[js.length] = "(function(){";
+    for (var k = 0; k < require_order.length; k++) {
+      var key = require_order[k];
+      if (sources.hasOwnProperty(key) || key.indexOf("$$require$$") > -1) {
+        var source = sources[key];
+        var isPublic = false;
+        if (key[0] === "!") {
+          key = key.substring(1);
+          isPublic = true;
+        }
+        if (key[0] === "*") {
+          key = key.substring(1);
+        }
+        if (publicList[key]) {
+          isPublic = true;
+        }
+        if (imported[key] || isType(moduleCounts[key], "undefined") && !_convert) {
+          continue;
+        }
+        if (namespace && key.indexOf("$$require$$") === -1 && key.indexOf(namespace + ".") === -1) {
+          namespace_requires[namespace_requires.length] = namespace;
+          continue;
+        }
+        var dependencies = source[0];
+        var fn = source[1];
+        var self = source[2];
+        var arr = key.split(".");
+        var i = 0, len = arr.length - 1, str = "";
+        str_final = "";
+        var tmp = imported;
+        while (i < len) {
+          str += (str ? "." : "") + arr[i];
+          if (isType(imported[str], "undefined")) {
+            var isPublic2 = publicList[str];
+            if (i === 0 && isPublic2) {
+              str_final = "var " + arr[i] + ' = window["' + arr[i] + '"]';
+            } else {
+              if (i > 0 && isPublic2) {
+                str_final = "var " + arr[i - 1] + "_" + arr[i] + " = " + arr[i - 1] + '["' + arr[i] + '"]';
+              } else {
+                str_final = str;
+              }
+            }
+            if (isType(build_check[str], "undefined")) {
+              js[js.length] = (str.indexOf(".") > -1 || isPublic2 ? "" : "var ") + str_final + " = {};";
+              build_check[str] = true;
+            }
+            imported[str] = true;
+            if (i > 0 && isPublic2) {
+              str_final = arr[i - 1] + "_" + arr[i];
+            }
+          } else {
+            str_final = str;
+          }
+          i += 1;
+        }
+        build_check[str + (str ? "." : "") + arr[i]] = true;
+        imported[str + (str ? "." : "") + arr[i]] = true;
+        if (!isPublic) {
+          str += (str ? "." : "") + arr[i];
+        } else {
+          if (i > 1 && isPublic2) {
+            str_final = arr[i - 2] + "_" + arr[i - 1];
+          }
+        }
+        if (isType(fn, "undefined")) {
+          if (isType(dependencies, "number") || isType(dependencies, "boolean")) {
+            js[js.length] = (key.indexOf(".") > -1 || isPublic ? "" : "var ") + (isPublic && i > 0 ? "var " + str_final.replace(/\./g, "_") + "_" + arr[i] + " = " + str_final + '["' + arr[i] + '"]' : key) + " = " + dependencies + ";";
+          } else {
+            if (isType(dependencies, "string")) {
+              js[js.length] = (key.indexOf(".") > -1 || isPublic ? "" : "var ") + (isPublic && i > 0 ? "var " + str_final.replace(/\./g, "_") + "_" + arr[i] + " = " + str_final + '["' + arr[i] + '"]' : key) + ' = "' + dependencies + '";';
+            } else {
+              if (isArray(dependencies)) {
+                js[js.length] = (key.indexOf(".") > -1 || isPublic ? "" : "var ") + (isPublic && i > 0 ? "var " + str_final.replace(/\./g, "_") + "_" + arr[i] + " = " + str_final + '["' + arr[i] + '"]' : key) + " = " + JSON.stringify(dependencies).replace(/\"([^(\")"]+)\":/g, "$1:") + ";";
+              } else {
+                if (isType(dependencies, "function")) {
+                  var fnResultCheck;
+                  if (key.indexOf("$$require$$") > -1) {
+                    js[js.length] = "(" + dependencies.toString() + "());";
+                  } else {
+                    js[js.length] = (key.indexOf(".") > -1 || isPublic ? "" : "var ") + (isPublic && i > 0 ? "var " + str_final.replace(/\./g, "_") + "_" + arr[i] + " = " + str_final + '["' + arr[i] + '"]' : key) + " = " + (isType(fnResultCheck = dependencies(), "function") && ((fnResultCheck = fnResultCheck.toString()).indexOf("[native code]") === -1 || fnResultCheck.substring(fnResultCheck.indexOf("{"), fnResultCheck.lastIndexOf("}")).length > 20) ? fnResultCheck : "(" + dependencies.toString() + 
+                    "())") + ";";
+                  }
+                }
+              }
+            }
+          }
+        } else {
+          if (isType(dependencies, "function")) {
+            js[js.length] = (key.indexOf(".") > -1 || isPublic ? "" : "var ") + (isPublic && i > 0 ? "var " + str_final.replace(/\./g, "_") + "_" + arr[i] + " = " + str_final + '["' + arr[i] + '"]' : key) + " = (function(){" + dependencies.toString() + "; }).call(" + fn.toString() + ");";
+          } else {
+            if (isType(dependencies, "string")) {
+              dependencies = [dependencies];
+            }
+            var requiredModules = [];
+            var a = 0, len2 = dependencies.length;
+            while (a < len2) {
+              if (isType(dependencies[a], "string")) {
+                if (!isType(sources["!" + dependencies[a]], "undefined")) {
+                  var arr2 = dependencies[a].split(".");
+                  var z = 0, len3 = arr2.length - 1, str2 = "";
+                  str_final = "";
+                  while (z < len3) {
+                    str2 += (str2 ? "." : "") + arr2[z];
+                    var isPublic2 = publicList[str2];
+                    if (i === 0 && isPublic2) {
+                      str_final = "var " + arr2[z] + ' = window["' + arr2[z] + '"]';
+                    } else {
+                      if (i > 0 && isPublic2) {
+                        str_final += '["' + arr2[z] + '"]';
+                      } else {
+                        str_final = str2;
+                      }
+                    }
+                    imported[str2] = true;
+                    z += 1;
+                  }
+                  requiredModules[requiredModules.length] = z > 0 ? str2 + '["' + arr2[z] + '"]' : arr2[z];
+                } else {
+                  if (publicList[dependencies[a]]) {
+                    if (dependencies[a].indexOf(".") > -1) {
+                      requiredModules[requiredModules.length] = dependencies[a].substring(0, dependencies[a].lastIndexOf(".")) + "['" + dependencies[a].substring(dependencies[a].lastIndexOf(".") + 1) + "']";
+                    } else {
+                      requiredModules[requiredModules.length] = "window['" + dependencies[a] + "']";
+                    }
+                  } else {
+                    requiredModules[requiredModules.length] = dependencies[a];
+                  }
+                }
+              } else {
+                requiredModules[requiredModules.length] = parseParams(fn)[a];
+              }
+              a += 1;
+            }
+            if (isType(self, "undefined")) {
+              if (isArray(fn)) {
+                js[js.length] = (key.indexOf(".") > -1 || isPublic ? "" : "var ") + (isPublic && i > 0 ? "var " + str_final.replace(/\./g, "_") + "_" + arr[i] + " = " + str_final + '["' + arr[i] + '"]' : key.indexOf(".") === -1 && publicList[key] ? "var " + key + ' = window["' + key + '"]' : key) + " = " + JSON.stringify(fn) + ";";
+              } else {
+                if (key.indexOf("$$require$$") > -1) {
+                  js[js.length] = "(" + fn.toString() + "(" + requiredModules.join(", ") + "));";
+                } else {
+                  js[js.length] = (key.indexOf(".") > -1 || isPublic ? "" : "var ") + (isPublic && i > 0 ? "var " + str_final.replace(/\./g, "_") + "_" + arr[i] + " = " + str_final + '["' + arr[i] + '"]' : key.indexOf(".") === -1 && publicList[key] ? "var " + key + ' = window["' + key + '"]' : key) + " = (" + fn.toString() + "(" + requiredModules.join(", ").replace(/\./g, "_") + "));";
+                }
+              }
+            } else {
+              if (isArray(fn)) {
+                js[js.length] = (key.indexOf(".") > -1 || isPublic ? "" : "var ") + (isPublic && i > 0 ? "var " + str_final.replace(/\./g, "_") + "_" + arr[i] + " = " + str_final + '["' + arr[i] + '"]' : key) + " = " + JSON.stringify(fn) + ";";
+              } else {
+                if (key.indexOf("$$require$$") > -1) {
+                  js[js.length] = "(function(){" + fn.toString() + "(" + requiredModules.join(", ") + ");}).call(" + self.toString() + ");";
+                } else {
+                  js[js.length] = (key.indexOf(".") > -1 || isPublic ? "" : "var ") + (isPublic && i > 0 ? "var " + str_final.replace(/\./g, "_") + "_" + arr[i] + " = " + str_final + '["' + arr[i] + '"]' : key) + "  = (function(){" + fn.toString() + "(" + requiredModules.join(", ").replace(/\./g, "_") + ");}).call(" + self.toString() + ");";
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    js[js.length] = "}());";
+    return js;
+  };
+  /** @const */ var convert = function(namespace) {
+    require_order = Object.keys(sources);
+    return build(namespace, true);
+  };
+  /** @const */ var debug = function(namespace) {
+    imported = {};
+    module_tree = {};
+    moduleCounts = {};
+    require_order = [];
+    js = [];
+  };
+  /** @const */ var parseParams = function(param) {
+    if (typeof param === "string") {
+      return param.split(".");
+    }
+    if (typeof param === "function") {
+      var x = param.toString();
+      var c = x.substring(x.indexOf("(", x.indexOf("function")) + 1);
+      c = c.substring(0, c.indexOf(")"));
+      return c.match(/([\w_\$\d]+)/g);
+    }
+    return param;
+  };
+  /** @const @type {function():boolean} */ var updateCache = function() {
+    var a = 0;
+    var update_state = false;
+    while (a < cache.length) {
+      /** @type {string} */ var namespace = cache[a][0];
+      var dependencies = cache[a][1];
+      var fn = cache[a][2];
+      var self = cache[a][3];
+      var state = false;
+      state = namespace === "" ? require(dependencies, fn, self, false) : define(namespace, dependencies, fn, self, false);
+      if (state) {
+        console.log("UPDATE: " + namespace);
+        cache[a] = null;
+        cache.splice(a, 1);
+        update_state = true;
+      }
+      a += 1;
+    }
+    return update_state;
+  };
+  /** @const */ var getModule = function(name) {
+    return modules[name];
+  };
+  /** @const */ var addCache = function(namespace, dependencies, fn, self) {
+    cache[cache.length] = [namespace, dependencies, fn, self];
+  };
+  /**
+ @const
+ @param {string} name
+ @param {*} fn
+ */
+var addModule = function(name, fn) {
+    modules[name] = fn;
+  };
+  var _export = function(fn, target, rename, _update) {
+    install(fn, target, "", _update, true);
+  };
+  /**
+ @const
+ @param {*=} fn
+ @param {*=} target
+ @param {*=} rename
+ @param {boolean=} _update
+ @param {boolean=} _export
+ */
+var install = function(fn, target, rename, _update, _export) {
+    if (fn) {
+      if (isType(fn, "string")) {
+        fn = [fn];
+      }
+      var a = 0, len2 = fn.length;
+      while (a < len2) {
+        last_define = "";
+        /** @type {string} */ var cur_fn = fn[a];
+        /** @type {Array<string>} */ var arr_modules = cur_fn.split(".");
+        /** @type {(*|null)} */ var tmp_module;
+        var i = 1, len = arr_modules.length - (_export ? 2 : 1);
+        if (!_update) {
+          if (target) {
+            if (isType(target, "string")) {
+              if (target === "window" && len > 0) {
+                target = rename || arr_modules[len];
+                tmp_module = window[target] || (window[target] = getModule(cur_fn));
+              } else {
+                tmp_module = window[target] || (window[target] = getModule(cur_fn));
+                while (i < len) {
+                  tmp_module = tmp_module[arr_modules[i]] || (tmp_module[arr_modules[i]] = {});
+                  i++;
+                }
+              }
+            } else {
+              if (target === window && len > 0) {
+                target = rename || arr_modules[len];
+                tmp_module = window[target] || (window[target] = getModule(cur_fn));
+              } else {
+                tmp_module = target;
+                if (!_export) {
+                  target = rename || arr_modules[len];
+                  tmp_module = tmp_module[target] || (tmp_module[target] = getModule(cur_fn));
+                }
+              }
+            }
+          } else {
+            tmp_module = window;
+            if (!_export) {
+              i = 0;
+              while (i < len) {
+                tmp_module = tmp_module[arr_modules[i]] || (tmp_module[arr_modules[i]] = {});
+                i++;
+              }
+              if (i < len + 1) {
+                tmp_module = tmp_module[arr_modules[i]] = getModule(cur_fn);
+              }
+            }
+          }
+        } else {
+          tmp_module = target;
+          if (!_export) {
+            i = 0;
+            while (i < len) {
+              tmp_module = tmp_module[arr_modules[i]] || (tmp_module[arr_modules[i]] = {});
+              i++;
+            }
+            if (i < len + 1) {
+              tmp_module = tmp_module[arr_modules[i]] = getModule(rename);
+            }
+          }
+        }
+        if (!_update) {
+          var keys = Object.keys(modules || {});
+          i = 0, len = keys.length;
+          while (i < len) {
+            if (keys[i].indexOf(cur_fn) > -1 && keys[i] !== cur_fn) {
+              install(keys[i].replace(cur_fn + ".", ""), tmp_module, keys[i], true);
+            }
+            i++;
+          }
+        }
+        a++;
+      }
+    } else {
+      if (last_define) {
+        return install(last_define, "");
+      }
+    }
+  };
+  var module_tree = window.asap_module_tree = {};
+  var addToTree = function(namespace, source) {
+    var arr = namespace.split("."), i = 0, len = arr.length;
+    var tree = module_tree;
+    while (i < len) {
+      if (isType(tree[arr[i]], "undefined")) {
+        tree = tree[arr[i]] = source;
+      } else {
+        tree = tree[arr[i]];
+      }
+      i += 1;
+    }
+  };
+  var updated = {};
+  var last_define;
+  /**
+ @const
+ @param {!string} namespace
+ @param {*=} dependencies
+ @param {Function=} fn
+ @param {*=} self
+ @param {boolean=} opt_cache
+ */
+var define = function(namespace, dependencies, fn, self, opt_cache) {
+    last_define = namespace;
+    if (isType(opt_cache, "undefined")) {
+      opt_cache = true;
+    }
+    var isPublic = false;
+    if (isType(namespace, "string")) {
+      if (namespace[0] === "!") {
+        namespace = namespace.substring(1);
+        isPublic = true;
+      }
+      if (namespace[0] === "*") {
+        namespace = namespace.substring(1);
+      }
+      if (!isType(sources[namespace], "undefined")) {
+        for (var key in sources) {
+          if (isType(updated[key], "undefined")) {
+            if (sources.hasOwnProperty(key)) {
+              if (isType(sources[key][0], "string")) {
+                if (namespace === sources[key][0]) {
+                  console.log("update addon 1: " + key);
+                  addCache(key, sources[key][0], sources[key][1], sources[key][2]);
+                  updated[key] = true;
+                  opt_cache = false;
+                }
+              } else {
+                if (!isType(sources[key][0], "undefined")) {
+                  var len = sources[key][0].length;
+                  for (var i = 0; i < len; i++) {
+                    if (isType(sources[key][0][i], "string")) {
+                      if (namespace === sources[key][0][i]) {
+                        console.log("update addon 2: " + key);
+                        addCache(key, sources[key][0], sources[key][1], sources[key][2]);
+                        updated[key] = true;
+                        opt_cache = false;
+                        break;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    if (typeof dependencies === "function") {
+      if (isType(fn, "undefined")) {
+        sources[(isPublic ? "!" : "") + namespace] = [dependencies, fn, self];
+        require_order[require_order.length] = namespace;
+        addModule(namespace, dependencies());
+      } else {
+        sources[(isPublic ? "!" : "") + namespace] = [dependencies, fn, self];
+        require_order[require_order.length] = namespace;
+        addModule(namespace, dependencies.call(fn));
+      }
+    } else {
+      if (isType(fn, "undefined")) {
+        sources[(isPublic ? "!" : "") + namespace] = [dependencies, fn, self];
+        require_order[require_order.length] = namespace;
+        if (isType(dependencies, "undefined")) {
+          dependencies = null;
+        }
+        addModule(namespace, dependencies);
+      } else {
+        if (isType(dependencies, "string")) {
+          dependencies = [dependencies];
+        }
+        var requiredModules = [];
+        var i = 0, len = dependencies.length;
+        while (i < len) {
+          var module = isType(dependencies[i], "string") ? getModule(dependencies[i]) : dependencies[i];
+          if (isType(module, "undefined")) {
+            console.log("Missing: " + namespace + " => " + dependencies[i]);
+            if (opt_cache) {
+              addCache(namespace, dependencies, fn, self);
+            }
+            return false;
+          }
+          requiredModules[requiredModules.length] = module;
+          i += 1;
+        }
+        sources[(isPublic ? "!" : "") + namespace] = [dependencies, fn, self];
+        require_order[require_order.length] = namespace;
+        addModule(namespace, fn.apply(isType(self, "undefined") ? this : getModule(self), requiredModules));
+        i = 0;
+      }
+    }
+    if (opt_cache && cache.length) {
+      while (updateCache()) {
+      }
+    }
+    return this;
+  };
+  var require_count = 0;
+  var publicList = {};
+  /**
+ @const
+ @param {*} dependencies
+ @param {Function=} callback
+ @param {*=} self
+ */
+var run = function(dependencies, callback, self) {
+    require(dependencies)();
+    if (callback) {
+      callback();
+    }
+  };
+  /**
+ @const
+ @param {*} dependencies
+ @param {*=} fn
+ @param {*=} self
+ @param {boolean=} opt_cache
+ */
+var require = function(dependencies, fn, self, opt_cache) {
+    last_define = fn;
+    if (isType(opt_cache, "undefined")) {
+      opt_cache = true;
+    }
+    if (isType(dependencies, "string")) {
+      if (dependencies[0] === "!") {
+        dependencies = dependencies.substring(1);
+        publicList[dependencies] = true;
+        var tmpStr = dependencies;
+        while (tmpStr.indexOf(".") > -1) {
+          publicList[tmpStr = tmpStr.substring(0, tmpStr.lastIndexOf("."))] = true;
+        }
+      }
+      if (dependencies[0] === "*") {
+        dependencies = dependencies.substring(1);
+      }
+      if (isType(modules[/** @type {string} */ (dependencies)], "undefined")) {
+        if (opt_cache) {
+          addCache("", dependencies, fn, self);
+        }
+        return;
+      }
+      dependencies = [dependencies];
+    }
+    var requiredModules = [];
+    var i = 0, len = dependencies.length;
+    while (i < len) {
+      var module;
+      if (isType(dependencies[i], "string")) {
+        if (dependencies[i].charCodeAt(0) === 33) {
+          dependencies[i] = dependencies[i].substring(1);
+          publicList[dependencies[i]] = true;
+          var tmpStr = dependencies[i];
+          while (tmpStr.indexOf(".") > -1) {
+            publicList[tmpStr = tmpStr.substring(0, tmpStr.lastIndexOf("."))] = true;
+          }
+        }
+        if (dependencies[i].charCodeAt(0) === 42) {
+          dependencies[i] = dependencies[i].substring(1);
+        }
+        if (moduleCounts[dependencies[i]]) {
+          moduleCounts[dependencies[i]]++;
+        } else {
+          moduleCounts[dependencies[i]] = 1;
+        }
+        module = getModule(dependencies[i]);
+        if (isType(sources[dependencies[i]], "undefined")) {
+          console.log("Build Missing: " + dependencies[i]);
+          return;
+        }
+        if ((isType(sources[dependencies[i]][0], "string") || isArrayType(sources[dependencies[i]][0], "Array")) && isType(sources[dependencies[i]][1], "undefined") === false) {
+          var nextSources = [];
+          if (isType(sources[dependencies[i]][0], "string")) {
+            nextSources[nextSources.length] = sources[dependencies[i]][0];
+          } else {
+            for (var a = 0; a < sources[dependencies[i]][0].length; a++) {
+              if (isType(sources[dependencies[i]][0][a], "string")) {
+                nextSources[nextSources.length] = sources[dependencies[i]][0][a];
+              }
+            }
+          }
+          while (nextSources.length) {
+            var nextSource = nextSources.pop();
+            if ((isType(sources[nextSource][0], "string") || isArrayType(sources[nextSource][0], "Array")) && isType(sources[nextSource][1], "undefined") === false) {
+              if (isType(sources[nextSource][0], "string")) {
+                nextSources[nextSources.length] = sources[nextSource][0];
+              } else {
+                for (var a = 0; a < sources[nextSource][0].length; a++) {
+                  if (isType(sources[nextSource][0][a], "string")) {
+                    nextSources[nextSources.length] = sources[nextSource][0][a];
+                  }
+                }
+              }
+            }
+            if (moduleCounts[nextSource]) {
+              moduleCounts[nextSource]++;
+            } else {
+              moduleCounts[nextSource] = 1;
+            }
+          }
+        }
+      } else {
+        module = dependencies[i];
+      }
+      if (isType(module, "undefined")) {
+        if (opt_cache) {
+          addCache("", dependencies, fn, self);
+        }
+        return;
+      }
+      requiredModules[i] = module;
+      i += 1;
+    }
+    if (isType(fn, "undefined")) {
+      if (dependencies.length === 1) {
+        require_order[require_order.length] = dependencies[0];
+        if (moduleCounts[dependencies[0]]) {
+          moduleCounts[dependencies[0]]++;
+        } else {
+          moduleCounts[dependencies[0]] = 1;
+        }
+        return getModule(dependencies[0]);
+      } else {
+        var return_arr = {};
+        for (var a = 0; a < dependencies.length; a++) {
+          require_order[require_order.length] = dependencies[a];
+          if (moduleCounts[dependencies[a]]) {
+            moduleCounts[dependencies[a]]++;
+          } else {
+            moduleCounts[dependencies[a]] = 1;
+          }
+          return_arr[dependencies[a]] = getModule(dependencies[a]);
+        }
+        return return_arr;
+      }
+    } else {
+      if (isType(self, "undefined")) {
+        var uid = "$$require$$" + require_count++;
+        sources[uid] = [dependencies, fn, self];
+        moduleCounts[uid] = 1;
+        require_order[require_order.length] = uid;
+        var fn_return = fn.apply(this, requiredModules);
+        return fn_return;
+      } else {
+        if (isType(self, "string")) {
+          var uid = "$$require$$" + require_count++;
+          sources[uid] = [dependencies, fn, self];
+          moduleCounts[uid] = 1;
+          require_order[require_order.length] = uid;
+          var fn_return = fn.apply(getModule(self), requiredModules);
+          return fn_return;
+        } else {
+          var uid = "$$require$$" + require_count++;
+          sources[uid] = [dependencies, fn, self];
+          moduleCounts[uid] = 1;
+          require_order[require_order.length] = uid;
+          var fn_return = fn.apply(self, requiredModules);
+          return fn_return;
+        }
+      }
+    }
+  };
+  /**
+ @const
+ @param {string} namespace
+ */
+var undefine = function(namespace) {
+    define(namespace, void 0);
+  };
+  /** @const */ var release = function() {
+    for (var key in sources) {
+      if (sources.hasOwnProperty(key)) {
+        for (var a = 0; a < sources[key].length; a++) {
+          delete sources[key][a];
+        }
+        delete sources[key];
+      }
+    }
+    for (var key in modules) {
+      if (modules.hasOwnProperty(key)) {
+        if (!isType(imported[key], "undefined") || isType(moduleCounts[key], "undefined")) {
+          delete modules[key];
+        }
+      }
+    }
+    while (cache.length) {
+      cache.pop();
+    }
+  };
+  var buildStart = function(dependencies) {
+    moduleCounts = {};
+    if (dependencies) {
+      if (isType(dependencies, "string")) {
+        dependencies = [dependencies];
+      }
+      var keys = Object.keys(sources || {});
+      for (var a = 0; a < dependencies.length; a++) {
+        var curItem = dependencies[a];
+        var isPublic = false;
+        if (curItem.substr(curItem.length - 2) === ".*") {
+          if (curItem.charCodeAt(0) === 33) {
+            curItem = curItem.substr(1);
+            isPublic = true;
+          }
+          dependencies[a] = curItem = curItem.substr(0, curItem.length - 2);
+          if (isPublic) {
+            for (var i = 0; i < keys.length; i++) {
+              if (keys[i].indexOf(curItem + ".") > -1) {
+                publicList[keys[i]] = true;
+                moduleCounts[keys[i]] = 1;
+              }
+            }
+          }
+        }
+        var splitArr = curItem.split(".");
+        var str = "";
+        for (var i = 0; i < splitArr.length; i++) {
+          str += (str ? "." : "") + splitArr[i];
+          publicList[str] = true;
+        }
+      }
+      require(dependencies);
+      console.log(publicList);
+    }
+  };
+  if (DEBUG) {
+    window["asap_imported"] = imported;
+    window["asap_module_tree"] = module_tree;
+    window["asap_sources"] = sources;
+    window["asap_modules"] = modules;
+    window["asap_cache"] = cache;
+    window["asap_moduleCounts"] = moduleCounts;
+    window["require_order"] = require_order;
+    window["asap_js"] = js;
+  }
+  /** @const */ return {/** @type {Function} */ define:define, /** @type {Function} */ require:require, /** @type {Function} */ run:run, /** @type {Function} */ install:install, /** @type {Function} */ export:_export, /** @type {Function} */ build:build, /** @type {Function} */ convert:convert, /** @type {Function} */ undefine:undefine, /** @type {Function} */ release:release, /** @type {Function} */ buildStart:buildStart, /** @type {Function} */ debug:debug, /** @type {Function} */ out:out, /** @type {Function} */ register:register};
+}.call(this);
+/** @const */ var define = AMD.define;
+/** @const */ var require = AMD.require;
+
 
 
 /** @const */ var CONFIG = {};
-/** @define {string} */ CONFIG.ENV = "production";
+/** @define {boolean} */ CONFIG.DEBUG = false;
 /** @define {string} */ CONFIG.RACK = "default";
 /** @define {boolean} */ CONFIG.NO_SCRIPT = false;
-/** @define {boolean} */ DEBUG = false;
 /** @define {boolean} */ CONFIG.SHOW_DEBUG = false;
 /** @define {boolean} */ CONFIG.DESKTOP = true;
 /** @define {string} */ CONFIG.FORCE_ORIENTATION = "none";
@@ -140,8 +978,6 @@ function _storage_interface(store_id) {
 /** @define {number} */ CONFIG.MAX_CACHE_TIME = 300000;
 /** @define {string} */ CONFIG.SERVER_HOST = "localhost";
 /** @define {number} */ CONFIG.EVENT_DEFAULT_DELAY = 0;
-
-(function(){
 
 window["requestFileSystem"] || (window["requestFileSystem"] = window["webkitRequestFileSystem"]);
 navigator["persistentStorage"] || (navigator["persistentStorage"] = navigator["webkitPersistentStorage"]);
@@ -341,6 +1177,17 @@ Array.prototype["indexOf"] || (Array.prototype["indexOf"] = function(d, e) {
 });
 
 
+
+/** @define {string} */ CONFIG.PLATFORM = PLATFORM;
+/** @define {string} */ CONFIG.ENV = "production";
+/** @define {string} */ var ENV = CONFIG.ENV;
+/** @define {boolean} */ var DEBUG = CONFIG.DEBUG;
+/** @define {string} */ var RACK = CONFIG.RACK;
+
+(function(){
+
+
+
 if (DEBUG) {
   var GRAPH = function() {
     var graph = {};
@@ -414,6 +1261,7 @@ checkout:function(fn) {
 
 
 
+
 /** @const */ var CORE = {};
 (function() {
   /** @private @type {XMLHttpRequest} */ var xhr = null;
@@ -459,7 +1307,7 @@ CORE.hasValue = function(value) {
     if (DEBUG) {
       GRAPH.register("CORE.hasValue");
     }
-    return CORE.isType(value) && value !== null;
+    return value || value === 0 || value === false || value === "" ? true : false;
   };
   /**
  @const
@@ -485,6 +1333,17 @@ CORE.isObject = function(value) {
   };
   /**
  @const
+ @param {(!Object|null)} value
+ @return {boolean}
+ */
+CORE.isCollection = function(value) {
+    if (DEBUG) {
+      GRAPH.register("CORE.isCollection");
+    }
+    return HTMLCollection.prototype.isPrototypeOf(value);
+  };
+  /**
+ @const
  @param {!Array<*>} value
  @return {boolean}
  */
@@ -492,7 +1351,25 @@ CORE.hasValues = function(value) {
     if (DEBUG) {
       GRAPH.register("CORE.hasValues");
     }
-    return value && value.length ? true : false;
+    if (value && value.length) {
+      for (var i = 0; i < value.length; i++) {
+        if (CORE.hasValue(value[i])) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+  /**
+ @const
+ @param {!Object} value
+ @return {boolean}
+ */
+CORE.hasKeys = function(value) {
+    if (DEBUG) {
+      GRAPH.register("CORE.hasKeys");
+    }
+    return Object.keys(value).length ? true : false;
   };
   /**
  @const
@@ -535,7 +1412,7 @@ var getNode = CORE.getNode = function(element) {
     return CORE.isType(element, "string") ? CORE.DOM[/** @type {string} */ (element)] || CORE.getById(/** @type {string} */ (element)) : /** @type {(Node|Element|HTMLDocument|Window|null)} */ (element);
   };
   /** @type {?Node} */ var dom_console;
-  var log = "";
+  /** @type {string} */ var log = "";
   /** @final */ CORE.console = {/**
  @param {(string|number)=} text
  @param {*=} obj
@@ -811,24 +1688,9 @@ this.remove = function remove(key) {
     }
   }
   /**
- @param {Function} fn
- @return {Array<string>}
- */
-var parse_fn = function parse_fn(fn) {
-    if (DEBUG) {
-      GRAPH.register("CORE.parse_fn");
-    }
-    var fn_string = fn.toString();
-    var fn_parameter = fn_string.substring(fn_string.indexOf("(") + 1, fn_string.indexOf(")"));
-    var fn_content = fn_string.substring(fn_string.indexOf("{") + 1, fn_string.length - 1);
-    var fn_pre = fn_content.substring(0, fn_content.indexOf("return "));
-    var fn_return = fn_content.substring(fn_content.indexOf("return ") + 7, fn_content.length).replace(";", "");
-    return [fn_parameter.split(","), fn_pre, fn_return];
-  };
-  /**
  @const
  @param {!string} query
- @return {(Array<Node>|NodeList)}
+ @return {(Array<(Node|null)>|NodeList|Node|null)}
  */
 CORE.query = function(query) {
     if (DEBUG) {
@@ -843,21 +1705,18 @@ CORE.query = function(query) {
       if (dot_position > 0) {
         var class_name = query.substring(dot_position + 1);
         if (firstChar === "#") {
-          var node = CORE.getById(query.substring(1, dot_position));
-          return CORE.hasClass(node, class_name) ? [node] : [];
+          return CORE.getByClass(class_name, query.substring(1, dot_position));
         } else {
           var nodes = [];
           var found_nodes = CORE.getByTag(query.substring(0, dot_position));
           for (var i = 0; i < found_nodes.length; i++) {
-            if (CORE.hasClass(found_nodes[i], class_name)) {
-              nodes[nodes.length] = found_nodes[i];
-            }
+            nodes = nodes.concat(CORE.getByClass(class_name, query.substring(1, found_nodes[i])));
           }
           return nodes;
         }
       } else {
         if (firstChar === "#") {
-          return [CORE.getById(query.substring(1))];
+          return CORE.getById(query.substring(1));
         } else {
           return CORE.getByTag(query);
         }
@@ -926,7 +1785,7 @@ CORE.getById = function getById(id) {
     if (CONFIG.DOM_CACHE_ENABLED) {
       return CORE.DOM[id] || (CORE.DOM[id] = document.getElementById(id));
     } else {
-      return CORE.DOM[id] || document.getElementById(id);
+      return document.getElementById(id);
     }
   };
   /**
@@ -957,30 +1816,39 @@ CORE.getByTag = function getByTag(tag, context) {
   };
   /**
  @const
- @param {(Node|HTMLElement|string)} node
+ @param {(Node|HTMLDocument|Window|NodeList|Array<Node>|string|null)} node
  @return {string}
  */
 CORE.getValue = function getValue(node) {
     if (DEBUG) {
       GRAPH.register("CORE.getValue");
     }
-    return getNode(node).value;
+    if (typeof node === "string") {
+      node = CORE.query(node);
+    }
+    if (node.length >= 0) {
+      node = node[0];
+    }
+    return node.value;
   };
   /**
  @const
- @param {(Array<(Node|HTMLElement|string)>|NodeList|Node|HTMLElement|Window|string|null)} node
+ @param {(Node|HTMLDocument|Window|NodeList|Array<Node>|string|null)} node
  @param {string} value
  */
 CORE.setValue = function setValue(node, value) {
     if (DEBUG) {
       GRAPH.register("CORE.setValue");
     }
-    if (typeof node === "string" || typeof node.length === "undefined") {
-      getNode(/** @type {(Node|Window|null|string)} */ (node)).value = value;
-    } else {
+    if (typeof node === "string") {
+      node = CORE.query(node);
+    }
+    if (node.length >= 0) {
       for (var i = 0; i < node.length; i++) {
-        getNode(/** @type {(Node|Window|null|string)} */ (node[i])).value = value;
+        node[i].value = value;
       }
+    } else {
+      node.value = value;
     }
   };
   /**
@@ -1108,6 +1976,19 @@ CORE.ajax = function ajax(params) {
     return str;
   };
   /**
+ @param {!number} length
+ @param {string=} charset
+ @return {string}
+ */
+CORE.randomString = function(length, charset) {
+    charset || (charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
+    var str = "", len = charset.length + 0.4999999;
+    for (var i = 0; i < length; i++) {
+      str += charset.charAt(Math.random() * len - 0.5 | 0);
+    }
+    return str;
+  };
+  /**
  @param {Array<(string|number)>} array
  @param {string} field
  @return {Array<(string|number)>}
@@ -1119,10 +2000,24 @@ CORE.unique = function(array, field) {
     var checkDuplicates = {};
     var unqiue_array = [];
     for (var i = 0, length = array.length; i < length; i++) {
-      var value = array[i][field];
+      var value = field ? array[i][field] : array[i];
       checkDuplicates[value] || (checkDuplicates[value] = true) && (unqiue_array[unqiue_array.length] = value);
     }
     return unqiue_array;
+  };
+  /**
+ @param {Array<*>} array_1
+ @param {Array<*>} array_2
+ @return {Array<*>}
+ */
+CORE.merge = function(array_1, array_2) {
+    var args = arguments || [array_1, array_2], arg;
+    for (var i = 1; i < args.length; i++) {
+      if (arg = args[i]) {
+        array_1 = (array_1 || []).concat(arg);
+      }
+    }
+    return array_1;
   };
   /**
  @param {Array<*>} array
@@ -1138,6 +2033,101 @@ CORE.reverse = function(array) {
       reversed_array[i] = array[length - i - 1];
     }
     return reversed_array;
+  };
+  var compare_asc = function(a, b) {
+    return ("" + a).localeCompare(b);
+  };
+  var compare_desc = function(a, b) {
+    return ("" + b).localeCompare(a);
+  };
+  var compare_numeric_asc = function(a, b) {
+    if (a === null) {
+      return 1;
+    }
+    if (b === null) {
+      return -1;
+    }
+    if (isNaN(a)) {
+      return 1;
+    }
+    if (isNaN(b)) {
+      return -1;
+    }
+    return a - b;
+  };
+  var compare_numeric_desc = function(b, a) {
+    if (a === null) {
+      return -1;
+    }
+    if (b === null) {
+      return 1;
+    }
+    if (isNaN(a)) {
+      return -1;
+    }
+    if (isNaN(b)) {
+      return 1;
+    }
+    return a - b;
+  };
+  /**
+ @param {!Array<*>} array
+ @param {Function=} cmp
+ @return {Array<*>}
+ */
+CORE.sort = function(array, cmp) {
+    return array.sort(cmp || compare_asc);
+  };
+  /**
+ @param {!Array<*>} array
+ @return {Array<*>}
+ */
+CORE.sortAsc = function(array) {
+    return array.sort(compare_asc);
+  };
+  /**
+ @param {!Array<*>} array
+ @return {Array<*>}
+ */
+CORE.sortDesc = function(array) {
+    return array.sort(compare_desc);
+  };
+  /**
+ @param {!Array<*>} array
+ @param {Function=} cmp
+ @return {Array<*>}
+ */
+CORE.sortNum = function(array, cmp) {
+    return array.sort(cmp || compare_numeric_asc);
+  };
+  /**
+ @param {!Array<*>} array
+ @return {Array<*>}
+ */
+CORE.sortNumAsc = function(array) {
+    return array.sort(compare_numeric_asc);
+  };
+  /**
+ @param {!Array<*>} array
+ @return {Array<*>}
+ */
+CORE.sortNumDesc = function(array) {
+    return array.sort(compare_numeric_desc);
+  };
+  /**
+ @param {!Array<*>} array
+ @param {number=} times
+ @return {Array<*>}
+ */
+CORE.shuffle = function(array, times) {
+    var length = array.length, tmp, index;
+    for (var i = 0; i < length; i++) {
+      index = Math.random() * length | 0;
+      tmp = array[i];
+      array[i] = array[index];
+      array[index] = tmp;
+    }
+    return times && --times ? CORE.shuffle(array, times) : array;
   };
   /**
  @param {Date} date
@@ -1250,7 +2240,11 @@ CORE.stack = function(fn, delay) {
   }();
   CORE.capitalize = capitalize;
   CORE.prefix = prefix;
-  CORE.crc32 = function(str) {
+  /**
+ @param {string} str
+ @return {number}
+ */
+CORE.crc32 = function(str) {
     if (DEBUG) {
       GRAPH.register("CORE.crc32");
     }
@@ -1261,6 +2255,85 @@ CORE.stack = function(fn, delay) {
     return (crc ^ -1) >>> 0;
   };
   /**
+ @param {(Array<(number|string|boolean)>|string)} source
+ @param {(number|string|boolean|null|undefined)} find
+ @return {number}
+ */
+CORE.count = function(source, find) {
+    var count = 0;
+    if (typeof source === "string") {
+      var pos = 0;
+      var length = find.length;
+      while ((pos = source.indexOf("" + find, pos)) !== -1) {
+        count++;
+        pos += length;
+      }
+    } else {
+      if (CORE.isArray(source)) {
+        var length = source.length;
+        for (var i = 0; i < source.length; i++) {
+          if (source[i] === find) {
+            count++;
+          }
+        }
+      } else {
+        if (DEBUG) {
+          throw new Error("'CORE.count' unsupported type passed.");
+        }
+      }
+    }
+    return count;
+  };
+  /**
+ @param {(string|Array<*>)} source
+ @param {*} find
+ @param {*} replace
+ @return {(string|Array<*>)}
+ */
+CORE.replace = function(source, find, replace) {
+    if (typeof source === "string") {
+      var pos = 0;
+      var find_length = find.length;
+      var replace_length = replace.length;
+      while ((pos = source.indexOf("" + find, pos)) !== -1) {
+        source = source.substring(0, pos) + replace + source.substring(pos + find_length);
+        pos += replace_length;
+      }
+    } else {
+      if (source.length) {
+        var length = source.length;
+        for (var i = 0; i < source.length; i++) {
+          if (source[i] === find) {
+            source[i] = replace;
+          }
+        }
+      } else {
+        if (DEBUG) {
+          throw new Error("'CORE.replace' unsupported type passed.");
+        }
+      }
+    }
+    return source;
+  };
+  /**
+ @param {Function} fn
+ @return {Array<string>}
+ */
+var parse_fn = function parse_fn(fn) {
+    if (DEBUG) {
+      GRAPH.register("CORE.parse_fn");
+    }
+    var fn_string = fn.toString();
+    var fn_parameter = fn_string.substring(fn_string.indexOf("(") + 1, fn_string.indexOf(")"));
+    if (fn_parameter.indexOf(",") !== -1) {
+      fn_parameter = fn_parameter.substring(0, fn_parameter.indexOf(","));
+    }
+    var fn_content = fn_string.substring(fn_string.indexOf("{") + 1, fn_string.length - 1);
+    var fn_pre = fn_content.substring(0, fn_content.indexOf("return "));
+    var fn_return = fn_content.substring(fn_content.indexOf("return ") + 7, fn_content.length).replace(";", "");
+    return [fn_parameter, fn_pre, fn_return];
+  };
+  /**
  @param {Function} fn
  @return {Function}
  */
@@ -1269,8 +2342,9 @@ CORE.registerEach = function registerEach(fn) {
       GRAPH.register("CORE.registerEach");
     }
     var parsed_fn = parse_fn(fn);
-    var fn_content = "var length = this.length;" + "for(var i = 0; i < length; i++){" + "var " + parsed_fn[0][0] + " = this[i];" + parsed_fn[1] + "}";
-    return parsed_fn[0].length > 1 ? Function(parsed_fn[0][1], fn_content) : Function(fn_content);
+    var parameter = parsed_fn[0];
+    var fn_content = "(function(){" + "var $length = this.length, " + parameter + ";" + "for(var $i = 0; $i < $length; $i++){" + parameter + " = this[$i];" + parsed_fn[2] + "}" + "return this;" + "}).call(" + parameter + ");";
+    return Function(parameter, fn_content);
   };
   /**
  @param {Function} fn
@@ -1281,8 +2355,9 @@ CORE.registerMap = function registerMap(fn) {
       GRAPH.register("CORE.registerMap");
     }
     var parsed_fn = parse_fn(fn);
-    var fn_content = "var length = this.length, copy = new Array(length);" + "for(var i = 0; i < length; i++){" + "var " + parsed_fn[0][0] + " = this[i];" + parsed_fn[1] + "copy[i] = " + parsed_fn[2] + ";" + "}" + "return copy;";
-    return parsed_fn[0].length > 1 ? Function(parsed_fn[0][1], fn_content) : Function(fn_content);
+    var parameter = parsed_fn[0];
+    var fn_content = "return (function(){" + "var $length = this.length, $copy = new Array($length), " + parameter + ";" + "for(var $i = 0; $i < $length; $i++){" + parameter + " = this[$i];" + parsed_fn[1] + "$copy[$i] = " + parsed_fn[2] + ";" + "}" + "return $copy;" + "}).call(" + parameter + ");";
+    return Function(parameter, fn_content);
   };
   /**
  @param {Function} fn
@@ -1293,10 +2368,16 @@ CORE.registerFilter = function registerFilter(fn) {
       GRAPH.register("CORE.registerFilter");
     }
     var parsed_fn = parse_fn(fn);
-    var fn_content = "var length = this.length, copy = [], count = 0;" + "for(var i = 0; i < length; i++){" + "var " + parsed_fn[0][0] + " = this[i];" + parsed_fn[1] + "if(" + parsed_fn[2] + ") copy[count++] = this[i];" + "}" + "return copy;";
-    return parsed_fn[0].length > 1 ? Function(parsed_fn[0][1], fn_content) : Function(fn_content);
+    var parameter = parsed_fn[0];
+    var fn_content = "return (function(){" + "var $length = this.length, $copy = [], $count = 0, " + parameter + ";" + "for(var $i = 0; $i < $length; $i++){" + parameter + " = this[$i];" + parsed_fn[1] + "if(" + parsed_fn[2] + ") $copy[$count++] = " + parameter + ";" + "}" + "return $copy;" + "}).call(" + parameter + ");";
+    return Function(parameter, fn_content);
   };
-  CORE.contains = function(array, item) {
+  /**
+ @param {Array} array
+ @param {*} item
+ @return {boolean}
+ */
+CORE.contains = function(array, item) {
     if (DEBUG) {
       GRAPH.register("CORE.contains");
     }
@@ -1307,6 +2388,20 @@ CORE.registerFilter = function registerFilter(fn) {
       }
     }
     return false;
+  };
+  /**
+ @param {!Array} array
+ @param {*} content
+ @param {number=} start
+ @param {number=} count
+ @return {!Array}
+ */
+CORE.fill = function(array, content, start, count) {
+    var length = count >= 0 ? Math.min(start + count, array.length) : array.length;
+    for (var i = start || 0; i < length; i++) {
+      array[i] = content;
+    }
+    return array;
   };
   /**
  @const
@@ -1330,6 +2425,18 @@ CORE.getKeys = function(data) {
       return tmp;
     }
     return [];
+  };
+  CORE.assign = function(target, source) {
+    if (!source || typeof source !== "object") {
+      return target;
+    }
+    var props = Object.keys(source);
+    var prop;
+    var length = props.length;
+    for (var i = 0; i < length; i++) {
+      prop = props[i];
+      target[prop] = source[prop];
+    }
   };
   /**
  @param {!string} src
@@ -1403,7 +2510,9 @@ max:function max(a, b) {
     } else {
       return /** @type {number} */ (a < b ? b : a);
     }
-  }, rad:window.Math.PI / 180, cos:window.Math.cos, sin:window.Math.sin, rnd:window.Math.random, abs:function abs(a) {
+  }, rad:window.Math.PI / 180, cos:window.Math.cos, sin:window.Math.sin, round:function(number) {
+    return number >= 0 ? number + 0.5 | 0 : number - 0.5 | 0;
+  }, rand:window.Math.random, abs:function abs(a) {
     if (DEBUG) {
       GRAPH.register("CORE.Math.abs");
     }
@@ -1411,11 +2520,25 @@ max:function max(a, b) {
   }};
   /** @const @struct */ CORE.Browser = {/** @type {boolean} */ isOpera:!!window["opera"] || navigator.userAgent.indexOf(" OPR/") >= 0, /** @type {boolean} */ isFirefox:typeof window["InstallTrigger"] !== "undefined", /** @type {boolean} */ isSafari:Object.prototype.toString.call(window["HTMLElement"]).indexOf("Constructor") > 0, /** @type {boolean} */ isMSIE:false || !!document["documentMode"]};
   /** @type {boolean} */ CORE.Browser.isChrome = !!window["chrome"] && !CORE.Browser.isOpera;
-  /** @const @struct */ CORE.System = {/** @type {boolean} */ isIphone:!!navigator.userAgent.match(/iPhone/i), /** @type {boolean} */ isIpod:!!navigator.userAgent.match(/iPod/i), /** @type {boolean} */ isIpad:!!navigator.userAgent.match(/iPad/i), /** @type {boolean} */ isAndroid:!!navigator.userAgent.match(/Android/i)};
+  /** @type {function(string):boolean} */ CORE.Browser.is = fn_is;
+  /** @const @struct */ CORE.System = {/** @type {boolean} */ isIphone:!!navigator.userAgent.match(/iPhone/i), /** @type {boolean} */ isIpod:!!navigator.userAgent.match(/iPod/i), /** @type {boolean} */ isIpad:!!navigator.userAgent.match(/iPad/i), /** @type {boolean} */ isAndroid:!!navigator.userAgent.match(/Android/i), /** @type {boolean} */ isCordova:!!window["cordova"]};
   /** @type {boolean} */ CORE.System.isIOS = CORE.System.isIphone || CORE.System.isIpod || CORE.System.isIpad;
   /** @type {boolean} */ CORE.System.isMobile = CORE.System.isIOS || CORE.System.isAndroid;
+  /** @type {function(string):boolean} */ CORE.System.is = fn_is;
+  /**
+ @param {!string} type
+ @return {boolean}
+ */
+function fn_is(type) {
+    var fn_name = "is" + type[0].toUpperCase() + type.substring(1);
+    if (DEBUG) {
+      if (typeof this[fn_name] === "undefined") {
+        CORE.console.warn("WARNING: The passed type '" + type + "' is not defined!");
+      }
+    }
+    return this[fn_name];
+  }
 })();
-
 
 
 
@@ -1435,8 +2558,8 @@ compress:function(val) {
  */
 decompress:function(val) {
   return val;
-}}, MAPPER:{}, LAYOUT:{}, VIEWPORT:{}, WORKER:{}, DEVICE:{}, LANG:{}, CONFIG:{LANG:"en", PROC:0, GZIP:false, PASSIVE_EVENTS:false, EVENT_OPTIONS:false, SHOW_DEBUG:false, SHOW_GRAPH:false, SHOW_STATS:false, LAYOUT:[]}, VARS:{CURRENT_USER:{}, HEADER:{}, AUTH:null, ZOOM:1, WIDTH:0, HEIGHT:0, DPR:Math.max(1, Math.min(3, Math.round(window["devicePixelRatio"] || 1)))}, SETTINGS:/** @type {_storage_struct} */ ({}), CACHE:{}, CRC32:{}, PLUGIN:{}, INTERFACE:{}, ADAPTER:{}, SERVICE:{}, REQUIRE:{}, CHANGELOG:{},
-MIGRATE:{}, INIT:function() {
+}}, MAPPER:{}, LAYOUT:{}, VIEWPORT:{}, WORKER:{}, DEVICE:{}, LANG:{}, CONFIG:{LANG:"en", PROC:0, GZIP:false, PASSIVE_EVENTS:false, EVENT_OPTIONS:false, SHOW_DEBUG:false, SHOW_GRAPH:false, SHOW_STATS:false, LAYOUT:[]}, VARS:{CURRENT_USER:{}, HEADER:{}, AUTH:null, ZOOM:1, WIDTH:0, HEIGHT:0, DPR:Math.max(1, Math.min(3, Math.round(window["devicePixelRatio"] || 1))), USED_STORAGE:0, MAX_STORAGE:0}, STATS:{}, SETTINGS:/** @type {_storage_struct} */ ({}), CACHE:{}, CRC32:{}, PLUGIN:{}, INTERFACE:{}, ADAPTER:{}, 
+SERVICE:{}, REQUIRE:{}, VALIDATE:{}, CHANGELOG:{}, MIGRATE:{}, INIT:function() {
 }, SETUP:function() {
   APP.MAIN();
 }, MAIN:function() {
@@ -1460,17 +2583,17 @@ MIGRATE:{}, INIT:function() {
 
 
 if (DEBUG) {
-  var DEBUG = function() {
+  var DEBUGGER = function() {
     (function initDebugMode() {
       var performance = window["performance"] || {};
       performance = performance["memory"] || (performance["memory"] = {});
-      APP.STATS = {heap_limit:performance["jsHeapSizeLimit"] || 0, heap_total:performance["totalJSHeapSize"] || 0, heap_used:performance["usedJSHeapSize"] || 0, count_draw:0, count_dom:0, count_paint:0, count_css:0, count_class:0, count_html:0, count_render:0, count_request:0, count_event:0, count_bubble:0, count_error:0, count_dom_cache:0, count_css_cache:0, count_class_cache:0, count_html_cache:0, count_render_cache:0, count_mapper_cache:0, count_event_cache:0, count_bubble_cache:0, count_mapper:0,
+      APP.STATS = {heap_limit:performance["jsHeapSizeLimit"] || 0, heap_total:performance["totalJSHeapSize"] || 0, heap_used:performance["usedJSHeapSize"] || 0, count_draw:0, count_dom:0, count_paint:0, count_css:0, count_class:0, count_html:0, count_render:0, count_request:0, count_event:0, count_bubble:0, count_error:0, count_dom_cache:0, count_css_cache:0, count_class_cache:0, count_html_cache:0, count_render_cache:0, count_mapper_cache:0, count_event_cache:0, count_bubble_cache:0, count_mapper:0, 
       time_calc:0, time_render:0, time_draw:0, time_request:0, time_event:0};
-      CORE.buildPattern(/** @type {Array<_pattern_struct>} */ ([{tag:"div", attr:{"id":"debug-log"}}, {tag:"div", attr:{"id":"debug-graph"}, child:[{tag:"div", attr:{"id":"debug-graph-count"}}, {tag:"div", attr:{"id":"debug-graph-trace"}}]}, {tag:"div", attr:{"id":"debug-stats"}, child:[{tag:"span", text:"FPS: "}, {tag:"span", attr:{"id":"debug-fps"}}, {tag:"br"}, {tag:"br"}, {tag:"span", text:"Models Stored: "}, {tag:"span", attr:{"id":"debug-models-stored"}}, {tag:"br"}, {tag:"span", text:"Models Cached: "},
-      {tag:"span", attr:{"id":"debug-models-cached"}}, {tag:"br"}, {tag:"br"}, {tag:"span", text:"Count DOM: "}, {tag:"span", attr:{"id":"debug-count-dom"}}, {tag:"br"}, {tag:"span", text:"Count Paint: "}, {tag:"span", attr:{"id":"debug-count-paint"}}, {tag:"br"}, {tag:"span", text:"Count CSS: "}, {tag:"span", attr:{"id":"debug-count-css"}}, {tag:"br"}, {tag:"span", text:"Count Class: "}, {tag:"span", attr:{"id":"debug-count-class"}}, {tag:"br"}, {tag:"span", text:"Count HTML: "}, {tag:"span", attr:{"id":"debug-count-html"}},
-      {tag:"br"}, {tag:"span", text:"Count Render: "}, {tag:"span", attr:{"id":"debug-count-render"}}, {tag:"br"}, {tag:"span", text:"Count Mapper: "}, {tag:"span", attr:{"id":"debug-count-mapper"}}, {tag:"br"}, {tag:"span", text:"Count Events: "}, {tag:"span", attr:{"id":"debug-count-event"}}, {tag:"br"}, {tag:"span", text:"Count Bubble: "}, {tag:"span", attr:{"id":"debug-count-bubble"}}, {tag:"br"}, {tag:"span", text:"Count Error: "}, {tag:"span", attr:{"id":"debug-count-error"}}, {tag:"br"}, {tag:"br"},
-      {tag:"span", text:"Time Calc: "}, {tag:"span", attr:{"id":"debug-time-calc"}}, {tag:"br"}, {tag:"span", text:"Time Render: "}, {tag:"span", attr:{"id":"debug-time-render"}}, {tag:"br"}, {tag:"span", text:"Time Draw: "}, {tag:"span", attr:{"id":"debug-time-draw"}}, {tag:"br"}, {tag:"span", text:"Time Event: "}, {tag:"span", attr:{"id":"debug-time-event"}}, {tag:"br"}, {tag:"span", text:"Time Server: "}, {tag:"span", attr:{"id":"debug-time-request"}}, {tag:"br"}, {tag:"br"}, {tag:"span", text:"Paint Stack: "},
-      {tag:"span", attr:{"id":"debug-paint-stack"}}, {tag:"br"}, {tag:"span", text:"CSS Stack: "}, {tag:"span", attr:{"id":"debug-css-stack"}}, {tag:"br"}, {tag:"span", text:"Class Stack: "}, {tag:"span", attr:{"id":"debug-class-stack"}}, {tag:"br"}, {tag:"span", text:"HTML Stack: "}, {tag:"span", attr:{"id":"debug-html-stack"}}, {tag:"br"}, {tag:"span", text:"Async Stack: "}, {tag:"span", attr:{"id":"debug-async-stack"}}, {tag:"br"}, {tag:"br"}, {tag:"span", text:"Heap Limit: "}, {tag:"span", attr:{"id":"debug-heap-limit"}},
+      CORE.buildPattern(/** @type {Array<_pattern_struct>} */ ([{tag:"div", attr:{"id":"debug-log"}}, {tag:"div", attr:{"id":"debug-graph"}, child:[{tag:"div", attr:{"id":"debug-graph-count"}}, {tag:"div", attr:{"id":"debug-graph-trace"}}]}, {tag:"div", attr:{"id":"debug-stats"}, child:[{tag:"span", text:"FPS: "}, {tag:"span", attr:{"id":"debug-fps"}}, {tag:"br"}, {tag:"br"}, {tag:"span", text:"Models Stored: "}, {tag:"span", attr:{"id":"debug-models-stored"}}, {tag:"br"}, {tag:"span", text:"Models Cached: "}, 
+      {tag:"span", attr:{"id":"debug-models-cached"}}, {tag:"br"}, {tag:"br"}, {tag:"span", text:"Count DOM: "}, {tag:"span", attr:{"id":"debug-count-dom"}}, {tag:"br"}, {tag:"span", text:"Count Paint: "}, {tag:"span", attr:{"id":"debug-count-paint"}}, {tag:"br"}, {tag:"span", text:"Count CSS: "}, {tag:"span", attr:{"id":"debug-count-css"}}, {tag:"br"}, {tag:"span", text:"Count Class: "}, {tag:"span", attr:{"id":"debug-count-class"}}, {tag:"br"}, {tag:"span", text:"Count HTML: "}, {tag:"span", attr:{"id":"debug-count-html"}}, 
+      {tag:"br"}, {tag:"span", text:"Count Render: "}, {tag:"span", attr:{"id":"debug-count-render"}}, {tag:"br"}, {tag:"span", text:"Count Mapper: "}, {tag:"span", attr:{"id":"debug-count-mapper"}}, {tag:"br"}, {tag:"span", text:"Count Events: "}, {tag:"span", attr:{"id":"debug-count-event"}}, {tag:"br"}, {tag:"span", text:"Count Bubble: "}, {tag:"span", attr:{"id":"debug-count-bubble"}}, {tag:"br"}, {tag:"span", text:"Count Error: "}, {tag:"span", attr:{"id":"debug-count-error"}}, {tag:"br"}, {tag:"br"}, 
+      {tag:"span", text:"Time Calc: "}, {tag:"span", attr:{"id":"debug-time-calc"}}, {tag:"br"}, {tag:"span", text:"Time Render: "}, {tag:"span", attr:{"id":"debug-time-render"}}, {tag:"br"}, {tag:"span", text:"Time Draw: "}, {tag:"span", attr:{"id":"debug-time-draw"}}, {tag:"br"}, {tag:"span", text:"Time Event: "}, {tag:"span", attr:{"id":"debug-time-event"}}, {tag:"br"}, {tag:"span", text:"Time Server: "}, {tag:"span", attr:{"id":"debug-time-request"}}, {tag:"br"}, {tag:"br"}, {tag:"span", text:"Paint Stack: "}, 
+      {tag:"span", attr:{"id":"debug-paint-stack"}}, {tag:"br"}, {tag:"span", text:"CSS Stack: "}, {tag:"span", attr:{"id":"debug-css-stack"}}, {tag:"br"}, {tag:"span", text:"Class Stack: "}, {tag:"span", attr:{"id":"debug-class-stack"}}, {tag:"br"}, {tag:"span", text:"HTML Stack: "}, {tag:"span", attr:{"id":"debug-html-stack"}}, {tag:"br"}, {tag:"span", text:"Async Stack: "}, {tag:"span", attr:{"id":"debug-async-stack"}}, {tag:"br"}, {tag:"br"}, {tag:"span", text:"Heap Limit: "}, {tag:"span", attr:{"id":"debug-heap-limit"}}, 
       {tag:"br"}, {tag:"span", text:"Heap Total: "}, {tag:"span", attr:{"id":"debug-heap-total"}}, {tag:"br"}, {tag:"span", text:"Heap Used: "}, {tag:"span", attr:{"id":"debug-heap-used"}}, {tag:"br"}, {tag:"span", text:"Storage: "}, {tag:"span", attr:{"id":"debug-storage"}}]}]), window.document.body);
       /**
  @param {string} errorMsg
@@ -1498,8 +2621,8 @@ window.onerror = function(errorMsg, url, lineNumber) {
         var debug_models_cached = 0;
         for (var model in APP.MODEL) {
           if (APP.MODEL.hasOwnProperty(model)) {
-            debug_models_stored += CORE.getKeys(/** @type {_model_helper} */ (APP.MODEL[model]).data).length;
-            debug_models_cached += CORE.getKeys(/** @type {_model_helper} */ (APP.MODEL[model]).cache).length;
+            debug_models_stored += CORE.getKeys(/** @type {_model_class} */ (APP.MODEL[model]).data).length;
+            debug_models_cached += CORE.getKeys(/** @type {_model_class} */ (APP.MODEL[model]).cache).length;
           }
         }
         CORE.getById("debug-models-stored").textContent = debug_models_stored;
@@ -1721,7 +2844,7 @@ var processPaint = function(time) {
       APP.STATS.class_stack_len = CLASS_STACK.length;
       APP.STATS.html_stack_len = HTML_STACK.length;
       APP.STATS.async_stack_len = CORE.getStackLength();
-      DEBUG.showStatistic(time, last_time);
+      DEBUGGER.showStatistic(time, last_time);
       last_time = time;
     }
     if (!APP.CONFIG.SHOW_STATS && !PAINT_STACK.length && !CSS_STACK.length && !HTML_STACK.length && !CLASS_STACK.length) {
@@ -1740,7 +2863,7 @@ var processPaint = function(time) {
   };
   /**
  @const
- @param {(Node|Element|HTMLDocument|Window|null|string)} node
+ @param {(Node|NodeList|Array<Node>|string|null)} node
  @param {string} class_name
  @param {boolean=} search_and_remove
  @return {boolean}
@@ -1749,7 +2872,12 @@ CORE.hasClass = function hasClass(node, class_name, search_and_remove) {
     if (DEBUG) {
       GRAPH.register("CORE.hasClass");
     }
-    node = CORE.getNode(node);
+    if (typeof node === "string") {
+      node = CORE.query(node);
+    }
+    if (node.length >= 0) {
+      node = node[0];
+    }
     var current_cache_new;
     if (current_cache_new = node["_class_new"]) {
       if (current_cache_new[class_name] !== false && CORE.isType(current_cache_new[class_name])) {
@@ -1770,7 +2898,7 @@ CORE.hasClass = function hasClass(node, class_name, search_and_remove) {
   };
   /**
  @const
- @param {(Array<(Node|Element|HTMLDocument|Window|null|string)>|Node|HTMLCollection|NodeList|Element|HTMLDocument|Window|null|string)} node
+ @param {(Node|NodeList|Array<Node>|string|null)} node
  @param {(Array<string>|string)} class_name
  @param {Function=} callback
  */
@@ -1778,16 +2906,15 @@ CORE.addClass = function addClass(node, class_name, callback) {
     if (DEBUG) {
       GRAPH.register("CORE.addClass");
     }
-    if (CORE.isType(node, "string")) {
-      node = CORE.getNode(/** @type {(Node|Element|HTMLDocument|Window|null|string)} */ (node));
-    } else {
-      if (node.length >= 0) {
-        var i = 0;
-        while (i < node.length) {
-          CORE.addClass(node[i++], class_name, callback && i === node.length - 1 ? callback : void 0);
-        }
-        return;
+    if (typeof node === "string") {
+      node = CORE.query(node);
+    }
+    if (node.length >= 0) {
+      var i = 0;
+      while (i < node.length) {
+        CORE.addClass(node[i++], class_name, callback && i === node.length - 1 ? callback : void 0);
       }
+      return;
     }
     if (CORE.isType(class_name, "string")) {
       class_name = [class_name];
@@ -1831,19 +2958,7 @@ CORE.addClass = function addClass(node, class_name, callback) {
   };
   /**
  @const
- @param {!string} class_name
- @param {(!Node|HTMLElement|Element|HTMLDocument|Window|null|string)} node
- @param {Function=} callback
- */
-CORE.addByClass = function addByClass(class_name, node, callback) {
-    if (DEBUG) {
-      GRAPH.register("CORE.addByClass");
-    }
-    CORE.addClass(CORE.getByClass(class_name, node), class_name, callback);
-  };
-  /**
- @const
- @param {(Array<(Node|Element|HTMLDocument|Window|null|string)>|Node|HTMLCollection|NodeList|HTMLElement|Element|HTMLDocument|Window|null|string)} node
+ @param {(Node|NodeList|Array<Node>|string|null)} node
  @param {(Array<string>|string)} class_name
  @param {Function=} callback
  */
@@ -1851,16 +2966,15 @@ CORE.removeClass = function removeClass(node, class_name, callback) {
     if (DEBUG) {
       GRAPH.register("CORE.removeClass");
     }
-    if (CORE.isType(node, "string")) {
-      node = CORE.getNode(/** @type {(Node|Element|HTMLDocument|Window|null|string)} */ (node));
-    } else {
-      if (node.length >= 0) {
-        var i = 0;
-        while (i < node.length) {
-          CORE.removeClass(node[i++], class_name, callback && i === node.length - 1 ? callback : void 0);
-        }
-        return;
+    if (typeof node === "string") {
+      node = CORE.query(node);
+    }
+    if (node.length >= 0) {
+      var i = 0;
+      while (i < node.length) {
+        CORE.removeClass(node[i++], class_name, callback && i === node.length - 1 ? callback : void 0);
       }
+      return;
     }
     if (CORE.isType(class_name, "string")) {
       class_name = [class_name];
@@ -1904,19 +3018,7 @@ CORE.removeClass = function removeClass(node, class_name, callback) {
   };
   /**
  @const
- @param {!string} class_name
- @param {(!Node|HTMLElement|Element|HTMLDocument|Window|null|string)} node
- @param {Function=} callback
- */
-CORE.removeByClass = function removeByClass(class_name, node, callback) {
-    if (DEBUG) {
-      GRAPH.register("CORE.removeByClass");
-    }
-    CORE.removeClass(CORE.getByClass(class_name, node), class_name, callback);
-  };
-  /**
- @const
- @param {(Array<(Node|Element|HTMLDocument|Window|null|string)>|Node|HTMLCollection|NodeList|HTMLElement|Element|HTMLDocument|Window|null|string)} node
+ @param {(Node|NodeList|Array<Node>|string|null)} node
  @param {string} class_name
  @param {Function=} callback
  @param {boolean=} toggle_state
@@ -1933,17 +3035,16 @@ CORE.toggleClass = function toggleClass(node, class_name, callback, toggle_state
       }
       return;
     } else {
-      if (CORE.isType(node, "string")) {
-        node = CORE.getNode(/** @type {(Node|Element|HTMLDocument|Window|null|string)} */ (node));
-      } else {
-        if (node.length >= 0) {
-          var i = 0;
-          while (i < node.length) {
-            CORE.toggleClass(node[i++], class_name, callback && i === node.length - 1 ? callback : void 0);
-          }
-          return;
-        }
+      if (typeof node === "string") {
+        node = CORE.query(node);
       }
+    }
+    if (node.length >= 0) {
+      var i = 0;
+      while (i < node.length) {
+        CORE.toggleClass(node[i++], class_name, callback && i === node.length - 1 ? callback : void 0);
+      }
+      return;
     }
     var current_cache = node["_class"] || (node["_class"] = {});
     var current_cache_new = node["_class_new"] || (node["_class_new"] = {});
@@ -1988,19 +3089,7 @@ CORE.toggleClass = function toggleClass(node, class_name, callback, toggle_state
   };
   /**
  @const
- @param {!string} class_name
- @param {(!Node|HTMLElement|Element|HTMLDocument|Window|null|string)} node
- @param {Function=} callback
- */
-CORE.toggleByClass = function toggleByClass(class_name, node, callback) {
-    if (DEBUG) {
-      GRAPH.register("CORE.toggleByClass");
-    }
-    CORE.toggleClass(CORE.getByClass(class_name, node), class_name, callback);
-  };
-  /**
- @const
- @param {(Node|Element|HTMLDocument|Window|null|string)} _obj
+ @param {(Node|NodeList|Array<Node>|string|null)} _obj
  @param {string=} style
  @return {(CSSStyleDeclaration|CSSValue|string|undefined)}
  */
@@ -2008,7 +3097,10 @@ CORE.getStyle = function getStyle(_obj, style) {
     if (DEBUG) {
       GRAPH.register("CORE.getStyle");
     }
-    var obj = CORE.getNode(/** @type {(Node|Element|HTMLDocument|Window|null|string)} */ (_obj));
+    var obj = typeof _obj === "string" ? CORE.query(_obj) : _obj;
+    if (obj.length >= 0) {
+      obj = obj[0];
+    }
     if (!obj) {
       if (DEBUG) {
         CORE.console.err("ERROR: Element was not found: " + _obj);
@@ -2049,7 +3141,7 @@ CORE.getStyle = function getStyle(_obj, style) {
   };
   /**
  @const
- @param {(Array<(Node|Element|HTMLDocument|Window|null|string)>|Node|HTMLCollection|NodeList|HTMLElement|Element|HTMLDocument|Window|null|string)} _obj
+ @param {(Node|NodeList|Array<Node>|string|null)} _obj
  @param {(Object<string,(string|number)>|string|number)} css
  @param {(string|number)=} val
  */
@@ -2057,7 +3149,7 @@ CORE.setStyle = function setStyle(_obj, css, val) {
     if (DEBUG) {
       GRAPH.register("CORE.setStyle");
     }
-    var obj = CORE.getNode(/** @type {(Node|Element|HTMLDocument|Window|null|string)} */ (_obj));
+    var obj = typeof _obj === "string" ? CORE.query(_obj) : _obj;
     if (!obj) {
       if (DEBUG) {
         CORE.console.err("ERROR: Element was not found: " + _obj);
@@ -2128,7 +3220,7 @@ CORE.setStyle = function setStyle(_obj, css, val) {
   };
   /**
  @const
- @param {(Node|HTMLElement|Element|HTMLDocument|Window|null|string)} obj
+ @param {(Node|NodeList|Array<Node>|string|null)} obj
  @param {string} css
  @param {Array<(string|number)>} val
  */
@@ -2144,7 +3236,7 @@ CORE.toggleStyle = function(obj, css, val) {
   };
   /**
  @const
- @param {(Node|Element|HTMLDocument|Window|null|string)} obj
+ @param {(Node|NodeList|Array<Node>|string|null)} obj
  @param {(Object<string,(string|number)>|string|number)} style
  @param {(string|number)=} val
  */
@@ -2192,22 +3284,21 @@ CORE.addCssRule = function(selector, rules, value) {
     }
   };
   /**
- @param {(Array<(Node|Element|HTMLDocument|Window|null|string)>|Node|HTMLCollection|NodeList|HTMLElement|Element|HTMLDocument|Window|null|string)} node
+ @param {(Node|HTMLDocument|Window|NodeList|Array<Node>|string|null)} node
  @param {string} val
  */
 CORE.setTextContent = function setTextContent(node, val) {
     if (DEBUG) {
       GRAPH.register("CORE.setTextContent");
     }
-    if (typeof node !== "string") {
-      if (node.length >= 0) {
-        for (var i = 0; i < node.length; i++) {
-          CORE.setTextContent(node[i], val);
-        }
-        return;
+    if (typeof node === "string") {
+      node = CORE.query(node);
+    }
+    if (node.length >= 0) {
+      for (var i = 0; i < node.length; i++) {
+        CORE.setTextContent(node[i], val);
       }
-    } else {
-      node = CORE.getNode(/** @type {(Node|Element|HTMLDocument|Window|null|string)} */ (node));
+      return;
     }
     var tmpObj;
     if ((tmpObj = node.firstChild) && CORE.isType(tmpObj.nodeValue)) {
@@ -2225,7 +3316,7 @@ CORE.setTextContent = function setTextContent(node, val) {
     }
   };
   /**
- @param {(Array<(Node|Element|HTMLDocument|Window|null|string)>|Node|HTMLCollection|NodeList|HTMLElement|Element|HTMLDocument|Window|null|string)} _node
+ @param {(Node|HTMLDocument|Window|NodeList|Array<Node>|string|null)} _node
  @param {string} _html
  @param {(boolean|Function)=} _async
  */
@@ -2237,16 +3328,15 @@ CORE.setHTML = function setHTML(_node, _html, _async) {
     var html = _html;
     var async = _async;
     var has_callback = CORE.isType(async, "function");
-    if (CORE.isType(node, "string")) {
-      node = CORE.getNode(/** @type {(Node|Element|HTMLDocument|Window|null|string)} */ (node));
-    } else {
-      var length = node.length;
-      if (length >= 0) {
-        for (var i = 0; i < length; i++) {
-          CORE.setHTML(node[i], html, has_callback ? i === length - 1 ? async : true : async);
-        }
-        return;
+    if (typeof node === "string") {
+      node = CORE.query(node);
+    }
+    var length = node.length;
+    if (length >= 0) {
+      for (var i = 0; i < length; i++) {
+        CORE.setHTML(node[i], html, has_callback ? i === length - 1 ? async : true : async);
       }
+      return;
     }
     var html_new = node["_html_new"];
     if (node["_html"] !== html) {
@@ -2294,13 +3384,18 @@ CORE.setHTML = function setHTML(_node, _html, _async) {
     }
   };
   /**
- @param {(Node|Element|HTMLDocument|Window|null|string)} node
+ @param {(Node|HTMLDocument|Window|NodeList|Array<Node>|string|null)} node
  */
 CORE.getHTML = function setHTML(node) {
     if (DEBUG) {
       GRAPH.register("CORE.getHTML");
     }
-    node = CORE.getNode(node);
+    if (typeof node === "string") {
+      node = CORE.query(node);
+    }
+    if (node.length >= 0) {
+      node = node[0];
+    }
     var html;
     return (html = node["_html_new"]) !== false && CORE.isType(html) ? html : CORE.isType(html = node["_html"]) ? html : node["_html"] = node.innerHTML;
   };
@@ -2332,31 +3427,49 @@ CORE.paint = function paint(fn, delay) {
     }
   };
   /**
- @param {number} id
+ @param {(number|null)} id
  @return {(number|null)}
  */
 CORE.clear = function clear(id) {
     if (DEBUG) {
       GRAPH.register("CORE.clear");
     }
-    window.clearTimeout(id);
-    clearFrame.call(window, id);
+    if (id) {
+      window.clearTimeout(id);
+      clearFrame.call(window, id);
+    }
     return null;
   };
-  CORE.animate = function(obj, params) {
+  /**
+ @param {(Array<(Node|null)>|Node|NodeList|string|null)} obj
+ @param {(string|Object)} params
+ @param {(string|number)=} arg3
+ @param {(number|string|Function)=} arg4
+ @param {(string|Function)=} arg5
+ @param {Function=} arg6
+ @param {Function=} arg7
+ */
+CORE.transition = function(obj, params, arg3, arg4, arg5, arg6, arg7) {
     if (DEBUG) {
-      GRAPH.register("CORE.animate");
+      GRAPH.register("CORE.transition");
     }
     if (params.delay) {
       (function(obj, params) {
         return CORE.async(function() {
           params.delay = 0;
-          CORE.animate(obj, params);
+          CORE.transition(obj, params);
         }, params.delay);
       })(obj, params);
     }
     if (typeof obj === "string") {
-      obj = CORE.getNode(obj);
+      obj = CORE.query(obj);
+    }
+    var length = obj.length;
+    if (length) {
+      for (var i = 0; i < length; i++) {
+        CORE.transition(obj[i], params);
+      }
+      return;
     }
     if (params.from) {
       CORE.setStyle(obj, params.style, params.from);
@@ -2383,7 +3496,7 @@ CORE.clear = function clear(id) {
     }
   };
   /**
- @param {(Node|Element|HTMLDocument|Window|null|string)} node
+ @param {(Node|HTMLDocument|Window|NodeList|Array<Node>|string|null)} node
  @param {(number|null)=} from
  @param {number=} to
  @param {number=} duration
@@ -2393,7 +3506,12 @@ CORE.scrollTo = function scrollTo(node, from, to, duration, start) {
     if (DEBUG) {
       GRAPH.register("CORE.scrollTo");
     }
-    /** @type {(Node|Element|HTMLDocument|Window|null|string)} */ (node = CORE.getNode(node));
+    if (typeof node === "string") {
+      node = CORE.query(node);
+    }
+    if (node.length >= 0) {
+      node = node[0];
+    }
     from || (from = node.scrollTop);
     to || (to = 0);
     duration || (duration = CORE.Math.abs(to - from) < 5000 ? 400 : 0);
@@ -2420,6 +3538,640 @@ CORE.scrollTo = function scrollTo(node, from, to, duration, start) {
   CORE.scrollToTop = function scrollToTop(node) {
     CORE.scrollTo(node);
   };
+})();
+
+
+
+
+
+(function() {
+  /**
+ @implements {FAT_CLASS}
+ @this {FAT}
+ */
+var FAT = {EXEC:0, RES:Math.max(screen.width, screen.height), raf:window.requestAnimationFrame ? true : false, force3D:false, isRender:false};
+  var FAT_EASE = {/** @type {function(number,number,number,number):number} */ "easeLinear":function(t, b, c, d) {
+    return c * (t / d) + b;
+  }, /** @type {function(number,number,number,number):number} */ "easeOutQuad":function(t, b, c, d) {
+    return -c * (t /= d) * (t - 2) + b;
+  }};
+  /** @const */ var FAT_EASING = function() {
+    /**
+ @const
+ @constructor
+ @param {number} RES
+ */
+function FAT_EASING(RES) {
+      this.RES = RES;
+      /**
+ @lends {EASE}
+ @const
+ @param {string} ease
+ @return {(Array<number>|Int16Array<number>)}
+ */
+this.easePrefetch = function(ease) {
+        /** @const @type {number} */ var RES = this.RES;
+        /** @const @type {(Array<number>|Int16Array<number>)} */ var arr = typeof Int16Array === "undefined" ? new Array(RES) : new Int16Array(RES);
+        /** @lends {EASE.easings} */ var fn_ease = FAT_EASE[ease] || FAT_EASE["easeOutQuad"];
+        var i = 0;
+        while (i < RES) {
+          arr[i] = fn_ease(i, 0, 100, RES) * 10 | 0;
+          i++;
+        }
+        return arr;
+      };
+      /**
+ @lends {EASE}
+ @const
+ @param {string} ease
+ @return {Array<number>}
+ */
+this.init = function(ease) {
+        return this[ease] || (this[ease] = this.easePrefetch(ease));
+      };
+    }
+    return new FAT_EASING(Math.max(screen.width, screen.height));
+  }();
+  function FAT_addEase(key, fn) {
+    return FAT_EASE[key] = fn;
+  }
+  /**
+ @constructor
+ @implements {_fatjob_interface}
+ @this {FATJOB}
+ */
+function FATJOB(obj, style, css, from, to, metric, duration, easeStr, ease, RES, callback, step) {
+    var _this = this;
+    _this.obj = obj;
+    _this.style = style;
+    _this.css = css;
+    _this.from = from;
+    _this.to = to;
+    _this.VAL = from;
+    _this.metric = metric;
+    _this.metric_type = metric.length === 0 ? 0 : metric === "%" ? 1 : 2;
+    _this.duration = duration;
+    _this.easeStr = easeStr;
+    _this.ease = ease;
+    _this.start = 0;
+    _this.callback = callback;
+    _this.step = step;
+    _this.checkkey = "anim_" + style;
+    _this.DIFF = (to - from) / 100;
+    _this.RES = RES / duration;
+    _this.dir = true;
+    _this.pause = false;
+  }
+  FATJOB.prototype.animate = /**
+ @this {_fatjob_interface}
+ @param {number} time
+ @return {boolean}
+ @override
+ */
+function(time) {
+    /** @const @type {_fatjob_interface} */ var _this = this;
+    var duration = _this.duration;
+    var style = _this.style;
+    var metric_type = _this.metric_type;
+    var stamp = Math.max(time - (_this.start || (_this.start = time)), 0);
+    if (stamp < duration) {
+      if (_this.color) {
+        var curValR = _this.DIFF_r * _this.ease[_this.RES * stamp + 0.5 | 0] + _this.old_r | 0;
+        var curValG = _this.DIFF_g * _this.ease[_this.RES * stamp + 0.5 | 0] + _this.old_g | 0;
+        var curValB = _this.DIFF_b * _this.ease[_this.RES * stamp + 0.5 | 0] + _this.old_b | 0;
+      } else {
+        var curVal = _this.DIFF * _this.ease[_this.RES * stamp | 0] / 10 + _this.from;
+        curVal = metric_type === 0 ? (curVal * 100 + 0.5 | 0) / 100 : metric_type === 1 ? (curVal * 10 + 0.5 | 0) / 10 : curVal + 0.5 | 0;
+        if (_this.VAL !== curVal) {
+          if (style === "scrollTop") {
+            _this.obj.scrollTop = _this.VAL = curVal;
+          } else {
+            _this.css[style] = (_this.VAL = curVal) + _this.metric;
+          }
+        }
+      }
+      if (_this.step) {
+        _this.step(curVal);
+      }
+    } else {
+      if (_this.step) {
+        _this.step(_this.to);
+      }
+      if (_this.callback) {
+        var loop_check = _this.start;
+        var value_check = _this.VAL;
+        _this.callback.call(_this.obj);
+        if (_this.start !== loop_check) {
+          return false;
+        } else {
+          if (_this.VAL !== value_check) {
+            _this.obj[_this.checkkey] = "";
+            return true;
+          }
+        }
+      }
+      if (_this.color) {
+      } else {
+        if (_this.VAL !== _this.to) {
+          if (style === "scrollTop") {
+            _this.obj.scrollTop = _this.to;
+          } else {
+            _this.css[style] = _this.to + _this.metric;
+          }
+        }
+      }
+      _this.obj[_this.checkkey] = "";
+      return true;
+    }
+    return false;
+  };
+  /**
+ @this {_fatjob_interface}
+ @override
+ */
+FATJOB.prototype.colorHandler = function(tmp, to) {
+    var isColor = false;
+    var _this = this;
+    if (tmp.charCodeAt(0) === 35) {
+      var old_r, old_g, old_b;
+      isColor = true;
+      if (tmp.length === 4) {
+        old_r = tmp.charAt(1);
+        old_g = tmp.charAt(2);
+        old_b = tmp.charAt(3);
+        old_r = ("0x" + old_r | 0) * 17;
+        old_g = ("0x" + old_g | 0) * 17;
+        old_b = ("0x" + old_b | 0) * 17;
+      } else {
+        old_r = "0x" + tmp.substring(1, 3) | 0;
+        old_g = "0x" + tmp.substring(3, 5) | 0;
+        old_b = "0x" + tmp.substring(5, 7) | 0;
+        console.log(tmp);
+      }
+    } else {
+      if (CORE.count(tmp, "rgb")) {
+        var old_r, old_g, old_b;
+        var rgba = tmp.split("(")[1].split(")")[0].split(",");
+        isColor = true;
+        old_r = rgba[0] | 0;
+        old_g = rgba[1] | 0;
+        old_b = rgba[2] | 0;
+      }
+    }
+    if (isColor) {
+      if (to.charCodeAt(0) === 35) {
+        var color_r, color_g, color_b;
+        if (to.length === 4) {
+          color_r = to.charAt(1);
+          color_g = to.charAt(2);
+          color_b = to.charAt(3);
+          color_r = ("0x" + color_r | 0) * 17;
+          color_g = ("0x" + color_g | 0) * 17;
+          color_b = ("0x" + color_b | 0) * 17;
+        } else {
+          color_r = "0x" + to.substring(1, 3) | 0;
+          color_g = "0x" + to.substring(3, 5) | 0;
+          color_b = "0x" + to.substring(5, 7) | 0;
+        }
+      } else {
+        if (CORE.count(to, "rgb")) {
+          var color_r, color_g, color_b;
+          rgba = to.split("(")[1].split(")")[0].split(",");
+          color_r = rgba[0];
+          color_g = rgba[1];
+          color_b = rgba[2];
+        }
+      }
+      _this.color_r = color_r;
+      _this.color_g = color_g;
+      _this.color_b = color_b;
+      _this.old_r = _this.VAL_r = old_r;
+      _this.old_g = _this.VAL_g = old_g;
+      _this.old_b = _this.VAL_b = old_b;
+      _this.DIFF_r = (color_r - old_r) / 100;
+      _this.DIFF_g = (color_g - old_g) / 100;
+      _this.DIFF_b = (color_b - old_b) / 100;
+      _this.color = true;
+      /**
+ @lends {FATJOB.prototype}
+ @const
+ @param {Array<string>} arr
+ @return {Array<string>}
+ */
+_this.constructor.prototype.hexArr = _this.constructor.prototype.hexArr || function(arr) {
+        var i = 0;
+        while (i < 256) {
+          var str = i.toString(16).toUpperCase();
+          if (str.length === 1) {
+            str = "0" + str;
+          }
+          arr[i] = str;
+          i++;
+        }
+        return arr;
+      }({});
+    }
+  };
+  var FAT_ANISTACK = [];
+  var FAT_PAINTSTACK = [];
+  var FAT_TIMERSTACK = [];
+  var FAT_TIMERINDEX = {};
+  /**
+ @return {Array<CSSJOB_CLASS>}
+ */
+var FAT_CSSSTACK = [];
+  /**
+ @return {Array<FAT_CANVAS_CLASS>}
+ */
+var FAT_CANVASSTACK = [];
+  /**
+ @constructor
+ @implements {CSSJOB_CLASS}
+ */
+function CSSJOB(css, style, val) {
+    var _this = this;
+    _this.css = css;
+    _this.style = style;
+    _this.val = val;
+  }
+  CSSJOB.prototype.set = function() {
+    var _this = this;
+    _this.css[_this.style] = _this.val;
+  };
+  function FAT_LOOPER(time) {
+    var len = FAT_ANISTACK.length;
+    if (len) {
+      var i = 0;
+      while (i < len) {
+        if (FAT_ANISTACK[i].animate(time)) {
+          FAT_ANISTACK[i] = void 0;
+          len--;
+          FAT_ANISTACK.splice(i, 1);
+        } else {
+          i++;
+        }
+      }
+    }
+  }
+  function FAT_renderFrames(_time) {
+    FAT.EXEC = CORE.paint(FAT_renderFrames);
+    FAT.isRender = true;
+    _time || (_time = CORE.time["now"]());
+    var len;
+    if (len = FAT_CSSSTACK.length) {
+      var i = 0, css_job;
+      while (i < len) {
+        FAT_CSSSTACK[i++].set();
+      }
+      while (i > 0) {
+        FAT_CSSSTACK[--i] = void 0;
+      }
+      FAT_CSSSTACK.length = 0;
+    }
+    if (len = FAT_PAINTSTACK.length) {
+      while (len--) {
+        var tmpObj = FAT_PAINTSTACK.shift();
+        if (typeof tmpObj === "function") {
+          tmpObj(_time);
+        }
+      }
+    }
+    if (FAT_ANISTACK.length) {
+      FAT_LOOPER(_time);
+      if (len = FAT_CANVASSTACK.length) {
+        for (var i = 0; i < len; i++) {
+          /** @type {Array<FAT_CANVAS_CLASS>} */ (FAT_CANVASSTACK)[i]["render"](_time);
+        }
+      }
+    }
+    if (FAT_ANISTACK.length === 0 && FAT_CSSSTACK.length === 0 && FAT_PAINTSTACK.length === 0) {
+      FAT.EXEC = CORE.clear(FAT.EXEC);
+    }
+    FAT.isRender = false;
+  }
+  /**
+ @param {*} val
+ @return {boolean}
+ */
+var isStr = function(val) {
+    return CORE.isType(val, "string");
+  };
+  /**
+ @const
+ @param {(Array<(Node|null)>|Node|NodeList|null|string)} selector
+ @param {(string|Object)} style
+ @param {(string|number)} val
+ @param {boolean=} force
+ @return {?}
+ */
+function FAT_CSS(selector, style, val, force) {
+    /** @type {(Array<(Node|null)>|Node|NodeList|null|string)} */ var obj = typeof selector === "string" ? CORE.query(selector) : selector;
+    if (force || typeof style === "undefined" || typeof val === "undefined" && isStr(style)) {
+      return CORE.css(obj, style, val);
+    } else {
+      if (FAT.isRender) {
+        CORE.css(obj, style, val);
+      } else {
+        if (isStr(style)) {
+          FAT_CSSSTACK[FAT_CSSSTACK.length] = /** @type {CSSJOB_CLASS} */ (new CSSJOB(style === "scrollTop" ? obj : obj.style, style, val));
+        } else {
+          var keys = Object.keys(/** @type {!Object} */ (style));
+          var css = obj.style;
+          for (i = 0; i < keys.length; i++) {
+            var tmp_1 = (keys[i] === "scrollTop" ? obj : css)[keys[i]];
+            var tmp_2 = style[keys[i]];
+            if (tmp_1 !== tmp_2) {
+              FAT_CSSSTACK[FAT_CSSSTACK.length] = /** @type {CSSJOB_CLASS} */ (new CSSJOB(keys[i] === "scrollTop" ? obj : css, keys[i], tmp_2));
+            }
+          }
+        }
+        if (!FAT.EXEC) {
+          FAT.EXEC = CORE.paint(FAT_renderFrames);
+        }
+      }
+      obj.fat_css || (obj.fat_css = {});
+      var str_anim_style;
+      if (isStr(style)) {
+        str_anim_style = "anim_" + style;
+        if (obj[str_anim_style]) {
+          obj[str_anim_style].VAL = parseFloat(val);
+        }
+      } else {
+        var keys = Object.keys(/** @type {!Object} */ (style));
+        for (var i = 0; i < keys.length; i++) {
+          var key = keys[i];
+          str_anim_style = "anim_" + key;
+          if (obj[str_anim_style]) {
+            obj[str_anim_style].VAL = parseFloat(style[key]);
+          }
+        }
+      }
+    }
+  }
+  /**
+ @param {(Array<Node>|Node|NodeList|null)} obj
+ @param {string} style
+ @param {(string|number)} to
+ @param {(number|string|Function)=} duration
+ @param {(string|Function)=} easeStr
+ @param {Function=} callback
+ @param {Function=} step
+ @return {?}
+ */
+function FAT_handleJob(obj, style, to, duration, easeStr, callback, step) {
+    /** @const @type {number} */ var RES = FAT.RES;
+    /** @const @type {string} */ var checkkey = "anim_" + style;
+    /** @type {_fatjob_interface} */ var cur_job = obj[checkkey];
+    if (cur_job) {
+      var fat_css = obj.fat_css;
+      if (fat_css && typeof fat_css[style] !== "undefined") {
+        cur_job.VAL = parseFloat(fat_css[style]);
+        fat_css[style] = "";
+      }
+      cur_job.from = from = cur_job.VAL;
+      cur_job.to = to = isStr(to) ? parseFloat(to) : to;
+      cur_job.duration = duration || (duration = 400);
+      cur_job.start = 0;
+      if (cur_job.easeStr !== easeStr) {
+        cur_job.easeStr = easeStr;
+        cur_job.ease = FAT_EASING.init(easeStr);
+      }
+      cur_job.DIFF = (to - from) / 100;
+      cur_job.RES = RES / duration;
+      cur_job.callback = callback || false;
+      cur_job.step = step || false;
+    } else {
+      var /** @type {CSSStyleDeclaration} */ css = obj.style || /** @type {CSSStyleDeclaration} */ ({left:0, top:0, width:0, height:0}), /** @type {string} */ tmp, /** @type {number} */ len, /** @type {number} */ num, /** @type {number} */ from, /** @type {string} */ metric;
+      var fat_css = obj.fat_css;
+      if (fat_css && typeof fat_css[style] !== "undefined") {
+        tmp = "" + fat_css[style];
+        fat_css[style] = "";
+      } else {
+        tmp = "" + CORE.getStyle(obj, style);
+      }
+      if (tmp === "auto") {
+        tmp = "0";
+      }
+      from = isStr(tmp) ? parseFloat(tmp) : tmp;
+      metric = tmp.substring(("" + from).length);
+      tmp = "" + to;
+      to = isStr(to) ? parseFloat(to) : to;
+      if (metric === "") {
+        metric = tmp.substring(("" + to).length);
+      }
+      if (!obj.force3D && FAT.force3D) {
+        obj.force3D = true;
+        if (obj !== document.body && obj !== document.documentElement) {
+          if (typeof css.transform !== "undefined") {
+            var transform = CORE.getStyle(obj, "transform");
+            transform !== "none" && transform !== "" || (css.backgroundPosition === "fixed" || css.backgroundAttachment === "fixed" || (css.transform = "translateZ(0)") && (css.perspective = "1000"));
+          } else {
+            if (typeof css.webkitTransform !== "undefined") {
+              var transform = CORE.getStyle(obj, "webkitTransform");
+              transform !== "none" && transform !== "" || (css.backgroundPosition === "fixed" || css.backgroundAttachment === "fixed" || (css.webkitTransform = "translateZ(0)") && (css.webkitPerspective = "1000"));
+            }
+          }
+        }
+      }
+      FAT_ANISTACK[FAT_ANISTACK.length] = obj[checkkey] = /** @type {_fatjob_interface} */ (new FATJOB(obj, style, css, from, to, metric, duration || 400, easeStr, FAT_EASING.init(easeStr), RES, callback || false, step || false));
+    }
+  }
+  /**
+ @constructor
+ @param {(Array<Node>|Node|NodeList|null)} arg1
+ @param {string} arg2
+ @param {(string|number)} arg3
+ @param {(number|string|Function)=} arg4
+ @param {(string|Function)=} arg5
+ @param {Function=} arg6
+ @param {Function=} arg7
+ */
+function FAT_run(arg1, arg2, arg3, arg4, arg5, arg6, arg7) {
+    if (isStr(arg2)) {
+      if (arg4 === "fast") {
+        arg4 = 200;
+      } else {
+        if (arg4 === "slow") {
+          arg4 = 800;
+        }
+      }
+      if (arg5 && isStr(arg5)) {
+        FAT_handleJob(arg1, arg2, arg3, /** @type {number} */ (arg4), /** @type {string} */ (arg5), arg6, arg7);
+      } else {
+        FAT_handleJob(arg1, arg2, arg3, /** @type {number} */ (arg4), "easeOutQuad", /** @type {(Function|null)} */ (arg5), arg6);
+      }
+    } else {
+      if (arg3 === "fast") {
+        arg3 = 200;
+      } else {
+        if (arg3 === "slow") {
+          arg3 = 800;
+        }
+      }
+      if (arg4 && isStr(arg4)) {
+        for (var key in arg2) {
+          FAT_handleJob(arg1, key, arg2[key], /** @type {number} */ (arg3), /** @type {string} */ (arg4), /** @type {(Function|null)} */ (arg5), arg6);
+          arg5 = null;
+          arg6 = null;
+        }
+      } else {
+        for (var key in arg2) {
+          FAT_handleJob(arg1, key, arg2[key], /** @type {number} */ (arg3), "easeOutQuad", /** @type {(Function|null)} */ (arg4), /** @type {(Function|null)} */ (arg5));
+          arg4 = null;
+          arg5 = null;
+        }
+      }
+    }
+    if (!FAT.EXEC) {
+      FAT.EXEC = CORE.paint(FAT_renderFrames);
+    }
+  }
+  function FAT_clearPaint(timer_id) {
+    window.clearTimeout(FAT_TIMERSTACK[timer_id]);
+    FAT_TIMERSTACK[timer_id] = 0;
+  }
+  /**
+ @param {Function} fn
+ @param {number} delay
+ @param {(HTMLElement|string|null)=} element
+ @param {number=} pos
+ @return {number}
+ */
+function FAT_paint(fn, delay, element, pos) {
+    var len = FAT_TIMERSTACK.length;
+    if (element && isStr(element)) {
+      pos = FAT_TIMERINDEX[element] || (FAT_TIMERINDEX[element] = len + 1);
+      element = "";
+    } else {
+      pos = pos || (element ? element.paint_id || (element.paint_id = len + 1) : len + 1);
+    }
+    if (pos === 1) {
+      FAT_TIMERSTACK[0] = 0;
+    }
+    if (pos < len) {
+      if (FAT_TIMERSTACK[pos]) {
+        window.clearTimeout(FAT_TIMERSTACK[pos]);
+        FAT_TIMERSTACK[pos] = 0;
+      }
+    }
+    if (delay > 0) {
+      FAT_TIMERSTACK[pos] = window.setTimeout(function() {
+        FAT_paint(fn, -1, element, pos);
+      }, delay === 1 ? 0 : delay);
+    } else {
+      if (element) {
+        FAT_TIMERSTACK[pos] = window.setTimeout(function() {
+          FAT_paint(fn, delay, element, pos);
+        }, 1000);
+      } else {
+        if (delay === -1 && FAT.isRender) {
+          fn(CORE.time.now());
+        } else {
+          FAT_PAINTSTACK[FAT_PAINTSTACK.length] = fn;
+          if (!FAT.EXEC) {
+            FAT.EXEC = CORE.paint(FAT_renderFrames);
+          }
+        }
+      }
+    }
+    return pos;
+  }
+  function FAT_move(arg1, arg2, arg3, arg4, arg5, arg6, arg7) {
+    var delay;
+    var props = isStr(arg2) ? arg4 : arg3;
+    if (typeof props === "object") {
+      if (props["duration"]) {
+        arg4 = props["duration"];
+      }
+      if (props["ease"]) {
+        arg5 = props["ease"];
+      }
+      if (props["complete"]) {
+        arg6 = props["complete"];
+      }
+      if (props["step"]) {
+        arg7 = props["step"];
+      }
+      if (props["delay"]) {
+        delay = props["delay"];
+      }
+    }
+    var obj = isStr(arg1) ? CORE.query(arg1) : arg1;
+    var style = arg2;
+    var transform = function() {
+      if (typeof style.WebkitTransform !== "undefined") {
+        return "WebkitTransform";
+      } else {
+        if (typeof style.MozTransform !== "undefined") {
+          return "MozTransform ";
+        } else {
+          if (typeof style.OTransform !== "undefined") {
+            return "OTransform";
+          } else {
+            if (typeof style.msTransform !== "undefined") {
+              return "msTransform ";
+            } else {
+              if (typeof style.WebkitTransform !== "undefined") {
+                return "WebkitTransform";
+              } else {
+                return "transform";
+              }
+            }
+          }
+        }
+      }
+    }();
+    var step = function() {
+      obj.style[transform] = "translate(" + (obj["anim_x"].to - obj["anim_x"].VAL) + "px, " + (obj["anim_y"].to - obj["anim_y"].VAL) + "px)";
+      arg6();
+    };
+    return FAT_paint(function() {
+      new FAT_run(obj, arg2, arg3, arg4, arg5, step);
+    }, delay);
+  }
+  CORE.animate = FAT_animate;
+  /**
+ @param {(Array<(Node|null)>|Node|NodeList|string|null)} arg1
+ @param {(string|Object)} arg2
+ @param {(string|number)} arg3
+ @param {(number|string|Function)=} arg4
+ @param {(string|Function)=} arg5
+ @param {Function=} arg6
+ @param {Function=} arg7
+ @return {number}
+ */
+function FAT_animate(arg1, arg2, arg3, arg4, arg5, arg6, arg7) {
+    var delay = -1;
+    var props = isStr(arg2) ? arg4 : arg3;
+    if (Object.prototype.toString.call(props) === "[object Object]") {
+      if (props["duration"]) {
+        arg4 = props["duration"];
+      }
+      if (props["ease"]) {
+        arg5 = props["ease"];
+      }
+      if (props["complete"]) {
+        arg6 = props["complete"];
+      }
+      if (props["step"]) {
+        arg7 = props["step"];
+      }
+      if (props["delay"]) {
+        delay = props["delay"];
+      }
+    }
+    return FAT_paint(function() {
+      if (typeof arg1 === "string") {
+        arg1 = CORE.query(arg1);
+      }
+      if (!arg1.length) {
+        arg1 = [arg1];
+      }
+      for (var i = 0; i < arg1.length; i++) {
+        new FAT_run(/** @type {Node} */ (arg1[i]), /** @type {string} */ (arg2), arg3, arg4, arg5, arg6, arg7);
+      }
+    }, delay);
+  }
 })();
 
 
@@ -2630,7 +4382,7 @@ CORE.preventEvent = function preventEvent(event, prevent, stop) {
   }
   var touch_events_supported;
   /**
- @param {(Node|Element|HTMLDocument|Window|null|string)} elem
+ @param {(Node|HTMLDocument|Window|NodeList|Array<Node>|string|null)} elem
  @param {string} query
  @param {string} event
  @param {Function} _fn
@@ -2651,7 +4403,16 @@ CORE.on = function on(elem, query, event, _fn, preventDefault, stopBubble, key) 
     } else {
       fn = _fn;
     }
-    elem = CORE.getNode(elem);
+    if (typeof elem === "string") {
+      elem = CORE.query(elem);
+    }
+    if (elem.length >= 0) {
+      var i = 0;
+      while (i < elem.length) {
+        CORE.on(elem[i++], query, event, _fn, preventDefault, stopBubble, key);
+      }
+      return fn;
+    }
     if (event === "touchstart" || event === "touchend" || event === "touchmove") {
       if (typeof touch_events_supported === "undefined") {
         try {
@@ -2681,14 +4442,14 @@ CORE.on = function on(elem, query, event, _fn, preventDefault, stopBubble, key) 
         APP.VARS.force_touchmove = false;
         fn.call(this, event);
       }, preventDefault, stopBubble, key);
-      if (elem != window.document) {
-        CORE.setStyle(elem, "touchAction", "manipulation");
+      if (elem !== window && elem !== window.document) {
+        CORE.setStyle(/** @type {(Node|NodeList|Array<Node>|string|null)} */ (elem), "touchAction", "manipulation");
       }
       return fn;
     }
     if (event === "clickmove") {
-      if (elem != window.document) {
-        CORE.setStyle(elem, "touchAction", "manipulation");
+      if (elem !== window && elem !== window.document) {
+        CORE.setStyle(/** @type {(Node|NodeList|Array<Node>|string|null)} */ (elem), "touchAction", "manipulation");
       }
       return CORE.addTouchMoveEvent(elem, fn, preventDefault, stopBubble, query, key);
     }
@@ -2718,7 +4479,7 @@ CORE.on = function on(elem, query, event, _fn, preventDefault, stopBubble, key) 
     return fn;
   };
   /**
- @param {(Node|Element|HTMLDocument|Window|null|string)} elem
+ @param {(Node|HTMLDocument|Window|NodeList|Array<Node>|string|null)} elem
  @param {string} event
  @param {Function} fn
  @param {boolean=} preventDefault
@@ -2729,7 +4490,7 @@ CORE.addEvent = function addEvent(elem, event, fn, preventDefault, stopBubble) {
     return CORE.on(elem, "", event, fn, preventDefault, stopBubble);
   };
   /**
- @param {(Node|Element|HTMLDocument|Window|null|string)} node
+ @param {(Node|HTMLDocument|Window|NodeList|Array<Node>|string|null)} node
  @param {Function} fn
  @param {boolean=} preventDefault
  @param {boolean=} stopBubble
@@ -2752,7 +4513,7 @@ function touch_move_listener(event) {
     CORE.preventEvent(event, false, true);
   }
   /**
- @param {(Node|Element|HTMLDocument|Window|null|string)} node
+ @param {(Node|HTMLDocument|Window|NodeList|Array<Node>|string|null)} node
  @param {Function} fn
  @return {Function}
  */
@@ -2777,18 +4538,20 @@ CORE.addTouchMoveEvent = function addTouchMoveEvent(node, fn, preventDefault, st
     return fn;
   };
   /**
- @param {(Node|Element|HTMLDocument|Window|null|string)} node
+ @param {(Node|HTMLDocument|Window|NodeList|Array<Node>|string|null)} node
  @param {Function} fn
  @param {boolean=} preventDefault
  @return {Function}
  */
 CORE.addInputEvent = function addInputEvent(node, fn, preventDefault) {
-    /** @type {(Node|Element|HTMLDocument|Window|null|string)} */ (node = CORE.getNode(node));
+    if (typeof node === "string") {
+      node = CORE.query(node);
+    }
     CORE.addEvent(node, "input", CORE.addEvent(node, "change", fn));
     return fn;
   };
   /**
- @param {(Node|Element|HTMLDocument|Window|null|string)} node
+ @param {(Node|HTMLDocument|Window|NodeList|Array<Node>|string|null)} node
  @param {Function} fn
  @return {Function}
  */
@@ -2811,7 +4574,7 @@ CORE.addMouseWheelScroll = function addMouseWheelScroll(node, fn) {
     return fn;
   };
   /**
- @param {(Node|Element|HTMLDocument|Window|null|string)} node
+ @param {(Node|HTMLDocument|Window|NodeList|Array<Node>|string|null)} node
  @param {string} eventType
  */
 CORE.triggerMouseEvent = function triggerMouseEvent(node, eventType) {
@@ -2890,96 +4653,6 @@ CORE.delegateByTagClass = function delegateByTagClass(node, tag, classname, even
     return fn;
   };
 })();
-
-
-
-/**
- @param {Object<?,Array<Object<string,(string|number)>>>} data
- @param {HTMLElement=} context
- */
-CORE.initRetina = function(data, context) {
-  var img_width, img_height, cur_width, cur_height, last_width, last_height, node_width, node_height;
-  var node, id, set, item, src = "", size, scale, is_image, nodes = (context || document).getElementsByClassName("autosize");
-  var dpr = window["devicePixelRatio"] || 1;
-  if (nodes.length) {
-    scale = document.body.getBoundingClientRect().width / document.body.offsetWidth;
-    for (var i = 0; i < nodes.length; i++) {
-      node = nodes[i];
-      id = node.dataset["id"] || node.id;
-      set = data[id];
-      node_width = (node.clientWidth || node.offsetWidth) * dpr * scale;
-      node_height = (node.clientHeight || node.offsetHeight) * dpr * scale;
-      if (node.tagName.toLowerCase() === "img") {
-        is_image = true;
-        size = "auto";
-      } else {
-        is_image = false;
-        size = node["style"]["backgroundSize"];
-      }
-      for (var a = 0; a < set.length; a++) {
-        item = set[a];
-        if (a === 0) {
-          img_width = item.width;
-          img_height = item.height;
-          last_width = img_width;
-          last_height = img_height;
-          src = item.src;
-        } else {
-          cur_width = item.width || Math.round(img_width * (item.zoom / 100));
-          cur_height = item.height || Math.round(img_height * (item.zoom / 100));
-          if (size === "contain" && ((cur_width >= node_width || cur_height >= node_height) && cur_width < last_width) || cur_width >= node_width && cur_height >= node_height && cur_width < last_width) {
-            src = item.src;
-            last_width = cur_width;
-            last_height = cur_height;
-          }
-        }
-      }
-      if (is_image) {
-        node["src"] = src;
-      } else {
-        node["style"]["backgroundImage"] = "url(" + src + ")";
-      }
-    }
-  }
-};
-
-
-
-(function() {
-  if (DEBUG) {
-    CORE.console.log("Initialize Compression");
-  }
-  if (!window["LZString"] || CORE.Browser.isMSIE) {
-    return;
-  }
-  var compression_levels = [{decompress:"decompress", compress:"compress", info:"Best (Unicode)"}, {decompress:"decompressFromUTF16", compress:"compressToUTF16", info:"Good (UTF16)"}, {decompress:"decompressFromEncodedURIComponent", compress:"compressToEncodedURIComponent", info:"Low (URIComponent)"}, {decompress:"decompressFromBase64", compress:"compressToBase64", info:"Low (Base64)"}];
-  var dummy = {"data":{"outer":{"inner":["test"]}}};
-  for (var i = 0; i < compression_levels.length; i++) {
-    try {
-      var compressed = window["LZString"][compression_levels[i].compress](JSON.stringify(dummy));
-      window.localStorage.setItem("test", compressed);
-      var decompressed = JSON.parse(window["LZString"][compression_levels[i].decompress](window.localStorage.getItem("test")));
-      if (decompressed["data"] && decompressed["data"]["outer"] && decompressed["data"]["outer"]["inner"] && decompressed["data"]["outer"]["inner"][0] === "test") {
-        APP.STORAGE.compress = window["LZString"][compression_levels[i].compress];
-        APP.STORAGE.decompress = window["LZString"][compression_levels[i].decompress];
-        APP.CONFIG.GZIP = true;
-        if (DEBUG) {
-          CORE.console.log("Current Compression Level: " + compression_levels[i].info);
-        }
-        break;
-      }
-    } catch (e) {
-      if (DEBUG) {
-        throw e;
-      }
-    }
-  }
-  if (DEBUG && !APP.CONFIG.GZIP) {
-    CORE.console.log("Current Compression Level: -");
-  }
-  window.localStorage.removeItem("test");
-})();
-
 
 
 
@@ -3407,7 +5080,7 @@ ModelHelper.prototype.updateAll = function(items, params, persistent) {
  @param {_model_class} model
  */
 function ModelClass(key, model) {
-    this.model_name = key;
+    this.modelName = key;
     this.data = STORAGE.DATA[key];
     this.cache = STORAGE.CACHE[key];
     var prototype = model.prototype;
@@ -3438,7 +5111,7 @@ function ModelClass(key, model) {
               var data_field_index = data_field[i];
               if (data_field_index.constructor.prototype instanceof ModelClass) {
                 data_field_index.save(persistent);
-                copy[field][i] = {"_id":"" + data_field_index["id"], "_type":data_field_index.constructor.prototype.model_name};
+                copy[field][i] = {"_id":"" + data_field_index["id"], "_type":data_field_index.constructor.prototype.modelName};
                 has_object_keys = true;
               } else {
                 if (data_field_index.constructor === Object) {
@@ -3482,7 +5155,7 @@ ModelClass.prototype.save = function(persistent) {
           var copy = compact_model_data(self, persistent);
           try {
             self.data.set("" + self["id"], copy);
-            APP.MODEL[self.model_name].keys = self.data.keys();
+            APP.MODEL[self.modelName].keys = self.data.keys();
           } catch (e) {
             if (DEBUG) {
               CORE.console.err("ERROR: Cannot save model data (ID: " + self["id"] + ")", self);
@@ -3540,10 +5213,10 @@ ModelClass.prototype.restore = function() {
  @param {boolean=} batch
  */
 ModelClass.prototype.delete = function(batch) {
-    APP.MODEL[this.model_name].data.del("" + this["id"]);
-    delete APP.MODEL[this.model_name].cache["" + this["id"]];
+    APP.MODEL[this.modelName].data.del("" + this["id"]);
+    delete APP.MODEL[this.modelName].cache["" + this["id"]];
     if (!batch) {
-      APP.MODEL[this.model_name].keys = this.data.keys();
+      APP.MODEL[this.modelName].keys = this.data.keys();
     }
   };
   return /** @type {_active_model} */ (new ACTIVE_MODEL);
@@ -3629,7 +5302,7 @@ CONTROLLER.request = function request(route, params, callback, error, update_cac
             data = data.filter(route_obj.filter);
           }
           if (route_obj.arrayfilter) {
-            data = route_obj.arrayfilter.call(data, params);
+            data = route_obj.arrayfilter(data, params);
           }
           if (route_obj.sort) {
             data = data.sort(route_obj.sort);
@@ -3644,7 +5317,7 @@ CONTROLLER.request = function request(route, params, callback, error, update_cac
             data.map(route_obj.map);
           }
           if (route_obj.arraymap) {
-            route_obj.arraymap.call(data, params);
+            route_obj.arraymap(data, params);
           }
           if (update_cache) {
             update_cache();
@@ -3982,9 +5655,9 @@ LAYOUT.update_menu_state = function update_menu_state(_target) {
           CORE.removeClass(nodes[i], "active");
         }
       }
-      CORE.addClass("btn-view-" + target, "active");
+      CORE.addClass("#btn-view-" + target, "active");
     }
-    CORE.setStyle("view-" + target, {"zIndex":1, "visibility":"visible"});
+    CORE.setStyle("#view-" + target, {"zIndex":1, "visibility":"visible"});
     nodes = CORE.getByClass("view");
     for (var i = 0; i < nodes.length; i++) {
       if (nodes[i].id !== "view-" + target) {
@@ -4034,8 +5707,8 @@ LAYOUT.add_preloader = function add_preloader(target, color) {
       }
     }
     if (toggle_state = !toggle_state) {
-      CORE.setStyle("nav-" + left_action, "display", "none");
-      CORE.setStyle("nav-" + right_action, "display", "block");
+      CORE.setStyle("#nav-" + left_action, "display", "none");
+      CORE.setStyle("#nav-" + right_action, "display", "block");
       CORE.addClass(content_left_action_layer, "active");
       CORE.addClass(content_right_action_layer, "active");
       if (callback) {
@@ -4045,8 +5718,8 @@ LAYOUT.add_preloader = function add_preloader(target, color) {
         callback();
       }
     } else {
-      CORE.setStyle("nav-" + right_action, "display", "none");
-      CORE.setStyle("nav-" + left_action, "display", "block");
+      CORE.setStyle("#nav-" + right_action, "display", "none");
+      CORE.setStyle("#nav-" + left_action, "display", "block");
       CORE.removeClass(content_left_action_layer, "active");
       CORE.removeClass(content_right_action_layer, "active");
     }
@@ -4196,8 +5869,8 @@ LAYOUT.toggle_popup = function(_wrapper, preloader_target, hideStatusbar) {
     }
     var wrapper = _wrapper;
     var showStatusbar = _showStatusbar;
-    CORE.removeClass("view-" + LAYOUT.lastAction, "active");
-    CORE.setStyle("view-" + LAYOUT.lastAction, "transform", "");
+    CORE.removeClass("#view-" + LAYOUT.lastAction, "active");
+    CORE.setStyle("#view-" + LAYOUT.lastAction, "transform", "");
     CORE.setStyle(wrapper, {"transform":"translateX(100%)"});
     CORE.paint(function() {
       CORE.setStyle(wrapper, {"display":"none", "zIndex":2});
@@ -4219,11 +5892,11 @@ LAYOUT.show_message = function(message) {
     if (DEBUG) {
       CORE.console.log("Show Message Box");
     }
-    CORE.setHTML("message-content", message, function() {
-      CORE.setStyle("message-wrapper", "display", "block");
+    CORE.setHTML("#message-content", message, function() {
+      CORE.setStyle("#message-wrapper", "display", "block");
       CORE.paint(function() {
-        CORE.setStyle("message-wrapper", "opacity", 1);
-        CORE.setStyle("message-inner", {"opacity":1, "transform":"scale(1)"});
+        CORE.setStyle("#message-wrapper", "opacity", 1);
+        CORE.setStyle("#message-inner", {"opacity":1, "transform":"scale(1)"});
       });
     });
   };
@@ -4231,11 +5904,11 @@ LAYOUT.show_message = function(message) {
     if (DEBUG) {
       CORE.console.log("Hide Message Box");
     }
-    CORE.setStyle("message-inner", {"transform":"scale(0.8)", "opacity":0});
-    CORE.setStyle("message-wrapper", "opacity", 0);
+    CORE.setStyle("#message-inner", {"transform":"scale(0.8)", "opacity":0});
+    CORE.setStyle("#message-wrapper", "opacity", 0);
     CORE.paint(function() {
-      CORE.setStyle("message-wrapper", "display", "none");
-      CORE.setHTML("message-content", "", true);
+      CORE.setStyle("#message-wrapper", "display", "none");
+      CORE.setHTML("#message-content", "", true);
     }, 200);
   };
   /**
@@ -4246,11 +5919,11 @@ LAYOUT.show_confirmation = function(message, fn_confirm) {
     if (DEBUG) {
       CORE.console.log("Show Confirmation Box");
     }
-    CORE.setHTML("confirmation-content", message, function() {
-      CORE.setStyle("confirmation-wrapper", "display", "block");
+    CORE.setHTML("#confirmation-content", message, function() {
+      CORE.setStyle("#confirmation-wrapper", "display", "block");
       CORE.paint(function() {
-        CORE.setStyle("confirmation-wrapper", "opacity", 1);
-        CORE.setStyle("confirmation-inner", "transform", "scale(1)");
+        CORE.setStyle("#confirmation-wrapper", "opacity", 1);
+        CORE.setStyle("#confirmation-inner", "transform", "scale(1)");
       });
     });
     CORE.getById("confirmation-yes").ontouchstart = fn_confirm;
@@ -4259,11 +5932,11 @@ LAYOUT.show_confirmation = function(message, fn_confirm) {
     if (DEBUG) {
       CORE.console.log("Hide Confirmation Box");
     }
-    CORE.setStyle("confirmation-wrapper", "opacity", 0);
-    CORE.setStyle("confirmation-inner", "transform", "scale(0.9)");
+    CORE.setStyle("#confirmation-wrapper", "opacity", 0);
+    CORE.setStyle("#confirmation-inner", "transform", "scale(0.9)");
     CORE.paint(function() {
-      CORE.setStyle("confirmation-wrapper", "display", "none");
-      CORE.setHTML("confirmation-content", "", true);
+      CORE.setStyle("#confirmation-wrapper", "display", "none");
+      CORE.setHTML("#confirmation-content", "", true);
     }, 200);
   };
   /** @const */ EVENT["confirmation-yes"] = {on:"click", do:function(event) {
@@ -4271,14 +5944,14 @@ LAYOUT.show_confirmation = function(message, fn_confirm) {
       CORE.preventEvent(event, true, true);
     } else {
       CORE.async(function() {
-        CORE.setHTML("confirmation-yes", "Ja");
+        CORE.setHTML("#confirmation-yes", "Ja");
       }, 200);
     }
     this.ontouchstart.call(this, event);
     LAYOUT.hide_confirmation();
   }, stopBubble:false, preventDefault:false};
   /** @const */ EVENT["confirmation-no"] = {on:"click", do:function(event) {
-    CORE.setHTML("confirmation-yes", "Ja");
+    CORE.setHTML("#confirmation-yes", "Ja");
     LAYOUT.hide_confirmation();
   }, stopBubble:true, preventDefault:true};
   /**
@@ -4370,8 +6043,8 @@ LAYOUT.addSwipe = function addSwipe(el, config) {
       distX = 0;
       startX = touchobj.pageX;
       startY = touchobj.pageY;
-      CORE.addClass([this.parentNode, "view-" + LAYOUT.lastAction], "no-transition");
-      CORE.removeClass("view-" + LAYOUT.lastAction, "active");
+      CORE.addClass([this.parentNode, "#view-" + LAYOUT.lastAction], "no-transition");
+      CORE.removeClass("#view-" + LAYOUT.lastAction, "active");
       if (touchstart) {
         touchstart.call(this, distX);
       }
@@ -4386,9 +6059,9 @@ LAYOUT.addSwipe = function addSwipe(el, config) {
       } else {
         if (distX < screen.width / 3.1416) {
           CORE.setStyle(this.parentNode, "transform", "translateX(0px)");
-          CORE.setStyle("view-" + LAYOUT.lastAction, "transform", "translateX(-25%)");
+          CORE.setStyle("#view-" + LAYOUT.lastAction, "transform", "translateX(-25%)");
           CORE.paint(function() {
-            CORE.setStyle("view-" + LAYOUT.lastAction, "transform", "");
+            CORE.setStyle("#view-" + LAYOUT.lastAction, "transform", "");
           }, 200);
         } else {
           limit ? CORE.setStyle(this.parentNode, {"transform":"translateX(" + limit + "%)"}) : CORE.setStyle(this.parentNode, {"transform":"translateX(100%)"});
@@ -4396,13 +6069,13 @@ LAYOUT.addSwipe = function addSwipe(el, config) {
           CORE.paint(function() {
             CORE.setStyle(_this.parentNode, "display", "none");
           }, 200);
-          CORE.setStyle("view-" + LAYOUT.lastAction, "transform", "");
+          CORE.setStyle("#view-" + LAYOUT.lastAction, "transform", "");
           if (finish) {
             finish.call(this, distX);
           }
         }
       }
-      CORE.removeClass([this.parentNode, "view-" + LAYOUT.lastAction], "no-transition");
+      CORE.removeClass([this.parentNode, "#view-" + LAYOUT.lastAction], "no-transition");
       this.removeEventListener("touchmove", swipe_touch_move_handler);
     }, true, true);
   };
@@ -4504,147 +6177,6 @@ LAYOUT.initPullToRefresh = function initPullToRefresh(el, route) {
 
 
 
-/** @const */ APP.VIEWPORT = function() {
-  var resizeTime = null;
-  var register_viewport_update = function() {
-    if (resizeTime) {
-      CORE.clear(resizeTime);
-    }
-    resizeTime = CORE.async(setupViewportAndZoom, 50);
-  };
-  CORE.paint(function() {
-    setupViewportAndZoom();
-    if (CORE.System.isMobile) {
-      if (CONFIG.FORCE_ORIENTATION && CONFIG.FORCE_ORIENTATION !== "none") {
-        lock_orientation(CONFIG.FORCE_ORIENTATION);
-        window.addEventListener("orientationchange", register_viewport_update);
-      }
-    }
-    window.addEventListener("resize", register_viewport_update);
-    if (!CONFIG.HIDE_STATUSBAR && CORE.System.isMobile && screen.height === window.innerHeight) {
-      var statusbar_height = CORE.Math.max(screen.height - screen.availHeight - 20, CONFIG.ENV === "production" ? 20 : 0);
-      var navbar_height = 69 - statusbar_height;
-      if (statusbar_height > 0) {
-        if (window["StatusBar"]) {
-          CORE.addCssRule(".navbar.status-bar", {"height":navbar_height + statusbar_height + "pt", "padding-top":statusbar_height + "pt"});
-          CORE.addCssRule(".viewport.status-bar", "top", navbar_height + statusbar_height + "pt");
-        } else {
-          CORE.addCssRule(".navbar", {"height":navbar_height + statusbar_height + "pt", "padding-top":statusbar_height + "pt"});
-          CORE.addCssRule(".sticky", {"height":navbar_height + statusbar_height + "pt", "padding-top":statusbar_height + "pt"});
-          CORE.addCssRule(".viewport", "top", navbar_height + statusbar_height + "pt");
-        }
-      }
-    }
-  }, 200);
-  function setupViewportAndZoom() {
-    if (DEBUG) {
-      CORE.console.log("Setup Viewport");
-    }
-    var window_width = window.innerWidth;
-    var window_height = window.innerHeight;
-    var newWidth = window_width;
-    var newHeight = window_height;
-    var zoom = 1;
-    if (CONFIG.FORCE_ORIENTATION === "portrait") {
-      if (newHeight < CONFIG.MIN_DIMENSION) {
-        newHeight = CONFIG.MIN_DIMENSION;
-        newWidth = Math.round(newHeight * (window_width / window_height));
-      } else {
-        if (newHeight > CONFIG.MAX_DIMENSION) {
-          newHeight = CONFIG.MAX_DIMENSION;
-          newWidth = Math.round(newHeight * (window_width / window_height));
-        }
-      }
-      if (newHeight / newWidth < CONFIG.MIN_ASPECT_RATIO) {
-        newWidth = Math.round(newHeight / CONFIG.MIN_ASPECT_RATIO);
-      }
-      zoom = window_height / newHeight;
-      if (newHeight / newWidth > CONFIG.MAX_ASPECT_RATIO) {
-        newWidth = Math.round(newHeight / CONFIG.MAX_ASPECT_RATIO);
-        zoom = window_width / newWidth;
-      }
-    } else {
-      if (CONFIG.FORCE_ORIENTATION === "landscape") {
-        if (newWidth < CONFIG.MIN_DIMENSION) {
-          newWidth = CONFIG.MIN_DIMENSION;
-          newHeight = Math.round(newWidth * (window_height / window_width));
-        }
-        if (newWidth > CONFIG.MAX_DIMENSION) {
-          newWidth = CONFIG.MAX_DIMENSION;
-          newHeight = Math.round(newWidth * (window_height / window_width));
-        }
-        if (newWidth / newHeight < CONFIG.MIN_ASPECT_RATIO) {
-          newHeight = Math.round(newWidth / CONFIG.MIN_ASPECT_RATIO);
-        }
-        zoom = window_width / newWidth;
-        if (newWidth / newHeight > CONFIG.MAX_ASPECT_RATIO) {
-          newHeight = Math.round(newWidth / CONFIG.MAX_ASPECT_RATIO);
-          zoom = window_height / newHeight;
-        }
-      }
-    }
-    APP.VARS.ZOOM = zoom;
-    APP.VARS.WIDTH = newWidth;
-    APP.VARS.HEIGHT = newHeight;
-    if (newHeight !== window_height || newWidth !== window_width) {
-      CORE.setStyle(window.document.body, {"width":newWidth + "px", "height":newHeight + "px", "transform":"scale(" + zoom + ") translateX(" + (window_width - newWidth) / zoom / 2 + "px) translateY(" + (window_height - newHeight) / zoom / 2 + "px)"});
-    } else {
-      CORE.setStyle(window.document.body, {"width":"", "height":"", "transform":""});
-    }
-    if (DEBUG) {
-      CORE.console.log("Resolution (W/H): " + window_width + " x " + window_height + " --\x3e " + newWidth + " x " + newHeight + " (Zoom: " + zoom + ")");
-    }
-  }
-  function lock_orientation(lock_orientation) {
-    if (DEBUG) {
-      CORE.console.log("Lock Orientation: " + lock_orientation);
-    }
-    try {
-      if (window["plugins"] && window["plugins"]["orientationLock"]) {
-        window["plugins"]["orientationLock"]["lock"](lock_orientation).catch(function() {
-        });
-      }
-      var orientation = window.screen["orientation"];
-      var prefix = CORE.prefix.replace(/-/g, "");
-      if (orientation["lock"]) {
-        orientation["lock"](lock_orientation).catch(function() {
-        });
-      } else {
-        if (window["lockOrientation"]) {
-          window["lockOrientation"](lock_orientation + "-primary").catch(function() {
-          });
-        } else {
-          if (window[prefix + "LockOrientation"]) {
-            window[prefix + "LockOrientation"](lock_orientation + "-primary").catch(function() {
-            });
-          } else {
-            if (window["lockOrientationUniversal"]) {
-              window["lockOrientationUniversal"](lock_orientation + "-primary").catch(function() {
-              });
-            } else {
-              if (orientation && orientation["lock"]) {
-                orientation["lock"](lock_orientation + "-primary").catch(function() {
-                });
-              } else {
-                orientation = window.screen[prefix + "Orientation"];
-                if (orientation && orientation["lock"]) {
-                  orientation["lock"](lock_orientation + "-primary").catch(function() {
-                  });
-                }
-              }
-            }
-          }
-        }
-      }
-    } catch (e) {
-    }
-  }
-  return {WIDTH:APP.VARS.WIDTH, HEIGHT:APP.VARS.HEIGHT, ZOOM:APP.VARS.ZOOM, SCALE:APP.VARS.ZOOM, ASPECT_RATIO:"unsupported", ORIENTATION:"unsupported", update:register_viewport_update, lockOrientation:lock_orientation};
-}();
-
-
-
-
 APP.WORKER = function() {
   return {/**
  @param {!string} name
@@ -4660,6 +6192,73 @@ register:function(name, worker, callback) {
     }
   }};
 }();
+
+
+
+(function(EVENT) {
+  EVENT["_document"] || (EVENT["_document"] = []);
+  /** @const */ EVENT["_document"] = EVENT["_document"].concat([{on:"keypress", if:".form-validate", do:validateInputs, stopBubble:false, preventDefault:false}, {on:"keyup", if:".form-validate", do:validateInputs, stopBubble:false, preventDefault:false}]);
+  var support_keypress = false;
+  /** @const */ var validate_charset_integer = "0123456789";
+  /**
+ @const
+ @this {HTMLElement}
+ */
+function validateInputs(event) {
+    if (this.dataset && this.dataset["validateType"] === "integer") {
+      var value = this.value, has_changed = false;
+      if (value) {
+        for (var i = 0; i < value.length; i++) {
+          if ((this.dataset["validateCharset"] || validate_charset_integer).indexOf(value[i]) === -1) {
+            value = value.replace(value[i], "");
+            has_changed = true;
+          }
+        }
+      } else {
+        this.value = "";
+      }
+      if (has_changed) {
+        this.value = value;
+      }
+      if (event.type === "keypress") {
+        support_keypress = true;
+      } else {
+        if (support_keypress) {
+          return;
+        }
+      }
+      var is_valid = true;
+      var charcode;
+      var charvalue;
+      if (support_keypress) {
+        charcode = event.charCode;
+        charvalue = String.fromCharCode(charcode);
+      } else {
+        charvalue = event.keyCode || event.which;
+        charcode = String(charvalue).charCodeAt(0);
+      }
+      if (charcode < 48 || charcode > 57) {
+        is_valid = false;
+      } else {
+        var current_value = parseInt(value + (support_keypress ? charvalue : ""), 10);
+        if (this.dataset["validateMin"] && current_value < parseInt(this.dataset["validateMin"], 10)) {
+          is_valid = false;
+        } else {
+          if (this.dataset["validateMax"] && current_value > parseInt(this.dataset["validateMax"], 10)) {
+            is_valid = false;
+          }
+        }
+      }
+      if (is_valid === false) {
+        if (!support_keypress) {
+          this.value = value.substring(0, value.length - 1);
+        }
+        return CORE.preventEvent(event, true, false);
+      }
+    }
+  }
+})(APP.EVENT);
+
 
 
 
@@ -4687,16 +6286,24 @@ register:function(name, worker, callback) {
 
 
 (function() {
-  var onload_triggered = false;
-  document.addEventListener("deviceready", window.onload = function() {
-    if (onload_triggered) {
+  var onload_already_triggered = false;
+  var window_onload = function() {
+    if (onload_already_triggered) {
       return;
     } else {
-      onload_triggered = true;
+      onload_already_triggered = true;
     }
     APP.INIT();
-    CORE.stack([initialize_settings, initialize_storage, initialize_app, initialize_config, initialize_debug, initialize_layout, initialize_translations, initialize_views, initialize_events, initialize_models, runApp]);
-  }, false);
+    CORE.stack([initialize_settings, initialize_storage, initialize_app, initialize_config, initialize_debug, initialize_layout, initialize_translations, initialize_views, initialize_events, initialize_models, runApp, function() {
+      runApp = null;
+    }]);
+  };
+  if (CORE.System.isCordova) {
+    document.addEventListener("deviceready", window_onload, false);
+  } else {
+    window.addEventListener("load", window_onload, false);
+    document.addEventListener("ready", window_onload, false);
+  }
   /** @type {(function()|number|null)} */ var runApp = function() {
     if (APP.CONFIG.PROC) {
       return CORE.async(/** @type {Function} */ (runApp));
@@ -4705,11 +6312,15 @@ register:function(name, worker, callback) {
       CORE.console.log("App initialized successfully.");
     }
     APP.SETUP();
-    document.removeEventListener("deviceready", window.onload);
-    window.onload = null;
-    delete APP.INIT;
-    delete APP.SETUP;
-    delete APP.MAIN;
+    if (CORE.System.isCordova) {
+      document.removeEventListener("deviceready", window_onload);
+    } else {
+      document.removeEventListener("ready", window_onload);
+      window.removeEventListener("load", window_onload);
+    }
+    APP.INIT = null;
+    APP.SETUP = null;
+    APP.MAIN = null;
     initialize_settings = null;
     initialize_storage = null;
     initialize_app = null;
@@ -4720,11 +6331,12 @@ register:function(name, worker, callback) {
     initialize_views = null;
     initialize_events = null;
     initialize_models = null;
-    CORE.async(function() {
-      runApp = null;
-    }, 1);
+    window_onload = null;
   };
   /** @type {(Function|null)} */ var initialize_settings = function() {
+    if (DEBUG) {
+      CORE.console.log("Initialize Settings");
+    }
     /** @type {_storage_interface} */ (APP.SETTINGS = new CORE.Storage("app_settings"));
     /** @type {_storage_interface} */ (APP.STORAGE.VIEW = new CORE.Storage("app_view"));
   };
@@ -4732,8 +6344,8 @@ register:function(name, worker, callback) {
     if (DEBUG) {
       CORE.console.log("Initialize App");
       if (CONFIG.SHOW_DEBUG) {
-        CORE.setStyle("debug-log", "display", "block");
-        CORE.setStyle("debug-stats", "display", "block");
+        CORE.setStyle("#debug-log", "display", "block");
+        CORE.setStyle("#debug-stats", "display", "block");
       }
     }
     if (CONFIG.RACK === "webapp") {
@@ -4882,7 +6494,7 @@ register:function(name, worker, callback) {
         if (!events) {
           continue;
         }
-        var node = key === "document" ? document : key === "body" ? document.body : CORE.getById(key);
+        var node = key === "document" || key === "_document" ? document : key === "body" ? document.body : CORE.getById(key);
         if (!node) {
           if (DEBUG) {
             CORE.console.warn("WARNING: Element " + key + " was missing for binding event.");

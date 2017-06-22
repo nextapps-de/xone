@@ -1,6 +1,27 @@
 goog.provide("DIST.APP");
+goog.require('APP.WORKER');
+goog.require('AMD');
 
 (function(){
+
+    /** @export @dict */
+
+    window.AMD = {
+
+        "define": AMD.define,
+        "require": AMD.require,
+        "install": AMD.install,
+        "export": AMD.export,
+        "build": AMD.build,
+        "out": AMD.out,
+        "run": AMD.run
+    };
+
+    /** @export */
+    window.define = AMD.define;
+
+    /** @export */
+    window.require = AMD.require;
 
     /** @export @dict */
 

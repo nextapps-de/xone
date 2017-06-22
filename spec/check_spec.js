@@ -94,7 +94,7 @@ describe("Checks", function() {
         expect(CORE.isEmpty(Array()))
             .toBe(true);
 
-        expect(CORE.isEmpty({}))
+        expect(CORE.hasKeys({}))
             .toBe(false);
 
         expect(CORE.isEmpty(0))

@@ -165,6 +165,19 @@ var CORE = {};
     };
 
     /**
+     * @param {!Object} value
+     * @return {boolean}
+     * @const
+     */
+
+    CORE.hasKeys = function(value){
+
+        if(DEBUG) GRAPH.register('CORE.hasKeys');
+
+        return Object.keys(value).length ? true : false;
+    };
+
+    /**
      * @param {!Array<*>} value
      * @return {boolean}
      * @const

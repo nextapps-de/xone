@@ -68,7 +68,7 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
 
         html += load_deps(/* field: */ 'js_extern');
 
-        if(DEPS){
+        if(MANIFEST.dependencies.calculate && window.DEPS){
 
             //console.log(DEPS);
             //console.log(MANIFEST.dependencies.js_xone);
@@ -84,15 +84,29 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
 
             html += load_deps(/* field: */ 'js_xone');
             html += load_deps(/* field: */ 'js');
-            html += load_deps(/* field: */ 'js_inject');
         }
 
+        html += load_deps(/* field: */ 'js_inject');
         html += load_deps(/* field: */ CONFIG.ENV);
+    }
+
+    else if(CONFIG.ENV === "test_bundle"){
+
+        MANIFEST.dependencies.js_xone = ['lib/xone/dist/xone.bundle.js'];
+
+        html += load_deps(/* field: */ 'js_xone');
+    }
+
+    else if(CONFIG.ENV === "test_lib"){
+
+        MANIFEST.dependencies.js_xone = ['lib/xone/dist/xone.lib.min.js'];
+
+        html += load_deps(/* field: */ 'js_xone');
     }
 
     // == IMPORT ADDITIONAL SOURCES FOR TEST ENVIRONMENT ==
 
-    if(CONFIG.ENV === "test") {
+    if(CONFIG.ENV === "test" || CONFIG.ENV === "test_bundle" || CONFIG.ENV === "test_lib") {
 
         /* JASMINE TEST FRAMEWORK */
 

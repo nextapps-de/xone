@@ -1,23 +1,18 @@
 goog.provide('CONFIG');
 goog.require('INTERFACE');
-
-/** @define {boolean} */
-var DEBUG = false;
+goog.require('AMD');
 
 /** @const */
 var CONFIG = {};
 
-/** @define {string} */
-CONFIG.ENV = 'production';
+/** @define {boolean} */
+CONFIG.DEBUG = false;
 
 /** @define {string} */
 CONFIG.RACK = 'default';
 
 /** @define {boolean} */
 CONFIG.NO_SCRIPT = false;
-
-/** @define {boolean} */
-CONFIG.DEBUG = DEBUG;
 
 /** @define {boolean} */
 CONFIG.SHOW_DEBUG = false;

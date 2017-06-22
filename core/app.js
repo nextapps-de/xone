@@ -185,7 +185,9 @@ var APP = {
         ZOOM: 1,
         WIDTH: 0,
         HEIGHT: 0,
-        DPR: Math.max(1, Math.min(3, Math.round(window['devicePixelRatio'] || 1)))
+        DPR: Math.max(1, Math.min(3, Math.round(window['devicePixelRatio'] || 1))),
+        USED_STORAGE: 0,
+        MAX_STORAGE: 0
     },
 
     /**

@@ -1,406 +1,271 @@
-/**!
- * @preserve Xone Javascript Framework
- * Copyright (c) 2017 NextApps, All rights reserved.
- */
+goog.provide('DIST.INTERFACE');
+goog.require('INTERFACE');
 
-goog.provide('INTERFACE');
-
-/**
- * ActiveModel Interface
- * @interface
- * @template ActiveModel
- * @const
- */
-
-function _active_model(){}
-/** @export @type {Function} */
+/** @export */
 _active_model.prototype.register;
-/** @export @type {Function} */
+/** @export */
 _active_model.prototype.new;
-/** @export @type {Function} */
+/** @export */
 _active_model.prototype.create;
 
-/**
- * ModelHelper Interface
- * @interface
- * @template ModelHelper
- * @const
- */
 
-function _model_helper(){}
-/** @export @type {Function} */
+
+/** @export */
 _model_helper.prototype.new;
-/** @export @type {Function} */
+/** @export */
 _model_helper.prototype.create;
-/** @export @type {Function} */
+/** @export */
 _model_helper.prototype.newFromList;
-/** @export @type {Function} */
+/** @export */
 _model_helper.prototype.createFromList;
-/** @export @type {Function} */
+/** @export */
 _model_helper.prototype.parse;
-/** @export @type {Function} */
+/** @export */
 _model_helper.prototype.find;
-/** @export @type {Function} */
+/** @export */
 _model_helper.prototype.all;
-/** @export @type {Function} */
+/** @export */
 _model_helper.prototype.range;
-/** @export @type {Function} */
+/** @export */
 _model_helper.prototype.count;
-/** @export @type {Function} */
+/** @export */
 _model_helper.prototype.findBy;
-/** @export @type {Function} */
+/** @export */
 _model_helper.prototype.each;
-/** @export @type {Function} */
+/** @export */
 _model_helper.prototype.where;
-/** @export @type {Function} */
+/** @export */
 _model_helper.prototype.like;
-/** @export @type {Function} */
+/** @export */
 _model_helper.prototype.saveAll;
-/** @export @type {Function} */
+/** @export */
 _model_helper.prototype.deleteAll;
-/** @export @type {Function} */
+/** @export */
 _model_helper.prototype.updateAll;
 
-/**
- * ModelClass Interface
- * @interface
- * @template ModelClass
- * @param {Object<string, *>} data
- * @const
- */
 
-function _model_class(data){}
-/** @export @type {Function} */
+
+/** @export */
 _model_class.prototype.save;
-/** @export @type {_storage_interface} */
+/** @export */
 _model_class.prototype.data;
-/** @export @type {Function} */
+/** @export */
 _model_class.prototype.cache;
-/** @export @type {Function} */
+/** @export */
 //_model_class.prototype.session;
-/** @export @type {Function} */
+/** @export */
 _model_class.prototype.update;
-/** @export @type {Function} */
+/** @export */
 _model_class.prototype.restore;
-/** @export @type {Function} */
+/** @export */
 _model_class.prototype.delete;
-/** @export @type {string} */
+/** @export */
 _model_class.prototype.modelName;
-/** @export @type {Function} */
+/** @export */
 _model_class.constructor.prototype.mapToView;
-/** @export @type {Function} */
+/** @export */
 _model_class.constructor.prototype.mapToPayload;
-/** @export @type {Function} */
+/** @export */
 _model_class.constructor.prototype.mapToData;
-/** @export @type {Function} */
+/** @export */
 _model_class.constructor.prototype.beforeUpdate;
-/** @export @type {Function} */
+/** @export */
 _model_class.constructor.prototype.beforeCreate;
-/** @export @type {Function} */
+/** @export */
 _model_class.constructor.prototype.beforeSave;
-/** @export @type {Function} */
+/** @export */
 _model_class.constructor.prototype.onCreate;
-/** @export @type {Function} */
+/** @export */
 _model_class.constructor.prototype.onUpdate;
-/** @export @type {Function} */
+/** @export */
 _model_class.constructor.prototype.onSave;
 
-/**
- * Controller Interface
- * @interface
- * @template Controller
- * @this {_controller_struct}
- * @const
- */
 
-function _controller_struct(){}
-/** @export @type {Function} */
+
+/** @export */
 _controller_struct.prototype.render;
-/** @export @type {Function} */
+/** @export */
 _controller_struct.prototype.build;
-/** @export @type {Function} */
+/** @export */
 _controller_struct.prototype.request;
-/** @export @type {Function} */
+/** @export */
 _controller_struct.prototype.requestBatch;
-/** @export @type {Function} */
+/** @export */
 _controller_struct.prototype.requestSync;
 
-/**
- * Route Interface
- * @typedef {_route_struct}
- * @const
- */
 
-var _route_struct = {
+/** @export */
+_route_struct.to;
+/** @export */
+_route_struct.action;
+/** @export */
+_route_struct.type;
+/** @export */
+_route_struct.field;
+/** @export */
+_route_struct.limit;
+/** @export */
+_route_struct.last;
+/** @export */
+_route_struct.params;
+/** @export */
+_route_struct.header;
+/** @export */
+_route_struct.cache;
+/** @export */
+_route_struct.clear;
+/** @export */
+_route_struct.async;
+/** @export */
+_route_struct.default;
+/** @export */
+_route_struct.error;
+/** @export */
+_route_struct.filter;
+/** @export */
+_route_struct.arrayfilter;
+/** @export */
+_route_struct.sort;
+/** @export */
+_route_struct.map;
+/** @export */
+_route_struct.arraymap;
 
-    /** @export @type {string} */
-    to: '',
 
-    /** @export @type {string} */
-    action: '',
+/** @export @dict */
+_mapping_struct.mapToView;
+/** @export @dict */
+_mapping_struct.mapToPayload;
+/** @export @dict */
+_mapping_struct.mapToData;
 
-    /** @export @type {string} */
-    type: '',
 
-    /** @export @type {string} */
-    field: '',
 
-    /** @export @type {number} */
-    limit: 0,
+/** @export */
+_template_struct.data;
+/** @export */
+_template_struct.map;
+/** @export */
+_template_struct.if;
+/** @export */
+_template_struct.loop;
+/** @export */
+_template_struct.include;
+/** @export */
+_template_struct.else;
 
-    /** @export @type {number} */
-    last: 0,
 
-    /** @export @type {Object<string, string|number|boolean>} */
-    params: {},
 
-    /** @export @type {Object<string, string>} */
-    header: {},
+/** @export */
+_view_model.data;
+/** @export */
+_view_model.target;
+/** @export */
+_view_model.view;
+/** @export */
+_view_model.default;
+/** @export */
+_view_model.callback;
 
-    /** @export @type {boolean} */
-    cache: false,
 
-    /** @export @type {boolean} */
-    clear: false,
-
-    /** @export @type {boolean} */
-    async: true,
-
-    /** @export @type {Function} */
-    default: function(){},
-
-    /** @export @type {Function} */
-    error: function(){},
-
-    /** @export @type {Function} */
-    filter: function(){},
-
-    /** @export @type {Function} */
-    arrayfilter: function(){},
-
-    /** @export @type {Function} */
-    sort: function(){},
-
-    /** @export @type {Function} */
-    map: function(){},
-
-    /** @export @type {Function} */
-    arraymap: function(){}
-};
-
-/**
- * Mapping Interface
- * @typedef {_mapping_struct}
- * @const
- */
-
-var _mapping_struct = {
-
-    /** @dict */
-    mapToView: {},
-
-    /** @dict */
-    mapToPayload: {},
-
-    /** @dict */
-    mapToData: {}
-};
-
-/**
- * Template Interface
- * @typedef {_template_struct}
- * @const
- */
-
-var _template_struct = {
-
-    /** @export @type {Array<string|number>} */
-    data: [],
-
-    /** @export @type {Array<string>} */
-    map: [],
-
-    /** @export @type {function(*):boolean} */
-    if: function(){},
-
-    /** @export @type {string} */
-    loop: '',
-
-    /** @export @type {string} */
-    include: '',
-
-    /** @export @type {string} */
-    else: ''
-};
-
-/**
- * View Model Interface
- * @typedef {_view_model}
- * @const
- */
-
-var _view_model = {
-
-    /** @export @type {Array<*>} */
-    data: [],
-
-    /** @export @type {string} */
-    target: '',
-
-    /** @export @type {string} */
-    view: '',
-
-    /** @export @type {string|_view_model} */
-    default: '',
-
-    /** @export @type {string|Function} */
-    callback: ''
-};
-
-/**
- * Cache Interface
- * @interface
- * @template CACHE
- * @this {_cache_struct}
- * @const
- */
-
-function _cache_struct() {}
-/** @export @type {function(string, *, boolean=)} */
+/** @export */
 _cache_struct.prototype.set;
-/** @export @type {function(string, boolean=):*} */
+/** @export */
 _cache_struct.prototype.get;
-/** @export @type {function(string):*} */
+/** @export */
 _cache_struct.prototype.remove;
-/** @export @type {function()} */
+/** @export */
 _cache_struct.prototype.clear;
 
-/**
- * Build Pattern Interface
- * @typedef {_pattern_struct}
- * @const
- */
 
-var _pattern_struct = {
+/** @export */
+_pattern_struct.tag;
+/** @export */
+_pattern_struct.attr;
+/** @export */
+_pattern_struct.text;
+/** @export */
+_pattern_struct.child;
+/** @export */
+_pattern_struct.length;
 
-    /** @export @type {string} */
-    tag: '',
 
-    /** @export @type {Object<string, string>|Array<Object<string, string>>} */
-    attr: {},
 
-    /** @export @type {string} */
-    text: '',
+/** @export */
+_event_struct.on;
+/** @export */
+_event_struct.if;
+/** @export */
+_event_struct.to;
+/** @export */
+_event_struct.do;
+/** @export */
+_event_struct.go;
+/** @export */
+_event_struct.stopBubble;
+/** @export */
+_event_struct.preventDefault;
 
-    /** @export @type {Array<_pattern_struct>} */
-    child: [],
 
-    /** @export @type {number} */
-    length: 0
-};
 
-/**
- * Application Storage Interface
- * @typedef {_storage_struct}
- * @const
- */
+/** @export */
+_ajax_struct.type;
+/** @export */
+_ajax_struct.url;
+/** @export */
+_ajax_struct.params;
+/** @export */
+_ajax_struct.success;
+/** @export */
+_ajax_struct.error;
+/** @export */
+_ajax_struct.header;
+/** @export */
+_ajax_struct.async;
+/** @export */
+_ajax_struct.clear;
+/** @export */
+_ajax_struct.cache;
 
-var _storage_struct = {
 
-    VIEW: '',
-    DATA: {},
-    SESSION: '',
-    CACHE: []
-};
 
-/**
- * Event Interface
- * @typedef {_event_struct}
- * @const
- */
-
-var _event_struct = {
-
-    /** @export @type {string} */
-    on: '',
-
-    /** @export @type {string} */
-    if: '',
-
-    /** @export @type {string} */
-    to: '',
-
-    /** @export @type {Object<string, string|number>} */
-    //params: {},
-
-    /** @export @type {Function} */
-    do: function(){},
-
-    /** @export @type {string} */
-    go: '',
-
-    /** @export @type {boolean} */
-    stopBubble: true,
-
-    /** @export @type {boolean} */
-    preventDefault: true
-};
-
-/**
- * AJAX Request Object Interface
- * @typedef {_ajax_struct}
- * @const
- */
-
-var _ajax_struct = {
-
-    /** @export @type {string} */
-    type: '',
-
-    /** @export @type {string} */
-    url: '',
-
-    /** @export @type {Object<string, string|number>} */
-    params: {},
-
-    /** @export @type {Function} */
-    success: function(){},
-
-    /** @export @type {Function} */
-    error: function(){},
-
-    /** @export @type {Object<string, string>} */
-    header: {},
-
-    /** @export @type {boolean} */
-    async: true,
-
-    /** @export @type {boolean} */
-    clear: true,
-
-    /** @export @type {boolean} */
-    cache: true
-};
-
-/**
- * Storage Interface
- * @interface
- * @template Storage
- * @this {_storage_interface}
- * @param {!string} store_id
- * @const
- */
-
-function _storage_interface(store_id) {}
-/** @export @type {Function} */
+/** @export */
 _storage_interface.prototype.get;
-/** @export @type {Function} */
+/** @export */
 _storage_interface.prototype.set;
-/** @export @type {Function} */
+/** @export */
 _storage_interface.prototype.update;
-/** @export @type {Function} */
+/** @export */
 _storage_interface.prototype.del;
-/** @export @type {Function} */
+/** @export */
 _storage_interface.prototype.clear;
-/** @export @type {Function} */
+/** @export */
 _storage_interface.prototype.keys;
+
+
+
+/** @export */
+_fatjob_interface.prototype.animate;
+/** @export */
+_fatjob_interface.prototype.colorHandler;
+
+
+
+/** @export */
+FAT_CANVAS_CLASS.prototype.add;
+/** @export */
+FAT_CANVAS_CLASS.prototype.render;
+
+
+/** @export */
+CSSJOB_CLASS.prototype.set;
+
+
+/** @export */
+FAT_SHAPE_CLASS.prototype.moveTo;
+/** @export */
+FAT_SHAPE_CLASS.prototype.moveBy;
+/** @export */
+FAT_SHAPE_CLASS.prototype.resize;
+/** @export */
+FAT_SHAPE_CLASS.prototype.draw;

@@ -54,13 +54,13 @@ function walkAsync(currentDirPath, callback) {
 }
 
 var manifest = {};
+var require_count = {};
+var file_map = {};
 var files = {};
 var order = [];
 var updates = [];
 
-var parse_depedencies = function(filePath, js, is_update){
-
-    //console.log("File: " + filePath);
+var parse_dependencies = function(filePath, js, is_update){
 
     filePath = path.normalize(filePath);
     js = js.replace(/\/\*[\s\S]*?\*\/|([^\\:]|^)\/\/.*$/gm, '$1');
@@ -75,15 +75,13 @@ var parse_depedencies = function(filePath, js, is_update){
 
         pos += 14;
 
-        //console.log(js.substring(pos, js.indexOf(")", pos) - 1));
+        var key = js.substring(pos, js.indexOf(")", pos) - 1);
 
-        if(!manifest[js.substring(pos, js.indexOf(")", pos) - 1)]){
+        if(!manifest[key]){
 
             valid = false;
 
             if(!is_update) {
-
-                //console.log(filePath + ' requires: ' + js.substring(pos, js.indexOf(")", pos) - 1));
 
                 updates.push({
 
@@ -91,12 +89,13 @@ var parse_depedencies = function(filePath, js, is_update){
                     js: js,
                 });
             }
-            else{
-
-                //console.log(filePath + ' requires: ' + js.substring(pos, js.indexOf(")", pos) - 1));
-            }
 
             break;
+        }
+
+        if(file_map[key]) {
+
+            require_count[file_map[key]] ? require_count[file_map[key]]++ : require_count[file_map[key]] = 1;
         }
     }
 
@@ -108,15 +107,19 @@ var parse_depedencies = function(filePath, js, is_update){
 
             pos += 14;
 
-            if(!manifest[js.substring(pos, js.indexOf(")", pos) - 1)]){
+            var key = js.substring(pos, js.indexOf(")", pos) - 1);
 
-                manifest[js.substring(pos, js.indexOf(")", pos) - 1)] = true;
+            file_map[key] = filePath;
+
+            if(!manifest[key]){
+
+                manifest[key] = true;
                 update = true;
 
                 if(!files[filePath]){
 
                     files[filePath] = true;
-                    order.push(path.normalize(filePath).replace("app//", "").replace("app\\", ""));
+                    order.push(filePath);
                 }
             }
         }
@@ -126,19 +129,15 @@ var parse_depedencies = function(filePath, js, is_update){
 
         for(var i = 0; i < updates.length; i++){
 
-            if(parse_depedencies(updates[i].filePath, updates[i].js, true)){
+            if(parse_dependencies(updates[i].filePath, updates[i].js, true)){
+
+                // updates.splice(i--, 1);
 
                 // TODO start from beginning really required when recursive?
-                //updates.splice(i--, 1);
                 updates.splice(i, 1);
                 i = -1;
             }
         }
-    }
-
-    if(!is_update){
-
-        //console.log('-------------------------');
     }
 
     return valid;
@@ -152,46 +151,75 @@ var status = true;
 var loose = true;
 
 manifest.PLATFORM = xone_manifest.platform;
-//manifest.CONFIG = true;
+manifest.CONFIG = true;
+manifest.ENV = true;
+manifest.INIT = true;
 
-parse_depedencies(path.normalize('app/config/' + xone_manifest.env + '.js'), fs.readFileSync(path.normalize('app/config/' + xone_manifest.env + '.js'), 'utf8'));
-parse_depedencies(path.normalize('app/lib/xone/local/env.js'), fs.readFileSync(path.normalize('app/lib/xone/local/env.js'), 'utf8'));
-
-//parse_depedencies('app/config/production.js', fs.readFileSync('app/config/production.js', 'utf8'));
+//parse_dependencies(path.normalize('app/config/' + xone_manifest.env + '.js'), fs.readFileSync(path.normalize('app/config/' + xone_manifest.env + '.js'), 'utf8'));
+//parse_dependencies(path.normalize('app/lib/xone/local/env.js'), fs.readFileSync(path.normalize('app/lib/xone/local/env.js'), 'utf8'));
+//parse_dependencies('app/config/production.js', fs.readFileSync('app/config/production.js', 'utf8'));
 
 walkSync('./app/lib/xone/core/', function(filePath){
 
-    if(filePath.indexOf('lib/xone/env.js') === -1 && filePath.indexOf('lib\\xone\\env.js') === -1) parse_depedencies(filePath, fs.readFileSync(filePath, 'utf8'));
+    parse_dependencies(filePath, fs.readFileSync(filePath, 'utf8'));
 });
 
 walkSync('./app/lib/xone/lib/', function(filePath){
 
-    parse_depedencies(filePath, fs.readFileSync(filePath, 'utf8'));
+    parse_dependencies(filePath, fs.readFileSync(filePath, 'utf8'));
 });
+
+parse_dependencies(path.normalize('app/layout/layout.js'), fs.readFileSync(path.normalize('app/layout/layout.js'), 'utf8'));
+parse_dependencies(path.normalize('app/view/view.js'), fs.readFileSync(path.normalize('app/view/view.js'), 'utf8'));
 
 walkSync('./app/js/', function(filePath){
 
-    if(filePath.indexOf('app/js/main.js') === -1 && filePath.indexOf('app\\js\\main.js') === -1) parse_depedencies(filePath, fs.readFileSync(filePath, 'utf8'));
+    /*if(filePath.indexOf('app/js/main.js') === -1 && filePath.indexOf('app\\js\\main.js') === -1) */
+    parse_dependencies(filePath, fs.readFileSync(filePath, 'utf8'));
 });
 
-parse_depedencies(path.normalize('app/layout/layout.js'), fs.readFileSync(path.normalize('app/layout/layout.js'), 'utf8'));
-parse_depedencies(path.normalize('app/view/view.js'), fs.readFileSync(path.normalize('app/view/view.js'), 'utf8'));
-parse_depedencies(path.normalize('app/js/main.js'), fs.readFileSync(path.normalize('app/js/main.js'), 'utf8'));
+//parse_dependencies(path.normalize('app/js/main.js'), fs.readFileSync(path.normalize('app/js/main.js'), 'utf8'));
 
 for(var i = 0; i < updates.length; i++){
 
     if(!loose){
 
-        order.push(path.normalize(updates[i].filePath).replace("app//", "").replace("app\\", ""));
+        order.push(updates[i].filePath);
         updates.splice(i--, 1);
     }
     else{
 
-        console.warn("Dependecy skipped: " + updates[i].filePath);
+        console.warn("Unused dependency skipped: " + updates[i].filePath);
     }
 }
 
-fs.writeFileSync('app/deps.js', "var DEPS = " + JSON.stringify(order, null, "\t") + ";", 'utf8');
+order = order.filter(function(value){
+
+    if(!require_count[value]){
+
+        console.warn("Unused dependency skipped: " + value);
+    }
+
+    return !!require_count[value];
+});
+
+order = order.map(function(value){
+
+    return path.normalize(value).replace("app//", "").replace("app\\", "");
+});
+
+//console.log(order);
+
+fs.writeFileSync('app/deps.js', (
+
+    "/**\n" +
+    " * DEPS\n" +
+    " * @const\n" +
+    " * @type {JSON}\n" +
+    " */\n\n" +
+    "var DEPS = " + JSON.stringify(order, null, "\t") + ";"
+
+), 'utf8');
 
 if(order.length){
 
@@ -204,7 +232,6 @@ if(order.length){
 
             console.log(Object.keys(manifest));
             console.log('-----------------------------------------------------');
-
             console.log(order);
             console.log('-----------------------------------------------------');
 

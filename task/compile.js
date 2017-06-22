@@ -449,4 +449,9 @@ if(fs.existsSync("app/css/build.less")) {
     ));
 }
 
-lib.exec('node "' + __dirname + '/deps" --silent');
+var xone_manifest = lib.loadJSON('app/manifest.js', 'MANIFEST');
+
+if(xone_manifest.dependencies.calculate_dependencies){
+
+    lib.exec('node "' + __dirname + '/deps" --silent');
+}

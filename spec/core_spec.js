@@ -24,7 +24,6 @@ describe("Check Core Initialize Status", function() {
         expect(APP).toHaveObject("DEVICE");
         expect(APP).toHaveObject("HANDLER");
         expect(APP).toHaveObject("HELPER");
-        expect(APP).toHaveObject("HTML");
         expect(APP).toHaveObject("STORAGE");
         expect(APP).toHaveObject("VARS");
         expect(APP).toHaveObject("VIEW");
@@ -33,9 +32,13 @@ describe("Check Core Initialize Status", function() {
         expect(APP).toHaveObject("PLUGIN");
         expect(APP).toHaveObject("WORKER");
 
-        expect(APP).toHaveMethod("INIT");
-        expect(APP).toHaveMethod("MAIN");
-        expect(APP).toHaveMethod("SETUP");
+        if(CONFIG.ENV !== 'test_lib'){
+
+            expect(APP).toHaveMethod("INIT");
+            expect(APP).toHaveMethod("SETUP");
+            expect(APP).toHaveMethod("MAIN");
+            expect(APP).toHaveObject("HTML");
+        }
     });
 
     it("Check if core contains all required functions", function() {

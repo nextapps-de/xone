@@ -51,7 +51,7 @@ Xone basically is available in 3 different versions:
     * Provides you a scalable development stack for modern web-based applications on top of Node.js
     * Is intended for a compilation/build
 2. __Xone Extern Bundle__ (Standalone)
-    * [_xone.bundle.js_](//cdn.rawgit.com/next-apps/xone/master/dist/xone.bundle.js)  >  [_xone.bundle.min.js_](//cdn.rawgit.com/next-apps/xone/master/dist/xone.bundle.min.js)
+    * [_xone.bundle.js_](//cdn.rawgit.com/next-apps/xone/master/dist/xone.bundle.js)
     * Alternatively use this bundle to add Xone as a dependency to an already existing build/compiler system (compatible with Closure Compiler "Advanced Mode")
     * Is intended for a compilation/build
 3. __Xone Extern Library__ (Standalone)

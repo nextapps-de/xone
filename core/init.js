@@ -12,6 +12,7 @@ goog.require('APP.MAIN');
 goog.require('APP.VIEW');
 goog.require('APP.HTML');
 goog.require('APP.LAYOUT');
+goog.require('APP.REQUIRE');
 
 /*goog.require('CORE.RETINA');*/
 /*goog.require('APP.VIEWPORT');*/
@@ -850,3 +851,7 @@ goog.require('APP.LAYOUT');
     };
 
 })();
+
+/**
+
+*/

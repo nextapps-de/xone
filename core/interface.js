@@ -418,7 +418,7 @@ _storage_interface.prototype.keys;
  * @param {Function|undefined} step
  * @public
  */
-function FATJOB_CLASS(
+function _fatjob_interface(
 
     //id,
     obj,
@@ -439,18 +439,19 @@ function FATJOB_CLASS(
     //checkkey,
     //DIFF,
 
-){};
+){}
+
 /**
  * @param {number} time
- * @this {FATJOB_CLASS}
+ * @this {_fatjob_interface}
  * @return {boolean}
  */
-FATJOB_CLASS.prototype.animate = function(time){};
+_fatjob_interface.prototype.animate;
 /**
  * @param {string} tmp
  * @param {string} to
  */
-FATJOB_CLASS.prototype.colorHandler = function(tmp, to){};
+_fatjob_interface.prototype.colorHandler;
 
 //------------------------------------------------------------------------------
 
@@ -468,7 +469,7 @@ function FAT_CLASS(){
      * @type {boolean}
      */
     this.EXEC;
-};
+}
 
 
 //------------------------------------------------------------------------------
@@ -490,15 +491,16 @@ function FAT_CANVAS_CLASS(
     height,
     useOffscreen
 
-){};
+){}
+
 /**
  * @param {FAT_SHAPE_CLASS} obj
  */
-FAT_CANVAS_CLASS.prototype.add = function(obj){};
+FAT_CANVAS_CLASS.prototype.add;
 /**
  * @param {number} time
  */
-FAT_CANVAS_CLASS.prototype.render = function(time){};
+FAT_CANVAS_CLASS.prototype.render;
 
 //------------------------------------------------------------------------------
 
@@ -522,9 +524,10 @@ function CSSJOB_CLASS(css, style, val){
      * @type {string|number}
      */
     this.val;
-};
+}
 
-CSSJOB_CLASS.prototype.set = function(){};
+/** @type {Function} */
+CSSJOB_CLASS.prototype.set;
 
 //------------------------------------------------------------------------------
 
@@ -551,23 +554,24 @@ function FAT_SHAPE_CLASS(
     lineWidth,
     strokeStyle,
     useBuffer
-){};
+){}
+
 /**
  * @param {number} x
  * @param {number} y
  */
-FAT_SHAPE_CLASS.prototype.moveTo = function(x, y){};
+FAT_SHAPE_CLASS.prototype.moveTo;
 /**
  * @param {number} x
  * @param {number} y
  */
-FAT_SHAPE_CLASS.prototype.moveBy = function(x, y){};
+FAT_SHAPE_CLASS.prototype.moveBy;
 /**
  * @param {number} w
  * @param {number} h
  */
-FAT_SHAPE_CLASS.prototype.resize = function(w, h){};
+FAT_SHAPE_CLASS.prototype.resize;
 /**
  * @param {CanvasRenderingContext2D} context
  */
-FAT_SHAPE_CLASS.prototype.draw = function(context){};
+FAT_SHAPE_CLASS.prototype.draw;

@@ -22,6 +22,9 @@ var MANIFEST = {
     // Manage project dependencies and externals
     "dependencies": {
 
+        // Enable dependency autosort (strict mode)
+        "calculate": false,
+
         "build": [
 
             "index.html",

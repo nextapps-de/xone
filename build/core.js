@@ -7,6 +7,8 @@ goog.require('CONFIG');
 goog.require('CORE');
 goog.require('APP');
 goog.require("DIST.APP");
+goog.require("DIST.INTERFACE");
+goog.require("CORE.ANIMATE");
 
 APP.VIEW = {};
 APP.HTML = {};
@@ -52,6 +54,17 @@ APP.SETUP = APP.MAIN;
         "paramsToString": CORE.paramsToString,
         "unique": CORE.unique,
         "reverse": CORE.reverse,
+        "merge": CORE.merge,
+        "shuffle": CORE.shuffle,
+        "fill": CORE.fill,
+        "sort": CORE.sort,
+        "sortAsc": CORE.sortAsc,
+        "sortDesc": CORE.sortDesc,
+        "sortNum": CORE.sortNum,
+        "sortNumAsc": CORE.sortNumAsc,
+        "sortNumDesc": CORE.sortNumDesc,
+        "replace": CORE.replace,
+        "count": CORE.count,
         "formatDate": CORE.formatDate,
         "formatNumber": CORE.formatNumber,
         "preloadImages": CORE.preloadImages,
@@ -68,6 +81,7 @@ APP.SETUP = APP.MAIN;
         "registerMap": CORE.registerMap,
         "registerFilter": CORE.registerFilter,
         "contains": CORE.contains,
+        "hasKeys": CORE.hasKeys,
         "getKeys": CORE.getKeys,
         "imageToDataUrl": CORE.imageToDataUrl,
         "Math": {
@@ -76,7 +90,8 @@ APP.SETUP = APP.MAIN;
             "rad": CORE.Math.rad,
             "cos": CORE.Math.cos,
             "sin": CORE.Math.sin,
-            "rnd": CORE.Math.rnd,
+            "round": CORE.Math.round,
+            "rand": CORE.Math.rand,
             "abs": CORE.Math.abs
         },
         "Browser": {
@@ -109,6 +124,7 @@ APP.SETUP = APP.MAIN;
         "paint": CORE.paint,
         "clear": CORE.clear,
         "animate": CORE.animate,
+        "transition": CORE.transition,
         "scrollTo": CORE.scrollTo,
         "scrollToTop": CORE.scrollToTop,
         "preventEvent": CORE.preventEvent,
@@ -123,7 +139,7 @@ APP.SETUP = APP.MAIN;
         "delegateByClass": CORE.delegateByClass,
         "delegateByTag": CORE.delegateByTag,
         "delegateByTagClass": CORE.delegateByTagClass,
-        "initRetina": CORE.initRetina,
+        //"initRetina": CORE.initRetina,
         "Storage": CORE.Storage
     };
 
