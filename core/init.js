@@ -852,6 +852,20 @@ goog.require('APP.REQUIRE');
 
 })();
 
-/**
-
-*/
+// CORE.ajax({
+//
+//     type: 'GET',
+//     url: 'lib/xone/gui/test.node.js',
+//     params: {
+//         fn: "test",
+//         payload: JSON.stringify({
+//             test: 1
+//         })
+//     },
+//     async: true,
+//     success: function(data){
+//
+//         if(data.json) alert(JSON.parse(data.json).test);
+//     }
+//     //dataType: type
+// });

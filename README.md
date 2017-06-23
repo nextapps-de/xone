@@ -25,7 +25,8 @@ __Xone__ provides a lightweight full stack environment to develop beautiful appl
 * [Basic Examples: MVC Pattern / Routes / Events / Templates / Dev Tools](doc/xone.md)
 * [Persistent Models](doc/xone_model.md)
 * [Core Library](doc/xone_core.md)
-* [AMD Loader, Build Plugin & Depedency Sorting](doc/xone_amd.md)
+* [Dependency Management & Calculation](doc/xone_deps.md)
+* [AMD Loader, Build Plugin](doc/xone_amd.md)
 * [Validations](doc/xone_validate.md)
 
 ---
@@ -360,8 +361,49 @@ CORE.paint(function(){
     display = document.getElementById('my_div').style.display;
     console.log(display); // -> 'none'
 });
-
 ```
+
+---
+
+### Development Environments
+
+Default environments are:
+
+- production (live build)
+- development (local)
+- test (local)
+- benchmark (local)
+
+Change environment in `app/manifest.js`:
+
+```json
+"env": "development",
+"platform": "www"
+```
+
+Or just adding parameters to the URL:
+
+```url
+http://localhost:9000/?env=test&platform=android&debug=true
+```
+
+> __Note:__ You are also able to override any `CONFIG` attribute by passing URL parameters respectively.
+
+##### Custom Environments
+
+Show currently defined environments:
+
+```bash
+my_project> xone env
+```
+
+Add custom environments:
+
+```bash
+my_project> xone env add offline
+```
+
+Build destination: _workspace/my_project/app/config/offline.js_
 
 ---
 
