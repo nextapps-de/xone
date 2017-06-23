@@ -318,10 +318,15 @@ The render engine provides an optional "fast mode" to get the most out of perfor
 
 > __Note:__ The "fast mode" is enabled by default in a _Xone Project_ (may change in future) and is disabled by default in the _Xone Extern Library_.
 
+<!--
 ###### Performance Comparison: Native VS. jQuery VS. Xone
-
+-->
+<!--
 * https://jsperf.com/xone-style-performance
+-->
+<!--
 * https://jsperf.com/xone-dom-selector-performance
+-->
 
 ###### Restrictions (when "fast mode" is enabled)
 

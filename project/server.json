@@ -1,0 +1,68 @@
+{
+    "server": {
+        "port": "9000",
+        "dir": "/",
+        "exitOnError": false,
+        "ssl": {
+            "enabled": false,
+            "key": "",
+            "cert": ""
+        }
+    },
+    "page": {
+        "script": "node.js",
+        "default": "index.html",
+        "error": {
+            "401": "app/lib/xone/gui/401.html",
+            "403": "app/lib/xone/gui/403.html",
+            "404": "app/lib/xone/gui/404.html",
+            "500": "app/lib/xone/gui/500.html"
+        }
+    },
+    "url": {
+        "/not-here.html": {
+            "alias": "test.html"
+        },
+        "/alias-recursion-1.html": {
+            "alias": "alias-recursion-2.html"
+        },
+        "/alias-recursion-2.html": {
+            "alias": "alias-recursion-1.html"
+        },
+        "/first/*": {
+            "alias": "/second/*"
+        }
+    },
+    "methods": {
+        "allowed": [
+            "OPTIONS",
+            "GET",
+            "POST",
+            "HEAD",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "COPY",
+            "LINK",
+            "UNLINK",
+            "TRACE",
+            "CONNECT"
+        ]
+    },
+    "log": {
+        "access": {
+            "enabled": true,
+            "path": "log/access.log",
+            "console": true
+        },
+        "error": {
+            "enabled": true,
+            "path": "log/error.log",
+            "console": true,
+            "debug": true
+        },
+        "warning": {
+            "enabled": true
+        }
+    }
+}
