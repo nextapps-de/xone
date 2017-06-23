@@ -83,6 +83,7 @@ APP.SETUP = APP.MAIN;
         "contains": CORE.contains,
         "hasKeys": CORE.hasKeys,
         "getKeys": CORE.getKeys,
+        "parseQuery": CORE.parseQuery,
         "imageToDataUrl": CORE.imageToDataUrl,
         "Math": {
             "min": CORE.Math.min,

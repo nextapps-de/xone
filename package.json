@@ -32,10 +32,10 @@
     "csso": "^3.1.1",
     "google-closure-compiler": "^20170521.0.0",
     "google-closure-compiler-js": "^20170521.0.0",
-    "http-server": "^0.10.0",
     "jasmine": "^2.6.0",
     "jsdoc": "^3.4.3",
     "less": "^2.7.2",
-    "less-plugin-clean-css": "^1.5.1"
+    "less-plugin-clean-css": "^1.5.1",
+    "web-servo": "^0.5.1"
   }
 }

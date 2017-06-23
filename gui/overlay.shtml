@@ -1,0 +1,3 @@
+<div style="position: absolute; top:0; left:0; right:0; bottom:0; background-color: rgba(26, 26, 26, 0.8); z-index: 999999">
+    <img src="lib/xone/gui/xone.svg" style="width: 25em; height: auto">
+</div>
