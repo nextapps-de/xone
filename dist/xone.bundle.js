@@ -1,5 +1,5 @@
 /**!
- * @preserve Xone Javascript Framework
+ * @preserve Xone Javascript Framework, v0.0.512
  * Copyright (c) 2017 NextApps, All rights reserved.
  */
 
@@ -2437,6 +2437,52 @@ CORE.getKeys = function(data) {
       prop = props[i];
       target[prop] = source[prop];
     }
+  };
+  /**
+ @param {!string} query
+ @return {Object<string,*>}
+ */
+CORE.parseQuery = function(query) {
+    var payload = {};
+    if ((query = String(query)).length) {
+      var pos;
+      if (query[0] === "?") {
+        query = query.substring(1);
+      } else {
+        if ((pos = query.indexOf("?")) !== -1) {
+          query = query.substring(pos + 1);
+        }
+      }
+      var array = query.split("&");
+      var entry;
+      var float;
+      var value;
+      for (var i = 0; i < array.length; i++) {
+        entry = array[i].split("=");
+        if (entry[0]) {
+          value = entry[1];
+          if (value === "false") {
+            value = false;
+          } else {
+            if (value === "true") {
+              value = true;
+            } else {
+              if (value === "null") {
+                value = null;
+              } else {
+                if (value.length === String(float = parseFloat(value)).length) {
+                  value = float;
+                } else {
+                  value = decodeURIComponent(value || "");
+                }
+              }
+            }
+          }
+          payload[decodeURIComponent(entry[0])] = value;
+        }
+      }
+    }
+    return payload;
   };
   /**
  @param {!string} src

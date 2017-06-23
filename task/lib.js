@@ -10,6 +10,7 @@ module.exports = {
     copyFolderRecursiveSync: copyFolderRecursiveSync,
     getDirectories: getDirectories,
     getFiles: getFiles,
+    getModule: getModule,
     deleteFiles: deleteFiles,
     loadJSON: loadJSON,
     exec: exec
@@ -221,4 +222,30 @@ function checkEnvironment(env){
 function checkXoneIntegration(path){
 
     return fs.existsSync(path + '/xone.json');
+}
+
+function getModule(name){
+
+    var xone_config = loadJSON('xone.json');
+    var resolved_path;
+
+    // lookup in default node_modules:
+    if(fs.existsSync(resolved_path = path.resolve(xone_config.node_modules_path, name))){
+
+        return resolved_path;
+    }
+    // lookup in xones node_modules:
+    else if(fs.existsSync(resolved_path = path.resolve(xone_config.node_modules_path, 'xone/node_modules/', name))){
+
+        return resolved_path;
+    }
+    // lookup in default node_modules if already in xone/node_modules/:
+    else if(fs.existsSync(resolved_path = path.resolve(xone_config.node_modules_path, '..', '..', name))){
+
+        return resolved_path;
+    }
+
+    console.warn("Cannot find module: '" + name + "'");
+
+    return false;
 }

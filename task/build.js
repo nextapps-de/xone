@@ -127,6 +127,7 @@ if(fs.existsSync(__dirname + '/build.js')){
         console.log("-----------------------------------------------------");
 
         var xone_config = lib.loadJSON('xone.json');
+        var node_config = lib.loadJSON('app/lib/xone/package.json');
         //var app_config = lib.loadJSON('app/config/app.js', 'APP_CONFIG');
         var xone_manifest = lib.loadJSON('app/manifest.js', 'MANIFEST');
         var dependencies = lib.loadJSON('app/deps.js', 'DEPS');
@@ -306,55 +307,40 @@ if(fs.existsSync(__dirname + '/build.js')){
 
         var build_callback_success = function(){
 
+            var compiled_code;
+
             if(parameter === 'bundle' || (parameter === 'lib' && !compress)){
 
-                var compiled_code = fs.readFileSync('tmp/build_tmp.js', 'utf8');
+                compiled_code = fs.readFileSync('tmp/build_tmp.js', 'utf8');
 
-                if(parameter === 'bundle'){
+                while(compiled_code.indexOf('goog.require(') !== -1){
 
-                    while(compiled_code.indexOf('goog.require(') !== -1){
+                    compiled_code = (
 
-                        compiled_code = (
-
-                            compiled_code.substring(0, compiled_code.indexOf('goog.require(')) +
-                            compiled_code.substring(compiled_code.indexOf(');', compiled_code.indexOf('goog.require(')) + 2)
-                        );
-                    }
-
-                    while(compiled_code.indexOf('goog.provide(') !== -1){
-
-                        compiled_code = (
-
-                            compiled_code.substring(0, compiled_code.indexOf('goog.provide(')) +
-                            compiled_code.substring(compiled_code.indexOf(');', compiled_code.indexOf('goog.provide(')) + 2)
-                        );
-                    }
-
-                    compiled_code = compiled_code.substring(0, compiled_code.indexOf(';', compiled_code.lastIndexOf('@define')) + 1) + '\n\n(function(){' + compiled_code.substring(compiled_code.indexOf(';', compiled_code.lastIndexOf('@define')) + 1) + '}).call(this);';
+                        compiled_code.substring(0, compiled_code.indexOf('goog.require(')) +
+                        compiled_code.substring(compiled_code.indexOf(');', compiled_code.indexOf('goog.require(')) + 2)
+                    );
                 }
 
-                compiled_code = (
+                while(compiled_code.indexOf('goog.provide(') !== -1){
 
-                    "/**!\n" +
-                    " * @preserve Xone Javascript Framework\n" +
-                    " * Copyright (c) 2017 NextApps, All rights reserved.\n" +
-                    " */\n"
+                    compiled_code = (
 
-                ) + compiled_code;
+                        compiled_code.substring(0, compiled_code.indexOf('goog.provide(')) +
+                        compiled_code.substring(compiled_code.indexOf(');', compiled_code.indexOf('goog.provide(')) + 2)
+                    );
+                }
+
+                compiled_code = compiled_code.substring(0, compiled_code.indexOf(';', compiled_code.lastIndexOf('@define')) + 1) + '\n\n(function(){' + compiled_code.substring(compiled_code.indexOf(';', compiled_code.lastIndexOf('@define')) + 1) + '}).call(this);';
 
                 fs.writeFileSync('tmp/build_tmp.js', compiled_code, 'utf8');
             }
 
             // if(!compress){
-            //
             //     var beautify = require('js-beautify').js_beautify;
-            //
             //     var data = fs.readFileSync('tmp/build_tmp.js', 'utf8');
-            //
             //     fs.writeFileSync('tmp/build_tmp.js', beautify(data, {
-            //
             //         indent_size: 4
-            //
             //     }), 'utf8');
             // }
 
@@ -363,13 +349,15 @@ if(fs.existsSync(__dirname + '/build.js')){
                 fs.mkdirSync('bin/' + target_platform + '/js');
             }
 
+            var compiled_file;
+
             if(parameter === 'bundle'){
 
-                lib.copyFileSync('tmp/build_tmp.js', build_path ? build_path + 'xone.bundle' + (compress ? '.min' : '') + '.js' : 'app/lib/xone/dist/xone.bundle' + (compress ? '.min' : '') + '.js', true);
+                lib.copyFileSync('tmp/build_tmp.js', compiled_file = (build_path ? build_path + 'xone.bundle' + (compress ? '.min' : '') + '.js' : 'app/lib/xone/dist/xone.bundle' + (compress ? '.min' : '') + '.js'), true);
             }
             else if(parameter === 'lib'){
 
-                lib.copyFileSync('tmp/build_tmp.js', build_path ? build_path + 'xone.lib' + (compress ? '.min' : '') + '.js' : 'app/lib/xone/dist/xone.lib' + (compress ? '.min' : '') + '.js', true);
+                lib.copyFileSync('tmp/build_tmp.js', compiled_file = (build_path ? build_path + 'xone.lib' + (compress ? '.min' : '') + '.js' : 'app/lib/xone/dist/xone.lib' + (compress ? '.min' : '') + '.js'), true);
             }
             else{
 
@@ -377,8 +365,35 @@ if(fs.existsSync(__dirname + '/build.js')){
 
                     return 'app/' + value;
 
-                }).concat(['tmp/build_tmp.js']), 'bin/' + target_platform + '/js/build.js', true);
+                }).concat(['tmp/build_tmp.js']), compiled_file = ('bin/' + target_platform + '/js/build.js'), true);
             }
+
+            compiled_code = fs.readFileSync(compiled_file, 'utf8');
+
+            compiled_code = (
+
+                "/**!\n" +
+                " * " + (parameter === 'bundle' ? '@preserve ' : '') + "Xone Javascript Framework (" + (parameter || 'Build') + ")\n" +
+                " * @version " + (node_config.version) + "\n" +
+                " * @author Thomas Wilkerling\n" +
+                " * @license Apache-2.0\n" +
+                " * @link https://www.npmjs.com/package/xone\n" +
+                " * @link https://github.com/next-apps/xone\n" +
+                " */\n"
+
+            ) + compiled_code;
+
+            var pos;
+
+            if((pos = compiled_code.indexOf('/*', 1)) > 0){
+
+                if((compiled_code[pos] !== ' ') && (compiled_code[pos] !== '\n')){
+
+                    compiled_code = compiled_code.substring(0, pos) + "\n" + compiled_code.substring(pos);
+                }
+            }
+
+            fs.writeFileSync(compiled_file, compiled_code, 'utf8');
         };
 
         // closure-compiler-js:
@@ -486,38 +501,32 @@ if(fs.existsSync(__dirname + '/build.js')){
                 }
             }
 
-            var path_to_csso;
+            var path_to_csso = lib.getModule('csso');
 
-            if(fs.existsSync(path.resolve(xone_config.node_modules_path, 'csso'))){
+            if(path_to_csso){
 
-                path_to_csso = path.resolve(xone_config.node_modules_path, 'csso');
+                lib.copyFileSync(css, 'tmp/style_tmp.css', true);
+
+                var result = require(path_to_csso).minify(fs.readFileSync('tmp/style_tmp.css', 'utf8'), {
+
+                    restructure: true,
+                    debug: false // 1, 2, 3
+                });
+
+                if(!fs.existsSync('bin/' + target_platform + '/css')){
+
+                    fs.mkdirSync('bin/' + target_platform + '/css');
+                }
+
+                fs.writeFileSync('bin/' + target_platform + '/css/style.css', result.css, 'utf8');
+
+                // yuicompressor:
+                // lib.exec('java -jar "' + xone_config.yui_compressor_path + 'build/yuicompressor-2.4.8.jar" -o tmp/style_tmp.css tmp/style_tmp.css -v --type css ' + xone_config.yui_compressor_options.join(' '), function(){
+                //     lib.copyFileSync('tmp/style_tmp.css', 'bin/' + target_platform + '/css/style.css', true);
+                // });
+
+                lib.exec('node "' + __dirname + '/refresh.js" ' + (platform || ''));
             }
-            else{
-
-                path_to_csso = path.resolve(xone_config.node_modules_path, '..', '..', 'csso');
-            }
-
-            lib.copyFileSync(css, 'tmp/style_tmp.css', true);
-
-            var result = require(path_to_csso).minify(fs.readFileSync('tmp/style_tmp.css', 'utf8'), {
-
-                restructure: true,
-                debug: false // 1, 2, 3
-            });
-
-            if(!fs.existsSync('bin/' + target_platform + '/css')){
-
-                fs.mkdirSync('bin/' + target_platform + '/css');
-            }
-
-            fs.writeFileSync('bin/' + target_platform + '/css/style.css', result.css, 'utf8');
-
-            // yuicompressor:
-            // lib.exec('java -jar "' + xone_config.yui_compressor_path + 'build/yuicompressor-2.4.8.jar" -o tmp/style_tmp.css tmp/style_tmp.css -v --type css ' + xone_config.yui_compressor_options.join(' '), function(){
-            //     lib.copyFileSync('tmp/style_tmp.css', 'bin/' + target_platform + '/css/style.css', true);
-            // });
-
-            lib.exec('node "' + __dirname + '/refresh.js" ' + (platform || ''));
         }
 
         console.log("Build Complete.\n");

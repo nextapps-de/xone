@@ -1,6 +1,6 @@
 {
   "name": "xone",
-  "version": "0.0.511",
+  "version": "0.0.513",
   "description": "Open source Javascript framework for building modern web applications.",
   "keywords": [
     "Javascript Framework",
@@ -24,7 +24,7 @@
     "url": "https://github.com/next-apps/xone.git"
   },
   "scripts": {},
-  "homepage": "http://nextapps.de",
+  "homepage": "https://next-apps.github.io/xone/",
   "author": "Thomas Wilkerling",
   "license": "Apache-2.0",
   "dependencies": {
