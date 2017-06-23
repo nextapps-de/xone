@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var parameter = process.argv[2];
-var platform = process.argv[3];
+var env = process.argv[3];
 var lib = require('./lib.js');
 
 switch(parameter){
@@ -75,42 +75,49 @@ switch(parameter){
 
 if(parameter === 'list'){
 
-    console.log("Current platforms:\n----------------------\n" + lib.getDirectories('app/platform').join("\n"));
-}
-else if(platform && parameter === 'delete') {
+    console.log("Current environments:\n----------------------\n" + lib.getFiles('app/config', 'js').map(
 
-    if(!lib.checkPlatform(platform)) {
+        function(value){
+
+            return value.substring(value.indexOf('config') + 7, value.lastIndexOf('.'))
+                        .replace(/\//g, '')
+                        .replace(/\\/g, '');
+        }
+
+    ).join("\n"));
+}
+else if(env && parameter === 'delete') {
+
+    if(!lib.checkEnvironment(env)) {
 
         return;
     }
     else{
 
-        //lib.deleteFiles('app/platform/' + platform);
+        //lib.deleteFiles('app/config/' + env + '.js');
 
-        console.log('Note: Deleting platforms is currently not supported.');
+        console.log('Note: Deleting environments is currently not supported.');
     }
 }
-else if(platform && parameter === 'add') {
+else if(env && parameter === 'add') {
 
-    if(platform === 'www' || platform === 'bundle' || platform === 'lib'){
+    if(env === 'production' || env === 'development' || env === 'benchmark' || env === 'test'){
 
-        console.log('Error: The platform name "' + platform + '" is not allowed.');
+        console.log('Error: The environment name "' + env + '" is not allowed.');
 
         return;
     }
 
     var fs = require('fs');
 
-    if(!fs.existsSync('app/platform/' + platform)) {
+    if(fs.existsSync('app/config/development.js')){
 
-        fs.mkdirSync('app/platform/' + platform);
-        fs.mkdirSync('app/platform/' + platform + '/css');
-        fs.mkdirSync('app/platform/' + platform + '/js');
-        fs.mkdirSync('app/platform/' + platform + '/img');
-        fs.mkdirSync('app/platform/' + platform + '/font');
-        fs.mkdirSync('app/platform/' + platform + '/asset');
-        fs.mkdirSync('app/platform/' + platform + '/lib');
+        lib.copyFileSync('app/config/development.js', 'app/config/' + env + '.js', true);
+    }
+    else{
+
+        lib.copyFileSync('app/lib/xone/project/app/config/development.js', 'app/config/' + env + '.js', true);
     }
 
-    console.log('The platform "' + platform + '" was successfully created in "app/platform/".');
+    console.log('The environment "' + env + '" was successfully created in "app/config/".');
 }

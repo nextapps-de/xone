@@ -5,6 +5,7 @@ var child_process = require('child_process');
 module.exports = {
 
     checkPlatform: checkPlatform,
+    checkEnvironment: checkEnvironment,
     copyFileSync: copyFileSync,
     copyFolderRecursiveSync: copyFolderRecursiveSync,
     getDirectories: getDirectories,
@@ -128,23 +129,6 @@ function copyFolderRecursiveSync(source, target, force){
     }
 }
 
-function checkPlatform(parameter){
-
-    if(parameter !== 'www' && !fs.existsSync('app/platform/' + parameter)){
-
-        console.log("Error: Platform '" + parameter + "' was not specified in 'app/platform/'");
-
-        return false;
-    }
-
-    else if(!fs.existsSync('bin/' + parameter)){
-
-        fs.mkdirSync('bin/' + parameter);
-    }
-
-    return true;
-}
-
 function getDirectories(dir){
 
     return fs.readdirSync(dir).filter(function(file) {
@@ -203,6 +187,35 @@ function deleteFiles(dirPath){
     }
 
     fs.rmdirSync(dirPath);
+}
+
+function checkPlatform(parameter){
+
+    if(parameter !== 'www' && !fs.existsSync('app/platform/' + parameter)){
+
+        console.log("Error: Platform '" + parameter + "' was not specified in 'app/platform/'");
+
+        return false;
+    }
+
+    else if(!fs.existsSync('bin/' + parameter)){
+
+        fs.mkdirSync('bin/' + parameter);
+    }
+
+    return true;
+}
+
+function checkEnvironment(env){
+
+    if(!fs.existsSync('app/config/' + env + '.js')){
+
+        console.log("Error: Environment '" + env + "' was not specified in 'app/config/'");
+
+        return false;
+    }
+
+    return true;
 }
 
 function checkXoneIntegration(path){

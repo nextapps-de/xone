@@ -109,7 +109,9 @@ else {
         'docs',
         'specs',
         'deploy',
-        'server'].indexOf(parameter) !== -1){
+        'server',
+        'deps',
+        'env'].indexOf(parameter) !== -1){
 
         var fs = require('fs');
         var dir = 'app/lib/xone/task/' + parameter + '.js';
