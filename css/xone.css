@@ -16,24 +16,7 @@ body {
     /*  Default Font */
     font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, 'SFUID', 'Lato', 'Helvetica Neue', 'HelveticaNeue-Light', Helvetica, Arial, 'Lucida Grande', SansSerif, sans-serif;
     /*  Default Style */
-    background-color:#252525;
-    background-image:linear-gradient(top, #333 0%, #111 51%);
-    background-image:-webkit-linear-gradient(top, #333 0%, #111 51%);
-    background-image:-ms-linear-gradient(top, #333 0%, #111 51%);
-    /*
-    background-image:-webkit-gradient(
-        linear,
-        left top,
-        left bottom,
-        color-stop(0, #111),
-        color-stop(0.51, #333)
-    );
-    */
-    /* Try Radial Gradient */
-    /*
-    background-image:radial-gradient(ellipse at center, rgba(30, 30, 30, 1) 0%, rgba(45, 45, 45, 1) 47%, rgba(55, 55, 55, 1) 100%);
-    background-image:-webkit-radial-gradient(ellipse at center, rgba(30, 30, 30, 1) 0%, rgba(45, 45, 45, 1) 47%, rgba(55, 55, 55, 1) 100%);
-    */
+    background-color:#222;
 }
 body *{
     /* make transparent link selection, adjust last value opacity 0 to 1.0 */

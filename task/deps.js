@@ -159,6 +159,11 @@ manifest.INIT = true;
 //parse_dependencies(path.normalize('app/lib/xone/local/env.js'), fs.readFileSync(path.normalize('app/lib/xone/local/env.js'), 'utf8'));
 //parse_dependencies('app/config/production.js', fs.readFileSync('app/config/production.js', 'utf8'));
 
+walkSync('./app/lib/xone/interface/', function(filePath){
+
+    parse_dependencies(filePath, fs.readFileSync(filePath, 'utf8'));
+});
+
 walkSync('./app/lib/xone/core/', function(filePath){
 
     parse_dependencies(filePath, fs.readFileSync(filePath, 'utf8'));

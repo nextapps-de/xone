@@ -451,7 +451,7 @@ if(fs.existsSync("app/css/build.less")) {
 
 var xone_manifest = lib.loadJSON('app/manifest.js', 'MANIFEST');
 
-if(xone_manifest.dependencies.calculate_dependencies){
+if(xone_manifest.dependencies.calculate){
 
     lib.exec('node "' + __dirname + '/deps" --silent');
 }

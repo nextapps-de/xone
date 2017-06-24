@@ -10,22 +10,36 @@ var local = false;
 switch(parameter){
 
     case '-l':
+    case '--l':
     case '--local':
+    case '-local':
     case 'local':
         parameter = false;
         path_to_folder = 'node_modules/xone';
         break;
 
+    case '--g':
     case '-g':
     case '--global':
+    case '-global':
     case 'global':
         parameter = false;
         path_to_folder = path.resolve(__dirname, '../');
         break;
 
+    case '--c':
+    case '-c':
+    case '--current':
+    case '-current':
+    case 'current':
+    case '--i':
+    case '-i':
+    case '--installed':
+    case '-installed':
+    case 'installed':
     case void 0:
         parameter = false;
-        path_to_folder = path.resolve(__dirname, '../'); //__dirname.substring(0, __dirname.lastIndexOf('/cli'));
+        path_to_folder = path.resolve('./app/lib/xone/') //__dirname.substring(0, __dirname.lastIndexOf('/cli'));
         break;
 
     case "remove_me_dummy":

@@ -852,20 +852,28 @@ goog.require('APP.REQUIRE');
 
 })();
 
-// CORE.ajax({
+// if(CONFIG.ENV !== 'production'){
 //
-//     type: 'GET',
-//     url: 'lib/xone/gui/test.node.js',
-//     params: {
-//         fn: "test",
-//         payload: JSON.stringify({
-//             test: 1
-//         })
-//     },
-//     async: true,
-//     success: function(data){
+//     CORE.ajax({
 //
-//         if(data.json) alert(JSON.parse(data.json).test);
-//     }
-//     //dataType: type
-// });
+//         type: 'GET',
+//         url: 'lib/xone/gui/node.js',
+//         params: {
+//             fn: "get",
+//             payload: JSON.stringify({
+//                 shtml: "overlay"
+//             })
+//         },
+//         //dataType: type
+//         async: true,
+//         success: function(data){
+//
+//             if(data.json && data.json.shtml) {
+//
+//                 var div = document.createElement('div');
+//                 div.innerHTML = data.json.shtml;
+//                 document.body.appendChild(div);
+//             }
+//         }
+//     });
+// }

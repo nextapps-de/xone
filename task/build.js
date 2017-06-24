@@ -200,7 +200,7 @@ if(fs.existsSync(__dirname + '/build.js')){
             xone_config.closure_compiler_jar.options.js.push("'app/lib/xone/lib/amd.js'");
             compiler_options.jsCode.push({path: "app/lib/xone/lib/amd.js"});
 
-            // if(xone_manifest.dependencies.calculate_dependencies){
+            // if(xone_manifest.dependencies.calculate){
             //
             //     xone_config.closure_compiler_jar.options.js.push("'app/lib/xone/build/env.js'");
             //     compiler_options.jsCode.push({path: "app/lib/xone/build/env.js"});
@@ -213,7 +213,7 @@ if(fs.existsSync(__dirname + '/build.js')){
 
             xone_config.closure_compiler_jar.options.js.unshift("'tmp/config.js'");
             compiler_options.jsCode.unshift({path: "tmp/config.js"});
-            if(xone_manifest.dependencies.calculate_dependencies) dependencies.unshift("lib/xone/build/env.js");
+            if(xone_manifest.dependencies.calculate) dependencies.unshift("lib/xone/build/env.js");
             dependencies.unshift("../tmp/config.js");
 
             //xone_config.closure_compiler_jar.options.js.push("'app/lib/xone/core/interface.js'");
@@ -231,6 +231,14 @@ if(fs.existsSync(__dirname + '/build.js')){
 
             ///*app_config.XONE_PATH +*/ 'lib/xone/lib/amd.js',
             /*app_config.XONE_PATH +*/ 'lib/xone/core/polyfill.js',
+            /*app_config.XONE_PATH +*/ 'lib/xone/interface/ajax.js',
+            /*app_config.XONE_PATH +*/ 'lib/xone/interface/event.js',
+            /*app_config.XONE_PATH +*/ 'lib/xone/interface/model.js',
+            /*app_config.XONE_PATH +*/ 'lib/xone/interface/pattern.js',
+            /*app_config.XONE_PATH +*/ 'lib/xone/interface/route.js',
+            /*app_config.XONE_PATH +*/ 'lib/xone/interface/storage.js',
+            /*app_config.XONE_PATH +*/ 'lib/xone/interface/template.js',
+            /*app_config.XONE_PATH +*/ 'lib/xone/interface/view.js',
             /*app_config.XONE_PATH +*/ 'lib/xone/core/interface.js',
             /*app_config.XONE_PATH +*/ 'lib/xone/build/env.js',
             /*app_config.XONE_PATH +*/ 'lib/xone/lib/graph.js',
@@ -374,11 +382,13 @@ if(fs.existsSync(__dirname + '/build.js')){
 
                 "/**!\n" +
                 " * " + (parameter === 'bundle' ? '@preserve ' : '') + "Xone Javascript Framework (" + (parameter || 'Build') + ")\n" +
-                " * @version " + (node_config.version) + "\n" +
+                " * @version " + (node_config.version) +  "\n" +
+                " * @build " + lib.crc32(compiled_code) + "/" + ((new Date()).getTime() + "").substring(1, 10) + "\n" +
                 " * @author Thomas Wilkerling\n" +
                 " * @license Apache-2.0\n" +
                 " * @link https://www.npmjs.com/package/xone\n" +
                 " * @link https://github.com/next-apps/xone\n" +
+                " * @tutorial https://next-apps.github.io/xone/\n" +
                 " */\n"
 
             ) + compiled_code;
@@ -401,7 +411,7 @@ if(fs.existsSync(__dirname + '/build.js')){
 
             //compiler_options.externs = xone_manifest.dependencies.js_extern;
 
-            if(xone_manifest.dependencies.calculate_dependencies && (parameter !== 'bundle') && (parameter !== 'lib')){
+            if(xone_manifest.dependencies.calculate && (parameter !== 'bundle') && (parameter !== 'lib')){
 
                 compiler_options.jsCode = dependencies.map(function(value){
 
@@ -448,7 +458,7 @@ if(fs.existsSync(__dirname + '/build.js')){
             });
             */
 
-            if(xone_manifest.dependencies.calculate_dependencies && (parameter !== 'bundle') && (parameter !== 'lib')){
+            if(xone_manifest.dependencies.calculate && (parameter !== 'bundle') && (parameter !== 'lib')){
 
                 xone_config.closure_compiler_jar.options.js = dependencies.map(function(value){
 
