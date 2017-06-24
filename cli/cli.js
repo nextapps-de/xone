@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 
 var parameter = process.argv[2] || 'help';
-var skip_global = false;
-var skip_local = false;
 
 switch(parameter){
 
@@ -51,50 +49,84 @@ switch(parameter){
         break;
 }
 
+var use_global = false;
+var use_local = false;
+var use_current = false;
+
 if(parameter === 'version' || parameter === 'help'){
 
     switch(process.argv[3]){
 
+        case '--g':
         case '-g':
         case '--global':
+        case '-global':
         case 'global':
-            skip_local = true;
+            use_global = true;
             break;
 
         case '-l':
+        case '--l':
         case '--local':
+        case '-local':
         case 'local':
-            skip_global = true;
+            use_local = true;
             break;
 
+        case '--c':
         case '-c':
         case '--current':
+        case '-current':
         case 'current':
-            skip_global = true;
-            skip_local = true;
+        case '--i':
+        case '-i':
+        case '--installed':
+        case '-installed':
+        case 'installed':
+        case void 0:
+            use_current = true;
             break;
 
-        case void 0:
-            skip_local = true;
+        default:
+            use_current = true;
             break;
     }
 }
 
+var fs = require('fs');
 var path = require('path');
 var lib = require('../task/lib.js');
 
 if(['help', 'version'].indexOf(parameter) !== -1) {
 
-    if(!skip_local){
+    if(use_current){
 
-        lib.exec('node "' + path.resolve('./node_modules/xone/task/',  parameter + '.js') + '" ' + (process.argv[3] || '') + ' ' + (process.argv[4] || ''));
+        if(fs.existsSync(path.resolve('./app/lib/xone/task/',  parameter + '.js'))){
+
+            lib.exec('node "' + path.resolve('./app/lib/xone/task/',  parameter + '.js') + '" ' + (process.argv[3] || '') + ' ' + (process.argv[4] || ''));
+        }
+        else{
+
+            console.warn("Warning: There was no local xone project found in '" + path.resolve('.') + "'");
+        }
     }
-    else{
+    else if(use_local){
+
+        if(fs.existsSync(path.resolve('./node_modules/xone/task/',  parameter + '.js'))){
+
+            lib.exec('node "' + path.resolve('./node_modules/xone/task/',  parameter + '.js') + '" ' + (process.argv[3] || '') + ' ' + (process.argv[4] || ''));
+        }
+        else{
+
+            console.warn("Warning: There are no local xone installation found in '" + path.resolve('./node_modules/xone/') + "'");
+        }
+    }
+    else if(use_global){
 
         lib.exec('node "' + path.resolve(__dirname, '..', 'task', parameter + '.js') /*__dirname.substring(0, __dirname.lastIndexOf('/cli')) + '/task/'*/ + '" ' + (process.argv[3] || '') + ' ' + (process.argv[4] || ''));
     }
 }
-else if(['create', 'install'].indexOf(parameter) !== -1 && !skip_global){
+else if(['create', 'install'].indexOf(parameter) !== -1 && !use_global){
 
     lib.exec('node "' + path.resolve(__dirname, parameter + '.js') + '" ' + (process.argv[3] || '') + ' ' + (process.argv[4] || ''));
 }
