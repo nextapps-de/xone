@@ -428,10 +428,10 @@ body, #intro, #header{
 
 @media (min-width: 2400px) {
     body {
-        font-size: 150%;
+        font-size: 125%;
     }
     .content_section{
-        max-width: 1500px;
+        max-width: 1080px;
     }
     #logo{
         padding: 0.65em 0;
@@ -442,10 +442,10 @@ body, #intro, #header{
 }
 @media (min-width: 3800px) {
     body {
-        font-size: 200%;
+        font-size: 150%;
     }
     .content_section{
-        max-width: 2000px;
+        max-width: 1480px;
     }
     #logo{
         padding: 1em 0;
@@ -455,6 +455,20 @@ body, #intro, #header{
     }
 }
 @media (min-width: 5600px) {
+    body {
+        font-size: 300%;
+    }
+    .content_section{
+        max-width: 3000px;
+    }
+    #logo{
+        padding: 1.5em 0;
+    }
+    #menu{
+        padding: 0.65em 0;
+    }
+}
+@media (min-width: 7200px) {
     body {
         font-size: 400%;
     }

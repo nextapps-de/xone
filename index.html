@@ -4,35 +4,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1, maximum-scale=1.0, user-scalable=no">
 
-    <!--
-                               888
-                               888
-                               888
-    88888b.   .d88b.  888  888 888888  8888b.  88888b.  88888b.  .d8888b
-    888 "88b d8P  Y8b `Y8bd8P' 888        "88b 888 "88b 888 "88b 88K
-    888  888 88888888   X88K   888    .d888888 888  888 888  888 "Y8888b.
-    888  888 Y8b.     .d8""8b. Y88b.  888  888 888 d88P 888 d88P      X88
-    888  888  "Y8888  888  888  "Y888 "Y888888 88888P"  88888P"   88888P'
-                                               888      888
-    Crossplatform Software Development         888      888
-                                               888      888
-    -->
-
-    <title>nextapps - Professionelle App-Entwicklung in Berlin</title>
+    <title>Xone - Javascript framework for building modern web applications</title>
 
     <meta name="robots" content="noindex, nofollow">
     <meta name="format-detection" content="telephone=no">
-    <!--
-    <meta name="description" content="Wir sind Ihre Agentur in Berlin für die Entwicklung plattformübergreifender Apps und skalierbarer Backends.">
-    <meta name="keywords" content="App Entwicklung in Berlin, Apps für Android und iOS entwickeln lassen, Crossplatform Apps, Softwareentwicklung, App Programmierung">
-    <meta property="og:url" content="http://nextapps.de">
-    <meta property="og:site_name" content="nextapps - Professionelle App-Entwicklung in Berlin">
-    <meta property="og:image" content="http://nextapps.de/img/logo.png">
-    -->
 
-    <!--
-    <link rel="shortcut icon" href="http://nextapps.de/img/favicon.ico">
-    -->
     <link rel="icon" type="image/png" href="page/img/favicon.png">
     <link rel="stylesheet" href="page/css/fonts.css">
     <link rel="stylesheet" href="page/css/reset.css">
@@ -40,17 +16,47 @@
     <link rel="stylesheet" href="page/css/style.css">
     <link rel="stylesheet" href="page/css/effect.css">
     <link rel="stylesheet" href="page/css/mobile.css">
-    <!--
-    <link rel="canonical"  href="http://nextapps.de">
-    -->
 
-    <link rel='stylesheet' href='//cdn.jsdelivr.net/font-hack/2.020/css/hack.min.css'>
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/font-hack/2.020/css/hack.min.css'>
     <link rel="stylesheet" href="page/lib/highlight/styles/agate.css">
 
     <style>
         a{
             color:#f25319;
             font-weight: 600;
+        }
+        h2{
+            margin: 0.5em 0 1em 0;
+            text-align: left;
+        }
+        ul{
+            list-style: square;
+            padding-left: 2em;
+            padding-top: 0.5em;
+        }
+        ol{
+            list-style: decimal;
+            padding-left: 2em;
+            padding-top: 0.5em;
+        }
+        th{
+            padding:0.5em;
+            background-color: #e0e0e0;
+        }
+        td{
+            padding:0.5em;
+        }
+        /*tr:nth-child(even) {background: #CCC}*/
+        tr:nth-child(odd) {background: #fff}
+        .separator{
+            width: 100%;
+            border-top: 1px solid #e2e2e2;
+            border-bottom: 1px solid #fff;
+            margin: 2em auto 1.5em auto;
+        }
+        .tagline{
+            margin: 0.5em 0;
+            text-align: left;
         }
         .anchor{
             top: -30px;
@@ -64,6 +70,7 @@
             background-color: #333;
             margin:0;
             padding:1em 1.5em;
+            margin-top: 1em;
         }
         code{
             white-space: pre;
@@ -80,10 +87,18 @@
             position: absolute;
             right:0;
             top:0;
-            padding: 0.5em 1em;
+            margin-right: 2px;
+            padding: 0.4em 0.8em;
+            font-family: Hack;
+            opacity: 0.85;
         }
         code.js:before{
             content: 'Javascript';
+            background-color: #1fdf00;
+            color: #111;
+        }
+        code.json:before{
+            content: 'JSON';
             background-color: #1fdf00;
             color: #111;
         }
@@ -100,6 +115,88 @@
             background-color: #ffd800;
             color: #222;
         }
+        code.url:before{
+            content: '';
+            background-color: transparent;
+            display: none;
+        }
+        span.highlight{
+            background-color: wheat;
+            padding:0.1em 0.25em;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+        /*
+        .toggle-box{
+            height: 123em;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            display: block;
+            vertical-align: top;
+        }
+        */
+        .toggle-box-content{
+            position: relative;
+            height: 0px;
+            width: 100%;
+            padding: 0 1em;
+            overflow: hidden;
+            opacity: 0;
+            transform: scale(0.99);
+            transition: all 0.2s ease-out;
+        }
+        .toggle-box-content.active{
+            transform: scale(1);
+            opacity: 1;
+            height: auto;
+        }
+        .toggle-box-title{
+            height:3em;
+            line-height: 3em;
+            width: 100%;
+            padding:0 1em;
+            margin-bottom: 1em;
+            background-color: #ddd;
+            cursor: pointer;
+            transition: background-color 0.2s ease-out;
+            position: relative;
+        }
+        .toggle-box-title:after{
+            content: " ";
+            position: absolute;
+            right: 0;
+            top: 0;
+            display: inline-block;
+            width: 3em;
+            height: 3em;
+            background-image: url(page/img/arrow.svg);
+            background-position: top 0.5em right 0.65em;
+            background-repeat: no-repeat;
+            background-size: 2em 2em;
+        }
+        .toggle-box-title.active:after{
+            transform: scaleY(-1);
+            filter: FlipV;
+        }
+        .toggle-box-title.active{
+            background-color: wheat;
+        }
+        .toggle-box-title:hover{
+            background-color: wheat;
+            /*
+            padding-left: 1.1em;
+            background-position: top 0.65em right 0.65em;
+            */
+        }
+        @media (max-width: 500px) {
+            code:before{
+                position: relative;
+                display: block;
+                margin-bottom: 1em;
+                opacity: 0.65;
+            }
+        }
     </style>
 </head>
 <body>
@@ -111,10 +208,9 @@
     </tr>
     <tr>
         <td style="height: 1%">
-            <div id="slogan" class="animated fadeIn" style="animation-delay: 0.2s; background-image: url(page/img/xone.svg); background-position: center center; background-repeat: no-repeat; background-size: contain; height: 20vh; width: 100%;"></div>
-            <div id="headline" class="animated fadeIn" style="animation-delay: 0.4s; color:#555; text-shadow: none; font-size: 3vh; padding-top: 1vw">
-                Javascript framework for building modern web applications
-            </div>
+            <div id="slogan" class="animated fadeIn" style="animation-delay: 0.2s; background-image: url(page/img/xone.svg); background-position: center center; background-repeat: no-repeat; background-size: contain; height: 12vmin; width: 66%; max-width: 66%;"></div>
+            <br>
+            <div id="headline" class="animated fadeIn" style="animation-delay: 0.4s; color:#555; text-shadow: none; font-size: 3vh; padding-top: 1vw">Building an app with the Xone Javascript framework</div>
         </td>
     </tr>
     <tr>
@@ -122,7 +218,7 @@
     </tr>
     <tr>
         <td style="height: 5%">
-            <a href="#download" class="autoscroll animated fadeInDown" id="btn_more" style="animation-delay: 0.6s; font-size: 1.5vh;">&nbsp;Start Tutorial&nbsp;</a>
+            <a href="#start" class="autoscroll animated fadeInDown" id="btn_more" style="animation-delay: 0.6s; font-size: 1.5vh;">&nbsp;Start Tutorial&nbsp;</a>
         </td>
     </tr>
     <tr>
@@ -130,7 +226,7 @@
     </tr>
     <tr>
         <td style="height: 5em;">
-            <div id="arrow_bottom" href="#download" class="autoscroll animated fadeInDown" style="animation-delay: 0.8s;"></div>
+            <div id="arrow_bottom" href="#start" class="autoscroll animated fadeInDown" style="animation-delay: 0.8s;"></div>
         </td>
     </tr>
     <tr>
@@ -141,64 +237,432 @@
     <div class="content_wrapper">
         <section class="content_section">
 
-            <br><br><br>
-            <h2 class="wow fadeIn" style="text-align: left; margin:0"><a name="download" id="download" class="anchor"></a>Tutorial</h2>
-            <div class="tagline wow fadeIn" data-wow-delay="100ms" style="text-align: left; margin:0">Building an app with Xone</div>
+            <br><br>
+            <a name="start" id="start" class="anchor"></a>
+            <p>
+                This tutorial is a step by step explanation of most features provided by Xone and will be updated continuously.
+            </p>
             <br>
 
-            <div>
+            <h2>Installation</h2>
 
-                <p>
-                    This tutorial is a step by step explanation of most features provided by Xone and will be updated continuously.
-                </p>
+            <div class="toggle-box-title" onclick="toggleBox(this); return false;">
+                Installation (Global with CLI support)
+            </div>
+            <div class="toggle-box-content">
 
+                <div class="tagline" style="text-align: left">1.) Install Xone</div>
+
+                Install Xone via NPM (Node Package Manager, requires <a href="https://nodejs.org" target="_blank">Node.js</a>):
                 <br>
-                Xone Installation Requirements: <a href="https://nodejs.org" target="_blank">Node.js</a>
-                <br><br>
-
-                Install Xone via NPM (Node Package Manager):
-                <br><br>
                 <pre>
                     <code class="bash">> npm install -g xone</code>
                 </pre>
-                <br><br>
+                <br>
 
-                Create blank project folder an run from it:
-                <br><br>
+                <div class="tagline">2.) Create New Xone Project</div>
+
+                Create a blank project folder and run from there:
+                <br>
                 <pre>
                     <code class="bash">> xone create</code>
                 </pre>
-                <br><br>
+                <br>
 
-                Build the new created project:
-                <br><br>
+                <div class="tagline">3.) Build Xone Project</div>
+
+                Build the project:
+                <br>
                 <pre>
                     <code class="bash">> xone build</code>
                 </pre>
-                <br><br>
+                <br>
+
+                <div class="tagline">4.) Run Xone Project</div>
 
                 Start local webserver:
-                <br><br>
+                <br>
                 <pre>
                     <code class="bash">> xone server</code>
                 </pre>
-                <br><br>
+                <br>
 
                 Open your browser and goto:<br>
-                <ul style="list-style-type:square; padding-left: 2em">
-                    <li><a href="http://localhost/app">http://localhost/app</a> to run development environment</li>
-                    <li><a href="http://localhost/bin/www">http://localhost/bin/www</a> to run production build ("www" is the default platform)</li>
+                <ul>
+                    <li><a href="http://localhost/app">http://localhost/app/</a> to run development environment</li>
+                    <li><a href="http://localhost/bin/www">http://localhost/bin/www/</a> to run production build (<span class="highlight">www</span> is the default platform)</li>
                 </ul>
                 <br>
 
-                You will see this default placeholder screen of a new created project:<br>
+                If you have choosen "Create New Xone Project" then you will see the default Xone placeholder screen of a new created project:<br>
                 <br>
-                <img src="page/img/screen-1.png" style="width: 100%; max-width: 800px">
+                <img src="page/img/screen-1.png" style="width: 100%; max-width: 400px">
+
+                <br><br>
+            </div>
+
+            <div class="toggle-box-title" onclick="toggleBox(this); return false;">
+                Installation (Local with CLI fallback)
+            </div>
+
+            <div class="toggle-box-content">
+
+                <!--<h2>Xone Installation (Local)</h2>-->
+
+                A single local Xone installation (without any global installation in addition) does not support the CLI commands: <span class="highlight">xone ...</span>. Please install at least one global Xone installation via <span class="highlight">npm install -g xone</span> or use plain terminal commands alternatively (as shown below). For this reason each Xone project provides you a local command as an alternative fallback to the global CLI counterpart.
                 <br>
+
+                <div style="height: 1em"></div>
+                <div class="tagline">a) Download Xone (NPM)</div>
+
+                Create a blank project folder and run from there:
                 <br>
+                <pre>
+                    <code class="bash">> npm install xone</code>
+                </pre>
+                <br>
+
+                Accordingly to <span class="highlight">xone create</span>, <span class="highlight">xone update</span> and <span class="highlight">xone init</span> you can do same with:
+                <br>
+                <pre>
+                    <code class="bash">> node node_modules/xone/create</code>
+                </pre>
+                <pre>
+                    <code class="bash">> node node_modules/xone/update</code>
+                </pre>
+                <pre>
+                    <code class="bash">> node node_modules/xone/init</code>
+                </pre>
+
+                <div class="separator"></div>
+
+                <div class="tagline">b) Download Xone (Git, Zip)</div>
+
+                Create a blank project folder and run from there:
+                <br>
+                <pre>
+                    <code class="bash">> git clone https://github.com/next-apps/xone.git</code>
+                </pre>
+                <br>
+
+                Alternatively download this package: <a href="https://github.com/next-apps/xone/archive/master.zip" target="_blank">master.zip</a> and extract included xone folder into the project folder, e.g. <span class="highlight">my_project/xone/</span>.
+                <br><br>
+                Change into the extracted xone folder and start installation via NPM:
+                <br>
+                <pre>
+                    <code class="bash">> cd xone
+> npm install
+> cd ..</code>
+                </pre>
+                <br>
+
+                Accordingly to <span class="highlight">xone create</span>, <span class="highlight">xone update</span> and <span class="highlight">xone init</span> you can do same with:
+                <br>
+                <pre>
+                    <code class="bash">> node xone/create</code>
+                </pre>
+                <pre>
+                    <code class="bash">> node xone/update</code>
+                </pre>
+                <pre>
+                    <code class="bash">> node xone/init</code>
+                </pre>
+
+                <div class="separator"></div>
+
+                <div class="tagline">Local CLI Fallback</div>
+
+                You can use a local CLI fallback from the projects root folder.
+                <br>
+                For Windows users:
+                <pre>
+                    <code class="bash">> app build</code>
+                </pre>
+                <br>
+                For MacOS/Linux users:
+                <pre>
+                    <code class="bash">> bash xone build</code>
+                </pre>
+
+                <br><br>
+            </div>
+
+            <div class="toggle-box-title" onclick="toggleBox(this); return false;">
+                Installation (Migrate from existing codebase)
+            </div>
+
+            <div class="toggle-box-content">
+
+                <!--<h2>Xone Installation (Migrate)</h2>-->
+                <div class="tagline">1.) Initialize Xone Project</div>
+
+                If you have an already existing codebase and want to migrate this to a xone project, goto the projects root folder and run from there:
+                <br>
+                <pre>
+                    <code class="bash">> xone init</code>
+                </pre>
+                <br>
+
+                Move all your html, css and js contents/sources to the folder <span class="highlight">my_project/app/</span>. Accordingly CSS files are located in <span class="highlight">my_project/app/css/</span>, Javascript files are located in <span class="highlight">my_project/app/js/</span>.
+                <br>
+
+                <div style="height: 1em"></div>
+                <div class="tagline">2.) Provide Main Class</div>
+
+                Provide at least the <span class="highlight">APP.MAIN</span> class definition, e.g. in <span class="highlight">my_project/app/js/main.js</span>:
+                <br>
+                <pre>
+                    <code class="js">goog.provide('APP.MAIN');
+
+APP.MAIN = function(){
+
+    alert('Hello World!');
+};</code>
+                </pre>
+                <br><br>
+            </div>
+
+            <div class="toggle-box-title" onclick="toggleBox(this); return false;">
+                Update Xone Project Library
+            </div>
+
+            <div class="toggle-box-content">
+
+                <!--<h2>Xone Update (Global)</h2>-->
+                <div class="tagline">a) Xone Update (Global)</div>
+
+                In the root of your project folder run:
+                <br>
+                <pre>
+                    <code class="bash">> npm install -g xone</code>
+                </pre>
+                <br>
+
+                Install the new files from node modules to the project:
+                <br>
+                <pre>
+                    <code class="bash">> xone install</code>
+                </pre>
+
+                <div class="separator"></div>
+
+                <div class="tagline">b) Xone Update (Local)</div>
+                In the root of your project folder run:
+                <br>
+                <pre>
+                    <code class="bash">> npm install xone</code>
+                </pre>
+                <br>
+
+                Install the new files from node modules to the project:
+                <br>
+                <pre>
+                    <code class="bash">> xone install local</code>
+                </pre>
+                <br><br>
+            </div>
+
+            <h2>Manage</h2>
+
+            <div class="toggle-box-title" onclick="toggleBox(this); return false;">
+                Manage Xone Versions
+            </div>
+            <div class="toggle-box-content">
+
+                Check Current Installation:
+                <br>
+                <pre>
+                    <code class="bash">> xone version current</code>
+                </pre>
+                <br>
+
+                Check Global Node Modules:
+                <br>
+                <pre>
+                    <code class="bash">> xone version global</code>
+                </pre>
+                <br>
+
+                Check Local Node Modules:
+                <br>
+                <pre>
+                    <code class="bash">> xone version local</code>
+                </pre>
+                <br>
+
+                Check Custom Location:
+                <br>
+                <pre>
+                    <code class="bash">> node ./path/to/xone/version</code>
+                </pre>
+                <br>
+            </div>
+
+            <div class="toggle-box-title" onclick="toggleBox(this); return false;">
+                Manage Xone Environments
+            </div>
+            <div class="toggle-box-content">
+
+                <div class="tagline">a) Manage Default Environments</div>
+
+                Xone default environments are:
+                <ul>
+                    <li><span class="highlight">production</span> (build)</li>
+                    <li><span class="highlight">development</span> (local)</li>
+                    <li><span class="highlight">test</span> (local)</li>
+                    <li><span class="highlight">benchmark</span> (local)</li>
+                </ul>
+
+                <br>
+                Change current active environment in <span class="highlight">app/manifest.js</span>:
+                <br>
+                <pre>
+                    <code class="json">"env": "test"</code>
+                </pre>
+                <br>
+
+                Alternatively adding parameters to the URL:
+                <br>
+                <pre>
+                    <code class="url">http://localhost:9000/?env=test&platform=android&debug=true</code>
+                </pre>
+                <br>
+
+                You are also able to override any <span class="highlight">CONFIG</span> attribute by passing URL parameters respectively.
+
+                <div class="separator"></div>
+
+                <div class="tagline">b) Manage Custom Environments</div>
+
+                Show/List currently defined environments:
+                <br>
+                <pre>
+                    <code class="bash">> xone env list</code>
+                </pre>
+                <br>
+
+                Add custom environments:
+                <br>
+                <pre>
+                    <code class="bash">> xone env add offline</code>
+                </pre>
+                <br>
+                Creates a new env file in destination: <span class="highlight">workspace/my_project/app/config/offline.js</span>
+                <br><br>
 
             </div>
 
+            <div class="toggle-box-title" onclick="toggleBox(this); return false;">
+                Manage Xone Platforms
+            </div>
+            <div class="toggle-box-content">
+
+                <div class="tagline">a) Manage Default Platforms</div>
+
+                Xone default platform is called <span class="highlight">www</span>.
+                <br><br>
+
+                Change current active platform in <span class="highlight">app/manifest.js</span>:
+                <br>
+                <pre>
+                    <code class="json">"platform": "android"</code>
+                </pre>
+                <br>
+
+                Alternatively adding parameters to the URL:
+                <br>
+                <pre>
+                    <code class="url">http://localhost:9000/?env=test&platform=android&debug=true</code>
+                </pre>
+                <br>
+
+                You are also able to override any <span class="highlight">CONFIG</span> attribute by passing URL parameters respectively.
+
+                <div class="separator"></div>
+
+                <div class="tagline">b) Manage Custom Platforms</div>
+
+                Show/List currently defined platforms:
+                <br>
+                <pre>
+                    <code class="bash">> xone platform list</code>
+                </pre>
+                <br>
+
+                Add custom platform:
+                <br>
+                <pre>
+                    <code class="bash">> xone platform add webapp</code>
+                </pre>
+                <br>
+                Creates a new platform folder in destination: <span class="highlight">workspace/my_project/app/platform/webapp/*</span>
+                <br><br>
+
+                Make a build with the new platform:
+                <br>
+                <pre>
+                    <code class="bash">> xone build webapp</code>
+                </pre>
+                <br>
+                Build destination: <span class="highlight">workspace/my_project/bin/webapp/*</span>
+                <br><br>
+            </div>
+
+            <div class="toggle-box-title" onclick="toggleBox(this); return false;">
+                Configure Build Tool
+            </div>
+            <div class="toggle-box-content">
+
+                <div class="tagline">Notice</div>
+
+                Xone build uses the Google Closure Compiler under the hood. All Xone libraries also supports compilation in <span class="highlight">Advanced Mode</span>. The build properties can be configured in <span class="highlight">xone.json</span>. The Closure Compiler also provides a simple dependency management system (provide/require) you should make use of to improve dead code removal.
+                <br><br>
+
+                Actually Xone supports 2 different versions of closure compiler:
+
+                <ol>
+                    <li>requires Java</li>
+                    <li>requires Javascript (Node)</li>
+                </ol>
+                <br>
+
+                It is recommended to have a Java (JRE) properly installed on your machine to unlock some benefits of the Closure Compiler Java version.
+                <br>
+
+                <div style="height: 1em"></div>
+                <div class="tagline">a) Change Compiler</div>
+
+                To change the type of the compiler you need to change the value of the field <span class="highlight">closure_compiler_lib_type</span> from <span class="highlight">"js"</span> into <span class="highlight">"jar"</span> in <span class="highlight">xone.json</span> accordingly:
+
+                <pre>
+                    <code class="json">"closure_compiler_lib_type": "jar"</code>
+                </pre>
+                <br>
+
+                <div class="tagline">b) Configure Compilation</div>
+
+                If you have less experience with the Closure Compiler you can optionally set the compilation level to <span class="highlight">"simple"</span> on the field <span class="highlight">closure_compiler_level</span> within the xone config file:
+                <br>
+                <pre>
+                    <code class="json">"closure_compiler_level": "simple"</code>
+                </pre>
+                <br>
+
+                <div class="tagline">c) Disable Compilation</div>
+
+                You can do one of both in <span class="highlight">xone.json</span>:
+                <br>
+
+                <pre>
+                    <code class="json">"closure_compiler_lib_type": "none"</code>
+                </pre>
+                <pre>
+                    <code class="json">"closure_compiler_level": "none"</code>
+                </pre>
+
+                <br>
+            </div>
+            <br><br>
         </section>
     </div>
 </main>
@@ -215,5 +679,12 @@
 </footer>
 <script src="page/lib/highlight/highlight.pack.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
+<script>
+    window.toggleBox = function(node){
+
+        node.classList.toggle('active');
+        node.nextElementSibling.classList.toggle('active');
+    };
+</script>
 </body>
 </html>

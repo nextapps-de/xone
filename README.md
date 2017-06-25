@@ -1,6 +1,7 @@
 <p align="center">
-    <img src="http://nextapps.de/img/xone.svg" alt="Xone Javascript Development Environment">
     <br>
+    <img src="http://nextapps.de/img/xone.svg?rnd=1" alt="Xone Javascript Development Environment" width="50%">
+    <br><br>
     <a target="_blank" href="https://www.npmjs.com/package/xone"><img src="https://img.shields.io/npm/v/xone.svg"></a>
     <img src="https://img.shields.io/badge/status-ALPHA-orange.svg">
     <a target="_blank" href="https://travis-ci.org/next-apps/xone"><img src="https://travis-ci.org/next-apps/xone.svg?branch=master"></a>

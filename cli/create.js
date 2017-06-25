@@ -60,7 +60,7 @@ else{
     }
 
     lib.copyFolderRecursiveSync(path_to_folder + '/project/./', path.normalize(parameter.toLowerCase()), force);
-    lib.exec('node "' + path.resolve(__dirname, 'init.js') + '" remove_me_dummy ' + parameter);
+    lib.exec('node "' + path.resolve(__dirname, 'init.js') + '" ' + parameter);
 
     console.log("Project was successfully created.");
 }
