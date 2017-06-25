@@ -5,47 +5,113 @@ var parameter = process.argv[2] || 'help';
 switch(parameter){
 
     case '-h':
+    case '--h':
     case '--help':
+    case '-help':
+    case 'help':
+
+    case '-i':
+    case '--i':
+    case '--info':
+    case '-info':
+    case 'info':
+
         parameter = 'help';
         break;
 
-    case '-i':
-    case '--info':
-    case 'info':
     case '-v':
+    case '--v':
     case '--version':
+    case '-version':
+    case 'version':
+
         parameter = 'version';
         break;
 
     case '-c':
+    case '--c':
     case '--compile':
+    case '-compile':
+    case 'compile':
+
         parameter = 'compile';
         break;
 
     case '-r':
+    case '--r':
     case '--refresh':
+    case '-refresh':
+    case 'refresh':
+
         parameter = 'refresh';
         break;
 
     case '-b':
+    case '--b':
     case '--build':
+    case '-build':
+    case 'build':
+
         parameter = 'build';
         break;
 
     case '-d':
+    case '--d':
     case '--docs':
+    case '-docs':
+    case 'docs':
+
         parameter = 'docs';
         break;
 
-    case '-u':
     case '--update':
+    case '-update':
+    case 'update':
+
+    case '--install':
+    case '-install':
+    case 'install':
+
         parameter = 'install';
         break;
 
+    case '--init':
+    case '-init':
+    case 'init':
+
+        parameter = 'init';
+        break;
+
+    case '--new':
+    case '-new':
+    case 'new':
+
+    case '--create':
+    case '-create':
+    case 'create':
+
+        parameter = 'create';
+        break;
+
     case '-t':
+    case '--t':
     case '--test':
+    case '-test':
     case 'test':
+
+    case '-s':
+    case '--s':
+    case '--specs':
+    case '-specs':
+    case 'specs':
+
         parameter = 'specs';
+        break;
+
+    default:
+
+        console.warn("The passed parameter '" + String(parameter) + "' is not supported.");
+        parameter = 'help';
         break;
 }
 
@@ -126,7 +192,7 @@ if(['help', 'version'].indexOf(parameter) !== -1) {
         lib.exec('node "' + path.resolve(__dirname, '..', 'task', parameter + '.js') /*__dirname.substring(0, __dirname.lastIndexOf('/cli')) + '/task/'*/ + '" ' + (process.argv[3] || '') + ' ' + (process.argv[4] || ''));
     }
 }
-else if(['create', 'install'].indexOf(parameter) !== -1 && !use_global){
+else if(['create', 'install', 'init'].indexOf(parameter) !== -1 && !use_global){
 
     lib.exec('node "' + path.resolve(__dirname, parameter + '.js') + '" ' + (process.argv[3] || '') + ' ' + (process.argv[4] || ''));
 }

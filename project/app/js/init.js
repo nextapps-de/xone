@@ -1,7 +1,6 @@
 goog.provide('APP.INIT');
-goog.require('CONFIG');
-goog.require('CORE');
 goog.require('APP');
+goog.require('POLYFILL');
 
 APP.INIT = function(){
 

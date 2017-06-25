@@ -6,14 +6,14 @@ goog.require('CORE.PAINT');
 goog.require('CORE.EVENT');
 goog.require('CORE.STORAGE');
 goog.require('APP');
-goog.require('APP.INIT');
-goog.require('APP.SETUP');
+//goog.require('APP.INIT');
+//goog.require('APP.SETUP');
 goog.require('APP.MAIN');
 goog.require('APP.VIEW');
 goog.require('APP.HTML');
 goog.require('APP.LAYOUT');
-goog.require('APP.REQUIRE');
 
+//goog.require('APP.REQUIRE');
 /*goog.require('CORE.RETINA');*/
 /*goog.require('APP.VIEWPORT');*/
 /*goog.require('APP.EVENT');*/
@@ -105,7 +105,8 @@ goog.require('APP.REQUIRE');
 
         if(DEBUG) CORE.console.log('App initialized successfully.');
 
-        APP.SETUP();
+        //APP.SETUP();
+        APP.MAIN();
 
         //if(APP.VARS.CURRENT_USER) initialize_storage();
 
@@ -271,53 +272,60 @@ goog.require('APP.REQUIRE');
 
             for(var i = 0; i < definitions.length; i++) {
 
-                for(var a = 0; a < APP.HTML[definitions[i]].length; a++) {
+                if(APP.HTML[definitions[i]]) {
 
-                    var current = APP.HTML[definitions[i]][a];
-                    var include = current.include;
+                    for(var a = 0; a < APP.HTML[definitions[i]].length; a++) {
 
-                    if(include) {
+                        var current = APP.HTML[definitions[i]][a];
+                        var include = current.include;
 
-                        if(APP.HTML[include]) {
+                        if(include) {
 
-                            for(var x = 0; x < APP.HTML[include].length; x++) {
+                            if(APP.HTML[include]) {
 
-                                // var current_2 = APP.HTML[include][x];
-                                // var include_2 = current_2.include;
-                                // if(include_2) {
-                                //     for(var y = 0; y < APP.HTML[include_2].length; y++) {
-                                //         if(y === 0) APP.HTML[include][x] = current_2 = APP.HTML[include_2][y];
-                                //         else APP.HTML[include].splice(x + 1 + y, 0, APP.HTML[include_2][y]);
-                                //     }
-                                // }
+                                for(var x = 0; x < APP.HTML[include].length; x++) {
 
-                                if(x === 0) {
+                                    // var current_2 = APP.HTML[include][x];
+                                    // var include_2 = current_2.include;
+                                    // if(include_2) {
+                                    //     for(var y = 0; y < APP.HTML[include_2].length; y++) {
+                                    //         if(y === 0) APP.HTML[include][x] = current_2 = APP.HTML[include_2][y];
+                                    //         else APP.HTML[include].splice(x + 1 + y, 0, APP.HTML[include_2][y]);
+                                    //     }
+                                    // }
 
-                                    APP.HTML[definitions[i]][a] = current = APP.HTML[include][x];
+                                    if(x === 0) {
+
+                                        APP.HTML[definitions[i]][a] = current = APP.HTML[include][x];
+                                    }
+                                    else {
+
+                                        APP.HTML[definitions[i]].splice(a + x, 0, APP.HTML[include][x]);
+                                    }
                                 }
-                                else {
+                            }
+                            else if(APP.VIEW[include]){
 
-                                    APP.HTML[definitions[i]].splice(a + x, 0, APP.HTML[include][x]);
+                                for(var x = 0; x < APP.VIEW[include].length; x++) {
+
+                                    if(x === 0) {
+
+                                        APP.HTML[definitions[i]][a] = current = APP.VIEW[include][x];
+                                    }
+                                    else {
+
+                                        APP.HTML[definitions[i]].splice(a + x, 0, APP.VIEW[include][x]);
+                                    }
                                 }
                             }
                         }
-                        else if(APP.VIEW[include]){
 
-                            for(var x = 0; x < APP.VIEW[include].length; x++) {
-
-                                if(x === 0) {
-
-                                    APP.HTML[definitions[i]][a] = current = APP.VIEW[include][x];
-                                }
-                                else {
-
-                                    APP.HTML[definitions[i]].splice(a + x, 0, APP.VIEW[include][x]);
-                                }
-                            }
-                        }
+                        html += current.data[0];
                     }
+                }
+                else{
 
-                    html += current.data[0];
+                    if(DEBUG) CORE.console.warn("Warning: '" + definitions[i] + "' is not defined in 'app/layout/'.");
                 }
 
                 /* Friendly Garbage Collection */

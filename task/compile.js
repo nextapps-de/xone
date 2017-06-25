@@ -302,7 +302,7 @@ function compile_view_to_array(html, array, exp, not, loop){
 // sync version
 function walkSync(dir, callback) {
 
-    fs.readdirSync(dir).forEach(function(name) {
+    if(fs.existsSync(dir)) fs.readdirSync(dir).forEach(function(name) {
 
         var filePath = path.join(dir, name);
         var stat = fs.statSync(filePath);
@@ -324,7 +324,7 @@ function walkSync(dir, callback) {
 // async version with basic error handling
 function walkAsync(currentDirPath, callback) {
 
-    fs.readdir(currentDirPath, function (err, files) {
+    fs.readdir(currentDirPath, function(err, files) {
 
         if(err) throw new Error(err);
 
@@ -372,6 +372,7 @@ if(status){
 
     var output = JSON.stringify(views).replace(/"data":/g, 'data:').replace(/"map":/g, 'map:').replace(/"if":/g, 'if:').replace(/"else":/g, 'else:').replace(/"include":/g, 'include:');
 
+    lib.buildFolders('app/view/');
     fs.writeFileSync('app/view/view.js', "goog.provide('APP.VIEW');\nAPP.VIEW = " + output + ";\n", 'utf8');
 }
 
@@ -408,6 +409,7 @@ if(status){
 
     var output = JSON.stringify(views).replace(/"data":/g, 'data:').replace(/"map":/g, 'map:').replace(/"if":/g, 'if:').replace(/"else":/g, 'else:').replace(/"include":/g, 'include:');
 
+    lib.buildFolders('app/layout/');
     fs.writeFileSync('app/layout/layout.js', "goog.provide('APP.HTML');\nAPP.HTML = " + output + ";\n", 'utf8');
 }
 

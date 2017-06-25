@@ -103,7 +103,7 @@ else if(platform && parameter === 'add') {
 
     if(!fs.existsSync('app/platform/' + platform)) {
 
-        fs.mkdirSync('app/platform/' + platform);
+        lib.buildFolders('app/platform/' + platform);
         fs.mkdirSync('app/platform/' + platform + '/css');
         fs.mkdirSync('app/platform/' + platform + '/js');
         fs.mkdirSync('app/platform/' + platform + '/img');

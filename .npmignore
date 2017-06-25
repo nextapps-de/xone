@@ -2,3 +2,7 @@ npm-debug.log
 node_modules
 page
 doc
+.git
+.gitignore
+.coveralls.yml
+.travis.yml

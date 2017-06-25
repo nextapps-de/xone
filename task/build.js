@@ -130,7 +130,7 @@ if(fs.existsSync(__dirname + '/build.js')){
         var node_config = lib.loadJSON('app/lib/xone/package.json');
         //var app_config = lib.loadJSON('app/config/app.js', 'APP_CONFIG');
         var xone_manifest = lib.loadJSON('app/manifest.js', 'MANIFEST');
-        var dependencies = lib.loadJSON('app/deps.js', 'DEPS');
+        var dependencies = xone_manifest.dependencies.calculate ? lib.loadJSON('app/deps.js', 'DEPS') : [];
         var compiler_options = xone_config.closure_compiler_js.options;
 
         compiler_options.jsCode || (compiler_options.jsCode = []);
@@ -145,6 +145,16 @@ if(fs.existsSync(__dirname + '/build.js')){
         ];
 
         xone_config.closure_compiler_jar.options.js_output_file = "tmp/build_tmp.js";
+
+        if(!fs.existsSync('tmp/')){
+
+            fs.mkdirSync('tmp/');
+        }
+
+        if(!fs.existsSync('log/')){
+
+            fs.mkdirSync('log/');
+        }
 
         fs.writeFileSync('tmp/config.js', "goog.provide('PLATFORM'); /** @define {string} */ var PLATFORM = '" + (platform || '') + "';", 'utf8');
 
@@ -216,11 +226,22 @@ if(fs.existsSync(__dirname + '/build.js')){
             if(xone_manifest.dependencies.calculate) dependencies.unshift("lib/xone/build/env.js");
             dependencies.unshift("../tmp/config.js");
 
-            //xone_config.closure_compiler_jar.options.js.push("'app/lib/xone/core/interface.js'");
-            xone_config.closure_compiler_jar.options.js.push("'app/config/production.js'");
-            //compiler_options.jsCode.push({path: "app/lib/xone/core/interface.js"});
-            compiler_options.jsCode.push({path: "app/config/production.js"});
-            dependencies.unshift("config/production.js");
+            if(fs.existsSync("app/config/production.js")){
+
+                //xone_config.closure_compiler_jar.options.js.push("'app/lib/xone/core/interface.js'");
+                xone_config.closure_compiler_jar.options.js.push("'app/config/production.js'");
+                //compiler_options.jsCode.push({path: "app/lib/xone/core/interface.js"});
+                compiler_options.jsCode.push({path: "app/config/production.js"});
+                dependencies.unshift("config/production.js");
+            }
+            else{
+
+                //xone_config.closure_compiler_jar.options.js.push("'app/lib/xone/core/interface.js'");
+                xone_config.closure_compiler_jar.options.js.push("'app/lib/xone/build/config.js'");
+                //compiler_options.jsCode.push({path: "app/lib/xone/core/interface.js"});
+                compiler_options.jsCode.push({path: "app/lib/xone/build/config.js"});
+                dependencies.unshift("lib/xone/build/config.js");
+            }
         }
 
         // xone_config.closure_compiler_jar.options.js.push("'app/lib/xone/core/**.js'");
@@ -352,10 +373,7 @@ if(fs.existsSync(__dirname + '/build.js')){
             //     }), 'utf8');
             // }
 
-            if(!fs.existsSync('bin/' + target_platform + '/js')){
-
-                fs.mkdirSync('bin/' + target_platform + '/js');
-            }
+            lib.buildFolders('bin/' + target_platform + '/js');
 
             var compiled_file;
 
@@ -429,7 +447,7 @@ if(fs.existsSync(__dirname + '/build.js')){
 
             for(var a = 0; a < compiler_options.jsCode.length; a++){
 
-                tmp_code += (compiler_options.jsCode[a].src = fs.readFileSync(path.normalize(compiler_options.jsCode[a].path), 'utf8'));
+                if(fs.existsSync(path.normalize(compiler_options.jsCode[a].path))) tmp_code += (compiler_options.jsCode[a].src = fs.readFileSync(path.normalize(compiler_options.jsCode[a].path), 'utf8'));
             }
 
             var compile = require(path.normalize(xone_config.closure_compiler_js.path)).compile;
@@ -523,11 +541,7 @@ if(fs.existsSync(__dirname + '/build.js')){
                     debug: false // 1, 2, 3
                 });
 
-                if(!fs.existsSync('bin/' + target_platform + '/css')){
-
-                    fs.mkdirSync('bin/' + target_platform + '/css');
-                }
-
+                lib.buildFolders('bin/' + target_platform + '/css');
                 fs.writeFileSync('bin/' + target_platform + '/css/style.css', result.css, 'utf8');
 
                 // yuicompressor:

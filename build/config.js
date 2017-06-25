@@ -1,6 +1,6 @@
 goog.provide('CONFIG');
-goog.require('INTERFACE');
-goog.require('AMD');
+//goog.require('INTERFACE');
+//goog.require('AMD');
 
 /** @const */
 var CONFIG = {};

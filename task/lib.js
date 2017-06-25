@@ -8,6 +8,7 @@ module.exports = {
     checkEnvironment: checkEnvironment,
     copyFileSync: copyFileSync,
     copyFolderRecursiveSync: copyFolderRecursiveSync,
+    buildFolders: buildFolders,
     getDirectories: getDirectories,
     getFiles: getFiles,
     getModule: getModule,
@@ -111,7 +112,7 @@ function copyFolderRecursiveSync(source, target, force){
         fs.mkdirSync(targetFolder);
     }
 
-    if(fs.lstatSync(source).isDirectory()){
+    if(fs.existsSync(source) && fs.lstatSync(source).isDirectory()){
 
         files = fs.readdirSync(source);
 
@@ -202,7 +203,7 @@ function checkPlatform(parameter){
 
     else if(!fs.existsSync('bin/' + parameter)){
 
-        fs.mkdirSync('bin/' + parameter);
+        buildFolders('bin/' + parameter);
     }
 
     return true;
@@ -282,4 +283,30 @@ function crc32(str){
     }
 
     return (crc ^ (-1)) >>> 0;
+}
+
+function buildFolders(folder){
+
+    var folders = (
+
+        folder.indexOf("/") !== -1 ?
+
+            folder.split("/")
+        :
+            folder.indexOf("\\\\") !== -1 ?
+
+                folder.split("\\\\")
+            :
+                folder.split("\\")
+    );
+
+    var initial_folder = ".";
+
+    for(var i = 0; i < folders.length; i++){
+
+        if(!fs.existsSync(initial_folder += "/" + folders[i])){
+
+            fs.mkdirSync(initial_folder);
+        }
+    }
 }

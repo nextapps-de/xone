@@ -14,6 +14,7 @@ switch(parameter){
     case '--local':
     case '-local':
     case 'local':
+
         parameter = false;
         path_to_folder = 'node_modules/xone';
         break;
@@ -23,6 +24,7 @@ switch(parameter){
     case '--global':
     case '-global':
     case 'global':
+
         parameter = false;
         path_to_folder = path.resolve(__dirname, '../');
         break;
@@ -32,22 +34,28 @@ switch(parameter){
     case '--current':
     case '-current':
     case 'current':
+
     case '--i':
     case '-i':
     case '--installed':
     case '-installed':
     case 'installed':
+
     case void 0:
+
         parameter = false;
-        path_to_folder = path.resolve('./app/lib/xone/') //__dirname.substring(0, __dirname.lastIndexOf('/cli'));
+        //path_to_folder = path.resolve('./app/lib/xone/') //__dirname.substring(0, __dirname.lastIndexOf('/cli'));
+        path_to_folder = path.resolve(__dirname, '../');
         break;
 
     case "remove_me_dummy":
+
         parameter = process.argv[3];
         path_to_folder = path.resolve(__dirname, '../');
         break;
 
     default:
+
         parameter = false;
         break;
 }
@@ -67,15 +75,19 @@ else{
 
         parameter || (parameter = '.');
 
+        lib.buildFolders('app/lib/xone/');
+
         lib.copyFolderRecursiveSync(path_to_folder + '/core', parameter + '/app/lib/xone', true);
         lib.copyFolderRecursiveSync(path_to_folder + '/css', parameter + '/app/lib/xone', true);
         lib.copyFolderRecursiveSync(path_to_folder + '/lib', parameter + '/app/lib/xone', true);
+        lib.copyFolderRecursiveSync(path_to_folder + '/interface', parameter + '/app/lib/xone', true);
         lib.copyFolderRecursiveSync(path_to_folder + '/plugin', parameter + '/app/lib/xone', true);
         lib.copyFolderRecursiveSync(path_to_folder + '/build', parameter + '/app/lib/xone', true);
         lib.copyFolderRecursiveSync(path_to_folder + '/dist', parameter + '/app/lib/xone', true);
         lib.copyFolderRecursiveSync(path_to_folder + '/task', parameter + '/app/lib/xone', true);
         lib.copyFolderRecursiveSync(path_to_folder + '/local', parameter + '/app/lib/xone', true);
         lib.copyFolderRecursiveSync(path_to_folder + '/spec', parameter + '/app/lib/xone', true);
+        //lib.copyFileSync(path_to_folder + '/cli/cli.js', parameter + '/app/lib/xone/cli/cli.js', true);
         lib.copyFileSync(path_to_folder + '/project/app/js/build.js', parameter + '/app/js/build.js', true);
         lib.copyFileSync(path_to_folder + '/package.json', parameter + '/app/lib/xone/package.json', true);
 
@@ -131,6 +143,8 @@ else{
             path_to_benchmark = path.resolve(__dirname, '..', '..', 'benchmark');
         }
 
+        lib.buildFolders(parameter + '/app/lib/benchmark/');
+
         lib.copyFileSync(path.resolve(path_to_benchmark, 'benchmark.js'), path.resolve(parameter + '/app/lib/benchmark/benchmark.js'), true);
 
         var path_to_lodash;
@@ -159,5 +173,12 @@ else{
         lib.copyFileSync(path.resolve(path_to_lodash, 'lodash.min.js'), path.resolve(parameter + '/app/lib/benchmark/lodash.min.js'), true);
     }
 
+    if(!fs.existsSync(path.resolve(parameter + '/app/manifest.js'))){
+
+        lib.copyFileSync(path_to_folder + '/project/app/manifest.js', parameter + '/app/manifest.js', true);
+    }
+
     console.log("Project was successfully updated.");
+
+    lib.exec('node "' + path.resolve(__dirname, '..', 'task/version.js') + '"');
 }

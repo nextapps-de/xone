@@ -1,5 +1,5 @@
 goog.provide('APP.MAIN');
-goog.require('APP.REQUIRE');
+goog.require('APP.INIT');
 
 APP.MAIN = function(){
 
