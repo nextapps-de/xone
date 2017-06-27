@@ -55,8 +55,6 @@ switch(parameter){
         parameter = 'build';
         break;
 
-    case '-d':
-    case '--d':
     case '--docs':
     case '-docs':
     case 'docs':
@@ -105,7 +103,26 @@ switch(parameter){
     case '-specs':
     case 'specs':
 
+    case '--spec':
+    case '-spec':
+    case 'spec':
+
         parameter = 'specs';
+        break;
+
+    case '-d':
+    case '--d':
+    case '--deps':
+    case '-deps':
+    case 'deps':
+
+        parameter = 'deps';
+        break;
+
+    case 'platform':
+    case 'env':
+    case 'server':
+
         break;
 
     default:
