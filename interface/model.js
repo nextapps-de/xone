@@ -14,6 +14,22 @@ _active_model.prototype.register;
 _active_model.prototype.new;
 /** @type {Function} */
 _active_model.prototype.create;
+/** @type {Function} */
+_active_model.constructor.beforeUpdate;
+/** @type {Function} */
+_active_model.constructor.beforeCreate;
+/** @type {Function} */
+_active_model.constructor.beforeSave;
+/** @type {Function} */
+_active_model.constructor.beforeDelete;
+/** @type {Function} */
+_active_model.constructor.onCreate;
+/** @type {Function} */
+_active_model.constructor.onUpdate;
+/** @type {Function} */
+_active_model.constructor.onSave;
+/** @type {Function} */
+_active_model.constructor.onDelete;
 
 /**
  * ModelHelper Interface
@@ -36,11 +52,17 @@ _model_helper.prototype.parse;
 /** @type {Function} */
 _model_helper.prototype.find;
 /** @type {Function} */
+_model_helper.prototype.update;
+/** @type {Function} */
+_model_helper.prototype.delete;
+/** @type {Function} */
 _model_helper.prototype.all;
 /** @type {Function} */
 _model_helper.prototype.range;
 /** @type {Function} */
 _model_helper.prototype.count;
+/** @type {Function} */
+_model_helper.prototype.countWhere;
 /** @type {Function} */
 _model_helper.prototype.findBy;
 /** @type {Function} */
@@ -54,7 +76,25 @@ _model_helper.prototype.saveAll;
 /** @type {Function} */
 _model_helper.prototype.deleteAll;
 /** @type {Function} */
+_model_helper.prototype.deleteWhere;
+/** @type {Function} */
 _model_helper.prototype.updateAll;
+/** @type {Function} */
+_model_helper.constructor.beforeUpdate;
+/** @type {Function} */
+_model_helper.constructor.beforeCreate;
+/** @type {Function} */
+_model_helper.constructor.beforeSave;
+/** @type {Function} */
+_model_helper.constructor.beforeDelete;
+/** @type {Function} */
+_model_helper.constructor.onCreate;
+/** @type {Function} */
+_model_helper.constructor.onUpdate;
+/** @type {Function} */
+_model_helper.constructor.onSave;
+/** @type {Function} */
+_model_helper.constructor.onDelete;
 
 /**
  * ModelClass Interface
@@ -88,14 +128,20 @@ _model_class.constructor.prototype.mapToPayload;
 /** @type {Function} */
 _model_class.constructor.prototype.mapToData;
 /** @type {Function} */
+_model_class.constructor.prototype.mapToStorage;
+/** @type {Function} */
 _model_class.constructor.prototype.beforeUpdate;
 /** @type {Function} */
 _model_class.constructor.prototype.beforeCreate;
 /** @type {Function} */
 _model_class.constructor.prototype.beforeSave;
 /** @type {Function} */
+_model_class.constructor.prototype.beforeDelete;
+/** @type {Function} */
 _model_class.constructor.prototype.onCreate;
 /** @type {Function} */
 _model_class.constructor.prototype.onUpdate;
 /** @type {Function} */
 _model_class.constructor.prototype.onSave;
+/** @type {Function} */
+_model_class.constructor.prototype.onDelete;

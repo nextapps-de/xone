@@ -1,0 +1,8 @@
+<li {{ if(completed) }}class="completed"{{ endif }} data-id="{{ id }}">
+	<div class="view">
+		<input class="toggle" type="checkbox" {{ if(completed) }}checked{{ endif }}>
+		<label class="title">{{ title }}</label>
+		<button class="destroy"></button>
+	</div>
+	<input class="edit" value="{{ title }}">
+</li>

@@ -67,14 +67,14 @@ describe("Check Core Initialize Status", function() {
 
     it("Check CORE.buildPattern()", function() {
 
-        var node = CORE.buildPattern([{
+        var node = CORE.buildPattern({
 
             tag: "div",
             attr: {
                 class: "test",
                 id: "test"
             },
-            child: [{
+            child: {
                 tag: "div",
                 attr: {
                     class: "test_child",
@@ -82,9 +82,9 @@ describe("Check Core Initialize Status", function() {
                     style: 'display: none;',
                     'data-id': 'id_1'
                 }
-            }]
+            }
 
-        }], document.createElement("div"));
+        }, document.createElement("div"));
 
         node = node.firstChild;
         expect(CORE.hasClass(node, 'test')).toBe(true);

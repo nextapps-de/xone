@@ -1,166 +1,161 @@
 goog.provide('CONFIG');
 
-// == ENVIRONMENTS SETTINGS ==
+//:= ENVIRONMENTS SETTINGS:=
 
 /**
- * The main config descriptor
+ * CONFIG
  * @struct
- * @name CONFIG
- * @namespace CONFIG Application
- */
-
-var CONFIG = {};
-
-/**
- * Sets the environment type:
- * @define {string}
- */
-
-CONFIG.RACK = 'local'; //'alpha' //'stage' //'local'
-
-/**
- * Turn on/off debug infos to the console:
- * @define {boolean}
- */
-
-CONFIG.DEBUG = true;
-
-/**
- * Turn on/off debug infos to be displayed:
- * @define {boolean}
- */
-
-CONFIG.SHOW_DEBUG = false;
-
-/**
- * Turn on/off JavaScript:
- * @define {boolean}
- */
-
-CONFIG.NO_SCRIPT = false;
-
-/**
- * Turn on/off desktop support:
- * @define {boolean}
- */
-
-CONFIG.DESKTOP = true;
-
-/**
- * Force orientation:
- * @define {string}
- */
-
-CONFIG.FORCE_ORIENTATION = 'landscape'; // 'portrait', 'none'
-
-/**
- * Set minimum Dimension (biggest length):
- * @define {number}
- */
-
-CONFIG.MIN_DIMENSION = 1024;
-
-/**
- * Set maximum Dimension (biggest length):
- * @define {number}
- */
-
-CONFIG.MAX_DIMENSION = 1024;
-
-/**
- * Set minimum Aspect Ratio:
- * @define {number}
- */
-
-CONFIG.MIN_ASPECT_RATIO = 0.7;
-
-/**
- * Set maximum Aspect Ratio:
- * @define {number}
- */
-
-CONFIG.MAX_ASPECT_RATIO = 1.35;
-
-/**
- * Turn on/off visibility of StatusBar:
- * @define {boolean}
  * @const
  */
 
-CONFIG.HIDE_STATUSBAR = true;
+var CONFIG = {
 
-/**
- * Maximum time which the cache is valid (in ms)
- * @define {number}
- */
+    /**
+     * Sets the environment type:
+     * @type {string}
+     */
 
-CONFIG.MAX_CACHE_TIME = 300000;
+    RACK: 'local', //'alpha' //'stage' //'local'
 
-/**
- * Maximum reserved file storage (in Mb)
- * @define {number}
- */
+    /**
+     * Turn on/off debug infos to the console:
+     * @type {boolean}
+     */
 
-CONFIG.MAX_FILE_STORAGE_MB = 5;
+    DEBUG: true,
 
-/**
- * @define {string}
- */
+    /**
+     * Turn on/off debug infos to be displayed:
+     * @type {boolean}
+     */
 
-CONFIG.APP_VERSION = '01.00.00';
+    SHOW_DEBUG: false,
 
-/**
- * CONFIG VERSION FOR COMPATIBILTY CHECK
- * @define {number}
- */
+    /**
+     * Turn on/off JavaScript:
+     * @type {boolean}
+     */
 
-CONFIG.SETTINGS_VERSION = 0.0;
+    NO_SCRIPT: false,
 
-/**
- * CORE VERSION FOR COMPATIBILTY CHECK
- * @define {number}
- */
+    /**
+     * Turn on/off desktop support:
+     * @type {boolean}
+     */
 
-CONFIG.CORE_VERSION = 0.6;
+    DESKTOP: true,
 
-/**
- * SERVER_HOST
- * @define {string}
- */
+    /**
+     * Force orientation:
+     * @type {string}
+     */
 
-CONFIG.SERVER_HOST = "";
+    FORCE_ORIENTATION: 'landscape', // 'portrait', 'none'
 
-/**
- * EVENT_DEFAULT_DELAY
- * @define {number}
- */
+    /**
+     * Set minimum Dimension (biggest length):
+     * @type {number}
+     */
 
-CONFIG.EVENT_DEFAULT_DELAY = 0;
+    MIN_DIMENSION: 1024,
 
-/**
- * START_DELAY
- * @define {number}
- */
+    /**
+     * Set maximum Dimension (biggest length):
+     * @type {number}
+     */
 
-CONFIG.START_DELAY = 500;
+    MAX_DIMENSION: 1024,
 
-/**
- * DISPLAY_MESSAGE_TIME
- * @define {number}
- */
+    /**
+     * Set minimum Aspect Ratio:
+     * @type {number}
+     */
 
-CONFIG.DISPLAY_MESSAGE_TIME = 2000;
+    MIN_ASPECT_RATIO: 0.7,
 
-/**
- * EMAIL_FEEDBACK
- * @define {string}
- */
+    /**
+     * Set maximum Aspect Ratio:
+     * @type {number}
+     */
 
-CONFIG.EMAIL_FEEDBACK = 'info@company.com';
+    MAX_ASPECT_RATIO: 1.35,
 
-/**
- * DOM_CACHE_ENABLED
- * @define {boolean}
- */
+    /**
+     * Turn on/off visibility of StatusBar:
+     * @type {boolean}
+     * @const
+     */
 
-CONFIG.DOM_CACHE_ENABLED = true;
+    HIDE_STATUSBAR: true,
+
+    /**
+     * Maximum time which the cache is valid (in ms)
+     * @type {number}
+     */
+
+    MAX_CACHE_TIME: 300000,
+
+    /**
+     * Maximum reserved file storage (in Mb)
+     * @type {number}
+     */
+
+    MAX_FILE_STORAGE_MB: 5,
+
+    /**
+     * @type {string}
+     */
+
+    APP_VERSION: '01.00.00',
+
+    /**
+     * CONFIG VERSION FOR COMPATIBILTY CHECK
+     * @type {number}
+     */
+
+    SETTINGS_VERSION: 0.0,
+
+    /**
+     * CORE VERSION FOR COMPATIBILTY CHECK
+     * @type {number}
+     */
+
+    CORE_VERSION: 0.6,
+
+    /**
+     * SERVER_HOST
+     * @type {string}
+     */
+
+    SERVER_HOST: "",
+
+    /**
+     * EVENT_DEFAULT_DELAY
+     * @type {number}
+     */
+
+    EVENT_DEFAULT_DELAY: 0,
+
+    /**
+     * START_DELAY
+     * @type {number}
+     */
+
+    START_DELAY: 500,
+
+    /**
+     * DISPLAY_MESSAGE_TIME
+     * @type {number}
+     */
+
+    DISPLAY_MESSAGE_TIME: 2000,
+
+    /**
+     * EMAIL_FEEDBACK
+     * @type {string}
+     */
+
+    EMAIL_FEEDBACK: 'info@company.com'
+};
+
+

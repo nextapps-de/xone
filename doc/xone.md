@@ -26,12 +26,12 @@ CONTROLLER['record_show'] = function(record){
     // if no template was given as 2nd parameter, the default template view is used instead (defined in routes)
     // in this example the passed template is same as the default template from this route
     CONTROLLER.render({
-        target: 'dom-element-id', 
+        target: '#dom-element-id', 
         route: 'view/record/show', 
         data: record
     });
     // or use the short form:
-    CONTROLLER.render('dom-element-id', 'view/record/show', record);
+    CONTROLLER.render('#dom-element-id', 'view/record/show', record);
 };
 ```
 
@@ -238,7 +238,7 @@ MAPPER['Record'] = {
 Each mapping definition is bind automatically to the corresponding model and/or controller.
 
 #### Create Specs (Jasmine)
-*app/spec/main_spec.js*
+*app/test/main_spec.js*
 ```javascript
 describe("Validate Record Methods", function() {
 

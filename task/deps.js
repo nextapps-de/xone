@@ -86,7 +86,7 @@ var parse_dependencies = function(filePath, js, is_update){
                 updates.push({
 
                     filePath: filePath,
-                    js: js,
+                    js: js
                 });
             }
 
@@ -159,23 +159,23 @@ manifest.INIT = true;
 //parse_dependencies(path.normalize('app/lib/xone/local/env.js'), fs.readFileSync(path.normalize('app/lib/xone/local/env.js'), 'utf8'));
 //parse_dependencies('app/config/production.js', fs.readFileSync('app/config/production.js', 'utf8'));
 
-walkSync('./app/lib/xone/interface/', function(filePath){
+walkSync(path.normalize("./app/" + xone_manifest.dependencies.xone + 'interface'), function(filePath){
 
     parse_dependencies(filePath, fs.readFileSync(filePath, 'utf8'));
 });
 
-walkSync('./app/lib/xone/core/', function(filePath){
+walkSync(path.normalize("./app/" + xone_manifest.dependencies.xone + 'core'), function(filePath){
 
     parse_dependencies(filePath, fs.readFileSync(filePath, 'utf8'));
 });
 
-walkSync('./app/lib/xone/lib/', function(filePath){
+walkSync(path.normalize("./app/" + xone_manifest.dependencies.xone + 'lib'), function(filePath){
 
     parse_dependencies(filePath, fs.readFileSync(filePath, 'utf8'));
 });
 
-parse_dependencies(path.normalize('app/layout/layout.js'), fs.readFileSync(path.normalize('app/layout/layout.js'), 'utf8'));
-parse_dependencies(path.normalize('app/view/view.js'), fs.readFileSync(path.normalize('app/view/view.js'), 'utf8'));
+parse_dependencies(path.normalize('app/tmp/layout.js'), fs.readFileSync(path.normalize('app/tmp/layout.js'), 'utf8'));
+parse_dependencies(path.normalize('app/tmp/view.js'), fs.readFileSync(path.normalize('app/tmp/view.js'), 'utf8'));
 
 walkSync('./app/js/', function(filePath){
 
@@ -210,12 +210,12 @@ order = order.filter(function(value){
 
 order = order.map(function(value){
 
-    return path.normalize(value).replace("app//", "").replace("app\\", "");
+    return path.relative("./app/", value).replace("app//", "").replace("app\\", "").replace(/\\\\/g, "/").replace(/\\/g, "/");//.replace("node_modules", "../node_modules");
 });
 
 //console.log(order);
 
-fs.writeFileSync('app/deps.js', (
+fs.writeFileSync('app/tmp/deps.js', (
 
     "/**\n" +
     " * DEPS\n" +

@@ -108,6 +108,11 @@ goog.require('APP.LAYOUT');
         //APP.SETUP();
         APP.MAIN();
 
+        // onHashChange({
+        //
+        //     newURL: window.location.hash || window.location.href
+        // });
+
         //if(APP.VARS.CURRENT_USER) initialize_storage();
 
         /* Clean Up & Register to Garbage Collector */
@@ -463,7 +468,7 @@ goog.require('APP.LAYOUT');
     /*
     var initialize_domcache = function(){
 
-        if(CONFIG.DOM_CACHE_ENABLED){
+        if(CONFIG.ENABLE_DOM_CACHE){
 
             CORE.DOM || (CORE.DOM = {});
 
@@ -512,6 +517,81 @@ goog.require('APP.LAYOUT');
             })));
 
         } catch (e) {}
+
+		// (APP.EVENT['_document'] || (APP.EVENT['_document'] = [])).push({
+		//
+		// 	on: 'clickmove',
+		// 	if: 'a',
+		// 	do: function(event){
+		//
+		// 		if(this.hasAttribute('href')){
+		//
+		// 			var href = this.getAttribute('href');
+		//
+		// 			if(href.substring(0, 2) === "#/"){
+		//
+		// 				//APP.CONTROLLER.request(href);
+		//
+		// 				if(APP.ROUTE[href]) {
+		//
+		// 					if(typeof APP.ROUTE[href] === 'function'){
+		//
+		// 						APP.ROUTE[href].call(this);
+		// 					}
+		// 					else if(APP.ROUTE[href].do){
+		//
+		// 						APP.ROUTE[href].do.call(this, APP.ROUTE[href].params);
+		// 					}
+		// 				}
+		// 			}
+		// 		}
+		// 	},
+		// 	stopBubble: true,
+		// 	preventDefault: true
+		// });
+
+		window.addEventListener('hashchange', function(event) {
+
+            var href;
+
+            if(event.newURL.lastIndexOf('#') > -1){
+
+                href = event.newURL.substring(event.newURL.lastIndexOf('#'));
+            }
+            else{
+
+                href = "#/";
+            }
+
+            if(href.substring(0, 2) === "#/" || href.substring(0, 2) === "#!"){
+
+                if(APP.ROUTE[href]) {
+
+                    var fn, params;
+
+                    if(typeof APP.ROUTE[href] === 'function'){
+
+                        fn = APP.ROUTE[href];
+                        params = null;
+                    }
+                    else if(APP.ROUTE[href].to){
+
+                        fn = APP.ROUTE[href].to;
+                        params = APP.ROUTE[href].params;
+                    }
+                    else if(APP.ROUTE[href].do){
+
+                        fn = APP.ROUTE[href].do;
+                        params = APP.ROUTE[href].params;
+                    }
+
+                    if(fn) {
+
+                        fn(params, CORE.query('a[href="' + href + '"]')[0]);
+                    }
+                }
+            }
+        });
 
         for(var key in APP.EVENT){
 
@@ -623,6 +703,7 @@ goog.require('APP.LAYOUT');
                                     event_caller,
                                     event.preventDefault,
                                     event.stopBubble,
+                                    event.at || event.go,
                                     key
                                 );
                             }
@@ -651,6 +732,7 @@ goog.require('APP.LAYOUT');
                                     event_caller,
                                     event.preventDefault,
                                     event.stopBubble,
+                                    event.at || event.go,
                                     key
                                 );
                             }
@@ -672,6 +754,7 @@ goog.require('APP.LAYOUT');
                                 event_caller,
                                 event.preventDefault,
                                 event.stopBubble,
+                                event.at || event.go,
                                 key
                             );
                         }

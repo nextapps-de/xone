@@ -478,7 +478,7 @@ describe("Array Tests", function() {
     it("CORE.registerEach(function)", function() {
 
         // TODO: cannot access to local context
-        str = '';
+        window.str = '';
 
         var each = CORE.registerEach(function(value){
 
@@ -489,5 +489,7 @@ describe("Array Tests", function() {
 
         expect(str)
             .toEqual("12345undefinednull");
+
+        delete window.str;
     });
 });

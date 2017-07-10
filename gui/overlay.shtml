@@ -10,7 +10,7 @@
     <div style="width: 10em; height: 5em; margin:0; padding:0; background-image: url(lib/xone/gui/xone.svg); background-size: cover; background-position: center center"></div>
     <br>
     <h2>Environment</h2>
-    <a href="../bin/www/">production</a>&emsp;
+    <a href="../public/www/">production</a>&emsp;
     <a href="?env=development">development</a>&emsp;
     <a href="?env=test">test</a>&emsp;
     <a href="?env=benchmark">benchmark</a>

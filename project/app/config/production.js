@@ -5,167 +5,159 @@ goog.provide('CONFIG');
  * Copyright (c) 2017 NextApps, All rights reserved.
  */
 
-// == ENVIRONMENTS SETTINGS ==
+//:= ENVIRONMENTS SETTINGS:=
 
 /**
- * The main config descriptor
+ * CONFIG
  * @struct
- * @name CONFIG
- * @namespace CONFIG Application
  * @const
  */
 
-var CONFIG = {};
+var CONFIG = {
 
-/**
- * Sets the environment type:
- * @define {string}
- */
+    /**
+     * Sets the environment type:
+     * @type {string}
+     */
 
-CONFIG.RACK = 'cordova' || 'webapp' || 'cordova_test' || 'alpha' || 'stage' || 'local';
+    RACK: 'cordova' || 'webapp' || 'cordova_test' || 'alpha' || 'stage' || 'local',
 
-/**
- * Turn on/off debug infos to the console:
- * @define {boolean}
- */
+    /**
+     * Turn on/off debug infos to the console:
+     * @type {boolean}
+     */
 
-CONFIG.DEBUG = false;
+    DEBUG: false,
 
-/**
- * Turn on/off debug infos to be displayed:
- * @define {boolean}
- */
+    /**
+     * Turn on/off debug infos to be displayed:
+     * @type {boolean}
+     */
 
-CONFIG.SHOW_DEBUG = false;
+    SHOW_DEBUG: false,
 
-/**
- * Turn on/off JavaScript:
- * @define {boolean}
- */
+    /**
+     * Turn on/off JavaScript:
+     * @type {boolean}
+     */
 
-CONFIG.NO_SCRIPT = false;
+    NO_SCRIPT: false,
 
-/**
- * Turn on/off desktop support:
- * @define {boolean}
- */
+    /**
+     * Turn on/off desktop support:
+     * @type {boolean}
+     */
 
-CONFIG.DESKTOP = true;
+    DESKTOP: true,
 
-/**
- * Force orientation:
- * @define {string}
- */
+    /**
+     * Force orientation:
+     * @type {string}
+     */
 
-CONFIG.FORCE_ORIENTATION = 'landscape' || 'portrait' || 'cubic' || 'none';
+    FORCE_ORIENTATION: 'landscape' || 'portrait' || 'cubic' || 'none',
 
-/**
- * Set minimum Dimension (biggest length):
- * @define {number}
- */
+    /**
+     * Set minimum Dimension (biggest length):
+     * @type {number}
+     */
 
-CONFIG.MIN_DIMENSION = 1024;
+    MIN_DIMENSION: 1024,
 
-/**
- * Set maximum Dimension (biggest length):
- * @define {number}
- */
+    /**
+     * Set maximum Dimension (biggest length):
+     * @type {number}
+     */
 
-CONFIG.MAX_DIMENSION = 1024;
+    MAX_DIMENSION: 1024,
 
-/**
- * Set minimum Aspect Ratio:
- * @define {number}
- */
+    /**
+     * Set minimum Aspect Ratio:
+     * @type {number}
+     */
 
-CONFIG.MIN_ASPECT_RATIO = 0.7;
+    MIN_ASPECT_RATIO: 0.7,
 
-/**
- * Set maximum Aspect Ratio:
- * @define {number}
- */
+    /**
+     * Set maximum Aspect Ratio:
+     * @type {number}
+     */
 
-CONFIG.MAX_ASPECT_RATIO = 1.35;
+    MAX_ASPECT_RATIO: 1.35,
 
-/**
- * Turn on/off visibility of StatusBar:
- * @define {boolean}
- */
+    /**
+     * Turn on/off visibility of StatusBar:
+     * @type {boolean}
+     */
 
-CONFIG.HIDE_STATUSBAR = true;
+    HIDE_STATUSBAR: true,
 
-/**
- * Maximum time which the cache is valid (in ms)
- * @define {number}
- */
+    /**
+     * Maximum time which the cache is valid (in ms)
+     * @type {number}
+     */
 
-CONFIG.MAX_CACHE_TIME = 300000;
+    MAX_CACHE_TIME: 300000,
 
-/**
- * Maximum reserved file storage (in Mb)
- * @define {number}
- */
+    /**
+     * Maximum reserved file storage (in Mb)
+     * @type {number}
+     */
 
-CONFIG.MAX_FILE_STORAGE_MB = 25;
+    MAX_FILE_STORAGE_MB: 25,
 
-/**
- * @define {string}
- */
+    /**
+     * @type {string}
+     */
 
-CONFIG.APP_VERSION = "01.00.00";
+    APP_VERSION: "01.00.00",
 
-/**
- * CONFIG VERSION FOR COMPATIBILTY CHECK
- * @define {number}
- */
+    /**
+     * CONFIG VERSION FOR COMPATIBILTY CHECK
+     * @type {number}
+     */
 
-CONFIG.SETTINGS_VERSION = 0.0;
+    SETTINGS_VERSION: 0.0,
 
-/**
- * CORE VERSION FOR COMPATIBILTY CHECK
- * @define {number}
- */
+    /**
+     * CORE VERSION FOR COMPATIBILTY CHECK
+     * @type {number}
+     */
 
-CONFIG.CORE_VERSION = 0.6;
+    CORE_VERSION: 0.6,
 
-/**
- * SERVER_HOST
- * @define {string}
- */
+    /**
+     * SERVER_HOST
+     * @type {string}
+     */
 
-CONFIG.SERVER_HOST = "";
+    SERVER_HOST: "",
 
-/**
- * EVENT_DEFAULT_DELAY
- * @define {number}
- */
+    /**
+     * EVENT_DEFAULT_DELAY
+     * @type {number}
+     */
 
-CONFIG.EVENT_DEFAULT_DELAY = 0;
+    EVENT_DEFAULT_DELAY: 0,
 
-/**
- * START_DELAY
- * @define {number}
- */
+    /**
+     * START_DELAY
+     * @type {number}
+     */
 
-CONFIG.START_DELAY = 500;
+    START_DELAY: 500,
 
-/**
- * DISPLAY_MESSAGE_TIME
- * @define {number}
- */
+    /**
+     * DISPLAY_MESSAGE_TIME
+     * @type {number}
+     */
 
-CONFIG.DISPLAY_MESSAGE_TIME = 2500;
+    DISPLAY_MESSAGE_TIME: 2500,
 
-/**
- * EMAIL_FEEDBACK
- * @define {string}
- */
+    /**
+     * EMAIL_FEEDBACK
+     * @type {string}
+     */
 
-CONFIG.EMAIL_FEEDBACK = 'info@company.com';
-
-/**
- * DOM_CACHE_ENABLED
- * @define {boolean}
- */
-
-CONFIG.DOM_CACHE_ENABLED = true;
+    EMAIL_FEEDBACK: 'info@company.com'
+};

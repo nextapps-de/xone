@@ -19,34 +19,37 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
     /**
      * @param {string} key
-     * @param {Function} model
+     * @param {Array<string>|Object<string, boolean>|Function} model
+     * @param {Object<string, boolean>=} map
      * @returns {_model_helper}
      */
 
-    ACTIVE_MODEL.prototype.register = function(key, model){
+    ACTIVE_MODEL.prototype.register = function(key, model, map){
 
-        /* NOTE: old workaround to catch bug of rhaboo is commented out */
+        if(map || CORE.isObject(model)){
 
-        //var init = true;
-        //while(init){
-            //try {
+            model = CORE.getKeys(map || (map = /** @type Object<string, boolean> */ (model)));
+        }
 
-                /* Register model to the storage controller */
+    	if(map || CORE.isArray(model)){
 
-                STORAGE.DATA[key] || (STORAGE.DATA[key] = /** @type _storage_struct */ (new CORE.Storage(key))); //window['Rhaboo']['persistent'](key));
+    		var str = "";
 
-                /* Register model to the session controller */
+    		for(var i = 0; i < model.length; i++){
 
-                //STORAGE.SESSION[key] || (STORAGE.SESSION[key] = window['Rhaboo']['perishable'](key));
+				str += "this." + model[i] + " = data." + model[i] + ";";
+			}
 
-                //init = false;
-            //}
-            //catch(e){
-                //if(DEBUG) CORE.console.log('WARNING: Rhaboo has a problem with the store: ' + key);
-                //init = false;
-                //window.localStorage.removeItem(key);
-            //}
-        //}
+			model = Function("data", str);
+		}
+
+        /* Register model to the storage controller */
+
+        STORAGE.DATA[key] || (STORAGE.DATA[key] = /** @type _storage_struct */ (new CORE.Storage(key)));
+
+        /* Register model to the session controller */
+
+        //STORAGE.SESSION[key] || (STORAGE.SESSION[key] = ;
 
         /* Register model to the cache controller */
 
@@ -59,6 +62,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
         /* Register custom mappings to the model */
 
         this[key].Model.prototype.mapToView = MAPPER[key] ? MAPPER[key].mapToView : false;
+        this[key].Model.prototype.mapToStorage = map || false;
 
         // TODO: Improve Mapping Integration
         //var mapper = MAPPER[key];
@@ -134,11 +138,11 @@ APP.MODEL = (function(MAPPER, STORAGE){
      * Provides a factory method which is used to create new instances
      * @param {_model_class|Array<_model_class>|Object<string, *>|Array<Object<string, *>>} data
      * @param {boolean=} persistent
-     * @param {boolean=} batch
+     * @param {boolean=} _batch
      * @returns {_model_class|Array<_model_class>}
      */
 
-    ModelHelper.prototype.new = function(data, persistent, batch){
+    ModelHelper.prototype.new = function(data, persistent, _batch){
 
         /* Set default data if missing */
 
@@ -165,11 +169,9 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
         /* Get existing record */
 
-        var record = data['id'] ? this.parse('' + data['id']) : null;
+        var record = data['id'] || (data['id'] === 0) ? this.parse('' + data['id']) : null;
 
         if(record) {
-
-            if(record.beforeUpdate) record.beforeUpdate(data);
 
             /* Update an existing instance */
 
@@ -177,6 +179,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
             if(!tmp_record) return null;
 
+            //todo:
             tmp_record['id'] = null; // delete tmp_record['id'];
 
             // var copy = {};
@@ -186,9 +189,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
             //     }
             // }
 
-            record.update(tmp_record, persistent); // update calls its own save method
-
-            if(record.onUpdate) record.onUpdate();
+            record.update(tmp_record, persistent, _batch); // update calls its own save method
         }
         else{
 
@@ -198,21 +199,29 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
             if(!record) return null;
 
-            if(record.beforeCreate) record.beforeCreate();
-            if(record.beforeUpdate) record.beforeUpdate();
-            if(record.beforeSave) record.beforeSave();
+            if(record['id'] || (record['id'] === 0)){
 
-            /* Saves a new created instance */
+                if(record.beforeCreate) record.beforeCreate();
+                if(!_batch) {
+                    if(this.beforeCreate) this.beforeCreate();
+                }
 
-            record.save(persistent);
+                /* Saves a new created instance */
 
-            if(record.onCreate) record.onCreate();
-            if(record.onUpdate) record.onUpdate();
-            if(record.onSave) record.onSave();
+                if(persistent) {
 
-            /* Update model keys */
+                    record.save(persistent, _batch);
 
-            this.keys = this.data.keys();
+                    /* Update model keys */
+
+                    this.keys = this.data.keys();
+                }
+
+                if(record.onCreate) record.onCreate();
+                if(!_batch) {
+                    if(this.onCreate) this.onCreate();
+                }
+            }
         }
 
         // if(init_persistent){
@@ -255,7 +264,9 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
             var item = this.new(data[i], persistent, /* batch? */ i < length - 1);
 
-            if(item && Object.keys(item).length) models[pos++] = item;
+            //todo: why this check?
+            //if(item && Object.keys(item).length)
+            	models[pos++] = item;
         }
 
         /* Returns model instances */
@@ -326,7 +337,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
     }
 
     /**
-     * @param {string} index
+     * @param {number|string} index
      * @param {boolean=} force
      * @param {boolean=} recursive
      * @this {_model_class|_model_helper}
@@ -335,35 +346,91 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
     ModelHelper.prototype.parse = function(index, force, recursive){
 
-        var data;
+        var data, model = null;
 
-        index = '' + index;
+        //TODO this line should be not needed
+        index = String(index);
 
-        if((force || !this.cache[index]) && (data = this.data.get(index))) {
+        if(!CONFIG.ENABLE_MODEL_CACHE || force || !this.cache[index]){
 
-            // data = /** @type {Object<string, *>} */ (JSON.parse(
-            //
-            //     APP.CONFIG.GZIP ?
-            //
-            //         STORAGE.decompress(data)
-            //     :
-            //         data
-            // ));
+            if(data = this.data.get(index)){
 
-            return (this.cache[index] = new this.Model(extract_model_data(data, force)));
+                model = new this.Model(extract_model_data(data, force));
+            }
         }
 
-        return this.cache[index] || null;
+        if(CONFIG.ENABLE_MODEL_CACHE){
+
+            if(model){
+
+                this.cache[index] = model;
+            }
+            else{
+
+                model = this.cache[index];
+            }
+        }
+
+        return model;
     };
 
     /**
-     * @param {string} id
+     * @param {Node|string} id
      * @return {_model_class|null}
      */
 
     ModelHelper.prototype.find = function(id){
 
-        return this.parse('' + id);
+        if(id){
+
+            if(id.dataset){
+
+                return this.parse(id.dataset.id);
+            }
+        }
+
+        return this.parse(/** @type {string} */ (id));
+    };
+
+    /**
+     * @param {Node|string} id
+     */
+
+    ModelHelper.prototype.delete = function(id){
+
+        if(id){
+
+            if(id.dataset){
+
+                this.parse(id.dataset.id).delete();
+            }
+
+            else {
+
+                this.parse(/** @type {string} */ (id)).delete();
+            }
+        }
+    };
+
+    /**
+     * @param {Node|string} id
+     * @param {string|Object<string, *>} params
+     * @param {*|boolean=} persistent
+     * @param {boolean=} _persistent
+     * @return {_model_class|null}
+     */
+
+    ModelHelper.prototype.update = function(id, params, persistent, _persistent){
+
+        if(id){
+
+            if(id.dataset){
+
+                return this.parse(id.dataset.id).update(params, persistent, _persistent);
+            }
+        }
+
+        return this.parse(/** @type {string} */ (id)).update(params, persistent, _persistent);
     };
 
     /**
@@ -404,13 +471,24 @@ APP.MODEL = (function(MAPPER, STORAGE){
         return this.range();
     };
 
-    /**
-     * @return {number}
-     */
+	/**
+	 * @param {string|Object<string, *>} where
+	 * @param {*|Function=} filter
+	 * @param {Function=} _filter
+	 * @return {number}
+	 */
 
-    ModelHelper.prototype.count = function(){
+    ModelHelper.prototype.count =
+    ModelHelper.prototype.countWhere = function(where, filter, _filter){
 
-        return this.keys.length || (this.keys = this.data.keys()).length;
+    	if(where){
+
+			return this.where(where, filter, _filter).length;
+		}
+		else{
+
+			return this.keys.length || (this.keys = this.data.keys()).length;
+		}
     };
 
     /**
@@ -436,7 +514,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
     };
 
     /**
-     * @param {Function|Array<string, *>} where
+     * @param {Function|Object<string, *>} where
      * @param {Function=} fn_compare
      */
 
@@ -496,20 +574,30 @@ APP.MODEL = (function(MAPPER, STORAGE){
     };
 
     /**
-     * @param {Array<string, *>} where
-     * @param {Function=} filter
+     * @param {string|Object<string, *>} where
+     * @param {*|Function=} filter
+	 * @param {Function=} _filter
      */
 
-    ModelHelper.prototype.where = function(where, filter){
+    ModelHelper.prototype.where = function(where, filter, _filter){
 
-        return this.each(where, filter || function(a, b){
+		if(typeof where === 'string'){
+
+			var attribute = where;
+
+			where = {};
+			where[attribute] = filter;
+			filter = _filter;
+		}
+
+        return this.each(where, /** @type {Function|null|undefined} */ (filter) || function(a, b){
 
             return a === b;
         });
     };
 
     /**
-     * @param {Array<string, *>} where
+     * @param {Object<string, *>} where
      * @param {Function=} filter
      */
 
@@ -528,52 +616,97 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
     ModelHelper.prototype.saveAll = function(items, persistent){
 
-        var length;
-
-        if(items && (length = items.length)) {
-
-            var i = 0;
-
-            for(; i < length; i++){
-
-                items[i].save(persistent);
-            }
-        }
-    };
-
-    /**
-     * @param {Array<_model_class>=} items
-     */
-
-    ModelHelper.prototype.deleteAll = function(items){
-
-        items || (items = this.all());
-
-        for(var i = 0, length = items.length; i < length; i++){
-
-            items[i].delete(/* batch? */ i < length - 1);
-        }
-    };
-
-    /**
-     * @param {Array<_model_class>} items
-     * @param {Array<string, *>} params
-     * @param {boolean=} persistent
-     */
-
-    ModelHelper.prototype.updateAll = function(items, params, persistent){
+		items || (items = this.all());
 
         var length;
 
         if(items && (length = items.length)) {
 
-            var i = 0;
+            for(var i = 0; i < length; i++){
 
-            for(; i < length; i++){
-
-                items[i].update(params, persistent);
+                items[i].save(persistent, /* batch: */ i < length - 1);
             }
         }
+
+        return items;
+    };
+
+    /**
+     * @param {string|Object<string, *>|Array<_model_class>=} items
+     * @param {*|Function=} filter
+     * @param {Function=} _filter
+     */
+
+    ModelHelper.prototype.deleteAll = function(items, filter, _filter){
+
+        if(filter){
+
+            items = this.where(/** @type {string|Object<string, *>} */ (items), filter, _filter);
+        }
+        else{
+
+            items || (items = this.all());
+        }
+
+		var length;
+
+		if(items && (length = items.length)){
+
+			for(var i = 0; i < length; i++){
+
+				items[i].delete(/* batch: */ i < length - 1);
+			}
+		}
+    };
+
+    ModelHelper.prototype.deleteWhere = ModelHelper.prototype.deleteAll;
+
+    var modelhelper_has_update;
+
+    /**
+     * ModelHelper.updateAll([items], {params}, save?);
+     * ModelHelper.updateAll([items], key, value, save?);
+     * ModelHelper.updateAll({params}, save?);
+     * ModelHelper.updateAll(key, value, save?);
+     *
+     * @param {Array<_model_class>|Object<string, *>|string} items
+     * @param {Object<string, *>|boolean|*} params
+     * @param {boolean|*=} persistent
+	 * @param {boolean|*=} _persistent
+     */
+
+    ModelHelper.prototype.updateAll = function(items, params, persistent, _persistent){
+
+        if(!CORE.isArray(items)){
+
+            _persistent = persistent;
+            persistent = params;
+            params = items;
+            items = this.all();
+        }
+
+        modelhelper_has_update = false;
+
+		var length;
+
+        if(this.beforeUpdate) this.beforeUpdate();
+        if(this.beforeSave) this.beforeSave();
+
+		if(items && (length = items.length)){
+
+			for(var i = 0; i < length; i++){
+
+				items[i].update(params, persistent, _persistent, /* batch: */ true);
+			}
+		}
+
+        if(modelhelper_has_update){
+
+            if(this.onSave) this.onSave();
+            if(this.onUpdate) this.onUpdate();
+        }
+
+        return items;
     };
 
     // ---------------------------------------------------------------------
@@ -593,6 +726,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
         /* Bind References from ModelHelper */
 
+        // TODO bind on model helper
         this.data = STORAGE.DATA[key];
         //this.session = STORAGE.SESSION[key];
         this.cache = STORAGE.CACHE[key];
@@ -617,13 +751,14 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
         for(var field in data) {
 
-            if(field !== 'mapToViewCache' && data.hasOwnProperty(field)) {
+            if(data.hasOwnProperty(field) && (!data.mapToStorage || data.mapToStorage[field]) && (field !== 'mapToViewCache')) {
 
                 if(field.charAt(0) === '_') continue;
 
                 var data_field = data[field];
 
-                if(data_field || (data_field === 0 && field === 'id')) { // NOTE: do not skip zero IDs
+                //if(data_field || (data_field === 0 && field === 'id')) { // NOTE: do not skip zero IDs
+                if(CORE.hasValue(data_field)) {
 
                     var data_field_constructor = data_field.constructor;
 
@@ -668,11 +803,11 @@ APP.MODEL = (function(MAPPER, STORAGE){
                             }
                             else{
 
-                                if(data_field_index) {
+                                //if(data_field_index) {
 
                                     copy[field][i] = data_field_index;
                                     has_object_keys = true;
-                                }
+                                //}
                             }
                         }
                     }
@@ -692,81 +827,56 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
     /**
      * @param {boolean=} persistent
+	 * @param {boolean=} _batch
      * @this _model_class
      */
 
-    ModelClass.prototype.save = function(persistent){
+    ModelClass.prototype.save = function(persistent, _batch){
 
-        var id = this['id'];
+    	//TODO:
+		persistent = true;
 
-        if(!CORE.isType(id)){
+        var id = String(this['id']);
+
+        if(!id && id !== '0'){
 
             if(DEBUG) CORE.console.warn('WARNING: Data without ID cannot be stored!', this);
 
             return this;
         }
 
-        if(persistent) {
+		if(this.beforeSave) this.beforeSave();
+		if(!_batch){
+			if(APP.MODEL[this.modelName].beforeSave) APP.MODEL[this.modelName].beforeSave();
+		}
 
-            (function(self){
+        if(persistent || !CONFIG.ENABLE_MODEL_CACHE) {
 
-                CORE.stack(function(){
+            var copy = compact_model_data(this, persistent);
 
-                    var copy = compact_model_data(self, persistent);
+            try {
 
-                    try {
+                this.data.set(id, copy);
 
-                        self.data.set(
+                // TODO: maybe this line failes?
+                if(!_batch) APP.MODEL[this.modelName].keys = this.data.keys();
+            }
+            catch(e){
 
-                            '' + self['id'],
-
-                            copy
-
-                            // APP.CONFIG.GZIP ?
-                            //
-                            //     STORAGE.compress(JSON.stringify(copy))
-                            // :
-                            //     JSON.stringify(copy)
-                        );
-
-                        // TODO: maybe this line failes
-                        APP.MODEL[self.modelName].keys = self.data.keys();
-                    }
-                    catch(e){
-
-                        if(DEBUG) CORE.console.err('ERROR: Cannot save model data (ID: ' + self['id'] + ')', self);
-                    }
-                });
-
-            })(this);
+                if(DEBUG) CORE.console.err('ERROR: Cannot save model data (ID: ' + id + ')', this);
+            }
         }
 
-        id = '' + id;
+		if(this.onSave) this.onSave();
+		if(!_batch){
+			if(APP.MODEL[this.modelName].onSave) APP.MODEL[this.modelName].onSave();
+		}
 
-        //NOTE: points through references
-        //if(this.cache[id]) console.log(this.cache[id] === this);
+        return CONFIG.ENABLE_MODEL_CACHE ?
 
-        // /* Update cache */
-        //
-        // if(this.cache[id]) {
-        //
-        //     for(var field in this) {
-        //
-        //         if(this.hasOwnProperty(field)) {
-        //
-        //             this.cache[id][field] = this[field];
-        //         }
-        //     }
-        // }
-        //
-        // /* Create cache */
-        //
-        // else {
-        //
-        //     this.cache[id] = this;
-        // }
-
-        return this.cache[id] || (this.cache[id] = this);
+            this.cache[id] = this
+        :
+            this;
     };
 
     /**
@@ -778,13 +888,38 @@ APP.MODEL = (function(MAPPER, STORAGE){
         return this.save(/* persistent? */ false);
     };
 
+    /*
+       Model.update(key, value, save?, batch?);
+       Model.update({key: value}, save?, batch?);
+     */
+
     /**
-     * @param {Object<string, *>} params
-     * @param {boolean=} persistent
+     * @param {string|Object<string, *>} params
+     * @param {*|boolean=} persistent
+	 * @param {boolean=} _persistent
+	 * @param {boolean=} _batch
      * @this _model_class
      */
 
-    ModelClass.prototype.update = function(params, persistent){
+    ModelClass.prototype.update = function(params, persistent, _persistent, _batch){
+
+        if(CORE.isType(params, 'string')){
+
+            var attribute = params;
+
+            params = {};
+            params[attribute] = persistent;
+            persistent = _persistent;
+        }
+        else{
+
+            //_batch = _persistent;
+        }
+
+        if(this.beforeUpdate) this.beforeUpdate();
+        if(!_batch){
+            if(APP.MODEL[this.modelName].beforeUpdate) APP.MODEL[this.modelName].beforeUpdate();
+        }
 
         var has_update = false;
 
@@ -795,34 +930,45 @@ APP.MODEL = (function(MAPPER, STORAGE){
                 var current_value = params[key_1st];
 
                 //TODO
-                if(CORE.isType(this[key_1st])){
+                // if(CORE.isType(this[key_1st])){
+                //
+                //     if((this[key_1st] !== current_value) && (
+                //         !current_value || (
+                //        (current_value.constructor !== Array || current_value.length) &&
+                //        (current_value.constructor !== Object || Object.keys(/** @type {Object} */ (current_value)||{}).length)))){
+                //
+                //         this[key_1st] = current_value;
+                //         has_update = true;
+                //     }
+                // }
+                // else{
 
-                    if(this[key_1st] !== current_value &&
-                      (current_value || (current_value === 0 || current_value === false || current_value === "")) &&
-                      (current_value.constructor !== Array || current_value.length) &&
-                      (current_value.constructor !== Object || Object.keys(/** @type {Object} */ (current_value)||{}).length)){
+                    if(this[key_1st] !== current_value){
 
                         this[key_1st] = current_value;
                         has_update = true;
                     }
-                }
-                else{
-
-                    this[key_1st] = current_value;
-                    has_update = true;
-                }
+                //}
             }
         }
 
         if(has_update) {
 
-            /* Delete View Mapper Cache */
-
-            this['mapToViewCache'] = void 0;
+            modelhelper_has_update = true;
 
             /* Delete View Mapper Cache */
 
-            if(persistent) this.save(persistent);
+            if(CONFIG.ENABLE_MAPPER_CACHE) this['mapToViewCache'] = false;
+
+            /* Delete View Mapper Cache */
+
+            if(persistent || !CONFIG.ENABLE_MODEL_CACHE) this.save(persistent, _batch);
+            else if(CONFIG.ENABLE_MODEL_CACHE) this.cache['' + this['id']] = this;
+
+			if(this.onUpdate) this.onUpdate();
+			if(!_batch){
+				if(APP.MODEL[this.modelName].onUpdate) APP.MODEL[this.modelName].onUpdate();
+			}
         }
 
         return this;
@@ -838,16 +984,26 @@ APP.MODEL = (function(MAPPER, STORAGE){
     };
 
     /**
-     * @param {boolean=} batch
+     * @param {boolean=} _batch
      * @this _model_class
      */
 
-    ModelClass.prototype.delete = function(batch){
+    ModelClass.prototype.delete = function(_batch){
+
+		if(this.beforeDelete) this.beforeDelete();
+		if(!_batch) {
+			if(APP.MODEL[this.modelName].beforeDelete) APP.MODEL[this.modelName].beforeDelete();
+		}
 
         APP.MODEL[this.modelName].data.del('' + this['id']);
         //delete APP.MODEL[this.modelName].data['' + this['id']];
         delete APP.MODEL[this.modelName].cache['' + this['id']];
-        if(!batch) APP.MODEL[this.modelName].keys = this.data.keys();
+        if(!_batch) APP.MODEL[this.modelName].keys = this.data.keys();
+
+		if(this.onDelete) this.onDelete();
+		if(!_batch) {
+			if(APP.MODEL[this.modelName].onDelete) APP.MODEL[this.modelName].onDelete();
+		}
     };
 
     return /** @type {_active_model} */ (new ACTIVE_MODEL());

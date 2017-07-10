@@ -21,22 +21,22 @@ for(var i = 0; i < dependencies.length; i++){
 
         if(platform){
 
-            lib.copyFolderRecursiveSync('app/' + dependencies[i], 'bin/' + platform, true);
+            lib.copyFolderRecursiveSync('app/' + dependencies[i], 'public/' + platform, true);
         }
         else{
 
-            lib.copyFolderRecursiveSync('app/' + dependencies[i], 'bin/www/', true);
+            lib.copyFolderRecursiveSync('app/' + dependencies[i], 'public/www/', true);
         }
     }
     else {
 
         if(platform){
 
-            lib.copyFileSync('app/' + dependencies[i], 'bin/' + platform + '/' + dependencies[i], true);
+            lib.copyFileSync('app/' + dependencies[i], 'public/' + platform + '/' + dependencies[i], true);
         }
         else{
 
-            lib.copyFileSync('app/' + dependencies[i], 'bin/www/' + dependencies[i], true);
+            lib.copyFileSync('app/' + dependencies[i], 'public/www/' + dependencies[i], true);
         }
     }
 }

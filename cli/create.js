@@ -45,7 +45,7 @@ if(!force && fs.existsSync(parameter.toLowerCase() + '/xone.json')){
     console.log("Error: The " + (parameter === '.' ? 'current' : 'target') + " directory already include a xone project!");
     console.log("Append the '--force' parameter to force execution and overwrite existing project files!");
 }
-else if(!force && (fs.existsSync('app') || fs.existsSync('bin'))){
+else if(!force && (fs.existsSync('app') || fs.existsSync('public'))){
 
     console.log("Warning: The " + (parameter === '.' ? 'current' : 'target') + " directory is not empty!");
     console.log("Append the '--force' parameter to force execution and overwrite existing project files!");

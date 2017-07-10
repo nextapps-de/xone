@@ -6,6 +6,7 @@ goog.require('PLATFORM');
 CONFIG.PLATFORM = PLATFORM;
 /** @define {string} */
 CONFIG.ENV = 'production';
+
 /** @define {string} */
 var ENV = CONFIG.ENV;
 /** @define {boolean} */

@@ -14,14 +14,14 @@ describe("Check Paint Initialize Status", function() {
     it("Check CORE.getStyle()", function() {
 
         document.getElementById('test_wrapper').style.width = "638px";
-        expect(CORE.getStyle('#test_wrapper', 'width'))
+        expect(roundStyleValue(CORE.getStyle('#test_wrapper', 'width')))
             .toBe("638px");
     });
 
     it("Check CORE.getStyle()", function() {
 
         expect(CORE.getStyle('#test_wrapper'))
-            .toBe(document.getElementById('test_wrapper').style);
+            .toEqual(window.getComputedStyle(document.getElementById('test_wrapper'), null));
     });
 
     it("Check CORE.setStyle()", function() {
@@ -62,6 +62,8 @@ describe("Check Paint Initialize Status", function() {
     /* Xone Tests */
 
     it("Check CORE.setStyle() + CORE.getStyle()", function() {
+
+        CONFIG.ENABLE_STYLE_CACHE = true;
 
         /* Init Test */
 
@@ -112,9 +114,13 @@ describe("Check Paint Initialize Status", function() {
             .toBe(undefined);
         expect(CORE.getById('test_layer')._style_new.width)
             .toBe('100px');
+
+        CONFIG.ENABLE_STYLE_CACHE = false;
     });
 
     it("Async Check CORE.setStyle() + CORE.getStyle()", function(done) {
+
+        CONFIG.ENABLE_STYLE_CACHE = true;
 
         /* Init Test */
 
@@ -180,12 +186,16 @@ describe("Check Paint Initialize Status", function() {
                 expect(CORE.getById('test_layer')._style_keys)
                     .toContain('width');
 
+                CONFIG.ENABLE_STYLE_CACHE = false;
+
                 done();
             });
         });
     });
 
     it("Check CORE.setHTML() + CORE.getHTML()", function() {
+
+        CONFIG.ENABLE_HTML_CACHE = true;
 
         /* Init Test */
 
@@ -231,9 +241,13 @@ describe("Check Paint Initialize Status", function() {
             .toBe(undefined);
         expect(CORE.getById('test_layer')._html_new)
             .toBe('Foo');
+
+        CONFIG.ENABLE_HTML_CACHE = false;
     });
 
     it("Async Check CORE.setHTML() + CORE.getHTML()", function(done) {
+
+        CONFIG.ENABLE_HTML_CACHE = true;
 
         /* Init Test */
 
@@ -286,12 +300,16 @@ describe("Check Paint Initialize Status", function() {
                 expect(CORE.getById('test_layer')._html_new)
                     .toBe(false);
 
+                CONFIG.ENABLE_HTML_CACHE = false;
+
                 done();
             });
         });
     });
 
     it("Check CORE.addClass() + CORE.removeClass() + CORE.toggleClass() + CORE.hasClass()", function() {
+
+        CONFIG.ENABLE_CLASS_CACHE = true;
 
         /* Init Test */
 
@@ -412,9 +430,13 @@ describe("Check Paint Initialize Status", function() {
             .toContain('bar');
         expect(CORE.getById('test_layer')._class_keys)
             .toContain('foobar');
+
+        CONFIG.ENABLE_CLASS_CACHE = false;
     });
 
     it("Async Check CORE.addClass() + CORE.removeClass() + CORE.toggleClass() + CORE.hasClass()", function(done) {
+
+        CONFIG.ENABLE_CLASS_CACHE = true;
 
         /* Init Test */
 
@@ -541,6 +563,8 @@ describe("Check Paint Initialize Status", function() {
                     .toContain('bar');
                 expect(CORE.getById('test_layer')._class_keys)
                     .toContain('foobar');
+
+                CONFIG.ENABLE_CLASS_CACHE = false;
 
                 done();
             });
@@ -756,6 +780,8 @@ describe("Check Paint Initialize Status", function() {
         // ############################################################################
         // ############################################################################
 
+        CONFIG.ENABLE_STYLE_CACHE = true;
+
         CORE.getById('test_wrapper')._style = {};
         CORE.getById('test_wrapper')._style_new = {};
         CORE.getById('test_wrapper')._style_keys = [];
@@ -847,7 +873,8 @@ describe("Check Paint Initialize Status", function() {
         expect(CORE.getStyle('#test_content', 'height'))
             // TODO:
             // NOTE: Cascade Style NOT Converted To Computed Style
-            .toBe('auto');
+            //.toBe('auto');
+            .toBe('111px');
 
         // -------------------------------------------------------------------------
 
@@ -993,8 +1020,12 @@ describe("Check Paint Initialize Status", function() {
             // NOTE: Cascade Style Was Converted To Computed Style
             .toBe(CORE.getByTag('li', 'test_content')[3].clientHeight + 'px');
 
+        CONFIG.ENABLE_STYLE_CACHE = false;
+
         // ############################################################################
         // ############################################################################
+
+        CONFIG.ENABLE_STYLE_CACHE = true;
 
         CORE.getById('test_wrapper')._style = {};
         CORE.getById('test_wrapper')._style_new = {};
@@ -1238,6 +1269,8 @@ describe("Check Paint Initialize Status", function() {
                 // TODO:
                 // NOTE: Cascade Style Was Converted To Computed Style
                     .toBe(CORE.getByTag('li', 'test_content')[3].clientHeight + 'px');
+
+                CONFIG.ENABLE_STYLE_CACHE = false;
 
                 done();
             });

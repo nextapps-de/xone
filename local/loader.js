@@ -8,8 +8,8 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
     var html = '';
     var local_webserver = (
 
-        window.location.href.indexOf('127.0.0.1') === -1 &&
-        window.location.href.indexOf('localhost') === -1 &&
+        window.location.href.indexOf('//127.0.0.1') !== -1 ||
+        window.location.href.indexOf('//localhost') !== -1 ||
         window.location.href.indexOf('file://') === -1
     );
 
@@ -19,47 +19,49 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
 
         MANIFEST.dependencies.css_xone = [
 
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/css/reset.css',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/css/xone.css',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/css/debug.css'
+            //MANIFEST.dependencies.xone + 'css/reset.css',
+            MANIFEST.dependencies.xone + 'css/xone.css',
+			MANIFEST.dependencies.xone + 'css/debug.css'
         ];
 
         MANIFEST.dependencies.js_xone = [
 
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/lib/amd.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/core/polyfill.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/interface/ajax.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/interface/event.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/interface/model.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/interface/pattern.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/interface/route.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/interface/storage.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/interface/template.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/interface/view.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/core/interface.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/lib/graph.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/core/core.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/core/app.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/lib/debug.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/lib/paint.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/lib/animate.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/lib/event.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/lib/retina.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/lib/compress.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/lib/storage.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/core/model.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/core/controller.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/lib/layout.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/lib/viewport.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/lib/worker.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/lib/validate.js'
+            MANIFEST.dependencies.xone + 'lib/amd.js',
+            MANIFEST.dependencies.xone + 'core/polyfill.js',
+            MANIFEST.dependencies.xone + 'interface/ajax.js',
+            MANIFEST.dependencies.xone + 'interface/event.js',
+            MANIFEST.dependencies.xone + 'interface/model.js',
+            MANIFEST.dependencies.xone + 'interface/pattern.js',
+            MANIFEST.dependencies.xone + 'interface/route.js',
+            MANIFEST.dependencies.xone + 'interface/storage.js',
+            MANIFEST.dependencies.xone + 'interface/template.js',
+            MANIFEST.dependencies.xone + 'interface/view.js',
+            MANIFEST.dependencies.xone + 'core/interface.js',
+            MANIFEST.dependencies.xone + 'lib/graph.js',
+            MANIFEST.dependencies.xone + 'core/core.js',
+            MANIFEST.dependencies.xone + 'core/app.js',
+            MANIFEST.dependencies.xone + 'lib/debug.js',
+            MANIFEST.dependencies.xone + 'lib/paint.js',
+            MANIFEST.dependencies.xone + 'lib/animate.js',
+            MANIFEST.dependencies.xone + 'lib/event.js',
+            MANIFEST.dependencies.xone + 'lib/retina.js',
+            MANIFEST.dependencies.xone + 'lib/compress.js',
+            MANIFEST.dependencies.xone + 'lib/storage.js',
+            MANIFEST.dependencies.xone + 'core/model.js',
+            MANIFEST.dependencies.xone + 'core/controller.js',
+            MANIFEST.dependencies.xone + 'lib/layout.js',
+            MANIFEST.dependencies.xone + 'lib/viewport.js',
+            MANIFEST.dependencies.xone + 'lib/worker.js',
+            MANIFEST.dependencies.xone + 'lib/validate.js',
+			"tmp/layout.js",
+			"tmp/view.js"
         ];
 
         MANIFEST.dependencies.js_inject = [
 
             /* INJECT XONE LOADER */
 
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/core/init.js'
+            MANIFEST.dependencies.xone + 'core/init.js'
         ];
 
         html += load_deps(/* field: */ 'css_xone');
@@ -78,12 +80,7 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
 
         if(MANIFEST.dependencies.calculate && window.DEPS){
 
-            //console.log(DEPS);
-            //console.log(MANIFEST.dependencies.js_xone);
-            //console.log(MANIFEST.dependencies.js);
-
-            DEPS.unshift('lib/xone/lib/amd.js');
-
+            DEPS.unshift(MANIFEST.dependencies.xone + 'lib/amd.js');
             MANIFEST.dependencies.js_deps = DEPS;
 
             html += load_deps(/* field: */ 'js_deps');
@@ -100,14 +97,14 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
 
     else if(CONFIG.ENV === "test_bundle"){
 
-        MANIFEST.dependencies.js_xone = ['lib/xone/dist/xone.bundle.js'];
+        MANIFEST.dependencies.js_xone = [MANIFEST.dependencies.xone + 'dist/xone.bundle.js'];
 
         html += load_deps(/* field: */ 'js_xone');
     }
 
     else if(CONFIG.ENV === "test_lib"){
 
-        MANIFEST.dependencies.js_xone = ['lib/xone/dist/xone.lib.min.js'];
+        MANIFEST.dependencies.js_xone = [MANIFEST.dependencies.xone + 'dist/xone.lib.min.js'];
 
         html += load_deps(/* field: */ 'js_xone');
     }
@@ -131,15 +128,15 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
 
         MANIFEST.dependencies.spec_xone = [
 
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/spec/helper.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/spec/core_spec.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/spec/dom_spec.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/spec/paint_spec.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/spec/array_spec.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/spec/check_spec.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/spec/model_spec.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/spec/async_spec.js',
-            /*CONFIG.XONE_PATH +*/ 'lib/xone/spec/amd_spec.js'
+            MANIFEST.dependencies.xone + 'test/helper.js',
+            MANIFEST.dependencies.xone + 'test/core_spec.js',
+            MANIFEST.dependencies.xone + 'test/dom_spec.js',
+            MANIFEST.dependencies.xone + 'test/paint_spec.js',
+            MANIFEST.dependencies.xone + 'test/array_spec.js',
+            MANIFEST.dependencies.xone + 'test/check_spec.js',
+            MANIFEST.dependencies.xone + 'test/model_spec.js',
+            MANIFEST.dependencies.xone + 'test/async_spec.js',
+            MANIFEST.dependencies.xone + 'test/amd_spec.js'
         ];
 
         html += (
@@ -190,23 +187,77 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
 
         MANIFEST.dependencies.benchmark = [
 
-            'lib/benchmark/lodash.min.js',
-            'lib/benchmark/benchmark.js'
+            MANIFEST.dependencies.xone + 'node_modules/lodash/lodash.min.js',
+            MANIFEST.dependencies.xone + 'node_modules/benchmark/benchmark.js',
+            MANIFEST.dependencies.xone + 'page/lib/highlight/highlight.pack.js',
+            MANIFEST.dependencies.xone + 'node_modules/chart.js/dist/Chart.min.js',
+            MANIFEST.dependencies.xone + 'dist/xone.bundle.js',
+            MANIFEST.dependencies.xone + 'local/benchmark.js'
         ];
 
-        MANIFEST.dependencies.suites = [];
+        MANIFEST.dependencies.suites = [
 
-        html += (
+            'array_vs_object.js',
+            'concat_string_vs_array_join.js',
+            'create_array_vs_cached_array.js',
+            'dom_access_vs_xone.js',
+            'inner_html_vs_build_dom.js',
+            'inner_html_vs_cached_html.js',
+            'local_storage.js',
+            'native_map_vs_custom_map.js'
+        ];
 
-            '<style type="text/css" media="all">body{ visibility: visible !important; transform: none !important; top:0; right:0; bottom:0; left:0; padding: 0; margin: 0; width:100%; height:100%; min-width:100%; min-height:100%;max-width:100%; max-height:100%; overflow:hidden; position:absolute; font-family: Arial, Helvetica, sans-serif}</style>' +
-            '&emsp;<b>Choose Test Suite: </b><select style="padding:0.5em; margin:1em" onchange="document.getElementsByTagName(\'iframe\')[0].src = this.value; return false;"><option value="" selected></option><option value="perf/array_vs_object/">array_vs_object</option></select><hr style="margin:0; padding:0">' +
-            '<iframe src="" style="width:96%; height:96%; position:relative; top:2%; right:2%; bottom:2%; left:2%; margin:0; padding:0; border:0; overflow: auto" frameborder="0"></iframe>'
-        );
+        MANIFEST.dependencies.css_xone = [
+
+            MANIFEST.dependencies.xone + 'css/reset.css',
+            MANIFEST.dependencies.xone + 'css/xone.css',
+            //'https://cdn.jsdelivr.net/font-hack/2.020/css/hack.min.css',
+            MANIFEST.dependencies.xone + 'page/lib/highlight/styles/agate.css',
+            MANIFEST.dependencies.xone + 'css/benchmark.css'
+        ];
+
+        html += load_deps(/* field: */ 'css_xone');
+
+        // html += (
+        //
+        //     '<style type="text/css" media="all">body{ visibility: visible !important; transform: none !important; top:0; right:0; bottom:0; left:0; padding: 0; margin: 0; width:100%; height:100%; min-width:100%; min-height:100%;max-width:100%; max-height:100%; overflow:hidden; position:absolute; font-family: Arial, Helvetica, sans-serif}</style>' +
+        //     '&emsp;<b>Choose Test Suite: </b><select style="padding:0.5em; margin:1em" onchange="document.getElementsByTagName(\'iframe\')[0].src = this.value; return false;"><option value="" selected></option><option value="perf/array_vs_object/">array_vs_object</option></select><hr style="margin:0; padding:0">' +
+        //     '<iframe src="" style="width:96%; height:96%; position:relative; top:2%; right:2%; bottom:2%; left:2%; margin:0; padding:0; border:0; overflow: auto" frameborder="0"></iframe>'
+        // );
+
+        var suites = '';
+
+        for(var i = 0; i < MANIFEST.dependencies.suites.length; i++){
+
+            var title = MANIFEST.dependencies.suites[i].substring(0, MANIFEST.dependencies.suites[i].length -3);
+
+            suites += '<option value="suite/' + title + '">' + title + '</option>';
+        }
+
+        html +=
+            '<header>' +
+                '<input type="button" value="Start">' +
+                '<select id="select-mode">' +
+                '<option value="test">Test</option>' +
+                '<option value="fast" selected>Fast</option>' +
+            '<option value="normal">Normal</option>' +
+                '<option value="long">Long</option>' +
+                '<option value="extra">Extra</option>' +
+                '</select>' +
+                '<div id="checkboxes"></div>' +
+            '</header>' +
+            '<main></main>' +
+            '<footer>' +
+                '<img src="lib/xone/page/img/xone.svg">' +
+                '<select>' + suites + '</select>' +
+                '<div style="float: left">&emsp;<input id="options_chart" type="checkbox" checked> Charts</div>' +
+                '<table><tr><td id="log"></td></tr></table>' +
+            '</footer>';
 
         /* ADD SUITES */
 
         html += load_deps(/* field: */ 'benchmark');
-        html += load_deps(/* field: */ 'suites');
+        //html += load_deps(/* field: */ 'suites');
     }
 
     if(html) {

@@ -79,6 +79,45 @@ var CORE = {};
     };
 
     /**
+     * @param {!string} value
+     * @return {boolean}
+     * @const
+     */
+
+    CORE.isString = function(value){
+
+        if(DEBUG) GRAPH.register('CORE.isString');
+
+        return typeof value === 'string';
+    };
+
+    /**
+     * @param {!*} value
+     * @return {boolean}
+     * @const
+     */
+
+    CORE.isNumber = function(value){
+
+        if(DEBUG) GRAPH.register('CORE.isNumber');
+
+        return typeof value === 'number';
+    };
+
+    /**
+     * @param {!*} value
+     * @return {boolean}
+     * @const
+     */
+
+    CORE.isBoolean = function(value){
+
+        if(DEBUG) GRAPH.register('CORE.isBoolean');
+
+        return typeof value === 'boolean';
+    };
+
+    /**
      * @param {!*} value
      * @return {boolean}
      * @const
@@ -88,7 +127,7 @@ var CORE = {};
 
         if(DEBUG) GRAPH.register('CORE.isDefined');
 
-        return CORE.isType(value);
+        return typeof value !== 'undefined';
     };
 
     /**
@@ -141,6 +180,19 @@ var CORE = {};
         if(DEBUG) GRAPH.register('CORE.isCollection');
 
         return HTMLCollection.prototype.isPrototypeOf(value);
+    };
+
+    /**
+     * @param {!Node|*} value
+     * @return {boolean}
+     * @const
+     */
+
+    CORE.isNode = function(value){
+
+        if(DEBUG) GRAPH.register('CORE.isCollection');
+
+        return value.nodeType && value.nodeName ? true : false;
     };
 
     /**
@@ -201,6 +253,117 @@ var CORE = {};
         if(DEBUG) GRAPH.register('CORE.isBlank');
 
         return value === "";
+    };
+
+    /**
+     * @type Array<string>
+     * @const
+     */
+
+    var KEYCODES = [
+
+        '',             // 0
+        '',             // 1
+        '',             // 2
+        '',             // 3
+        '',             // 4
+        '',             // 5
+        '',             // 6
+        '',             // 7
+        'backspace',    // 8
+        'tab',          // 9
+        '',             // 10
+        '',             // 11
+        '',             // 12
+        'enter',        // 13
+        '',             // 14
+        '',             // 15
+        'shift',        // 16
+        'ctrl',         // 17
+        'alt',          // 18
+        'pause/break',  // 19
+        'caps lock',    // 20
+        '',             // 21
+        '',             // 22
+        '',             // 23
+        '',             // 24
+        '',             // 25
+        '',             // 26
+        'esc',          // 27
+        '',             // 28
+        '',             // 29
+        '',             // 30
+        '',             // 31
+        'space',        // 32
+        'page up',      // 33
+        'page down',    // 34
+        'end',          // 35
+        'home',         // 36
+        'left',         // 37
+        'up',           // 38
+        'right',        // 39
+        'down',         // 40
+        '',             // 41
+        '',             // 42
+        '',             // 43
+        '',             // 44
+        'insert',       // 45
+        'delete',       // 46
+        '',             // 47
+        '',             // 48
+        '',             // 49
+        ''              // 50
+    ];
+
+    // a-z
+    for(var i = 97; i < 123; i++) {
+
+        KEYCODES[i - 32] = String.fromCharCode(i);
+    }
+
+    // 0-9
+    for(var i = 48; i < 58; i++) {
+
+        KEYCODES[i] = String(i - 48);
+    }
+
+    // f1-f12
+    for(var i = 1; i < 13; i++) {
+
+        KEYCODES[i + 111] = 'f' + i;
+    }
+
+    // numpad
+    for(var i = 0; i < 10; i++) {
+
+        KEYCODES[i + 96] = 'numpad ' + i;
+    }
+
+    /**
+     * @param {!Event|number} keyCode
+     * @param {!Object<string, Function>} payload
+     */
+
+    CORE.switchKeyCode = function(keyCode, payload){
+
+        if(typeof keyCode === 'number'){
+
+            if(payload[KEYCODES[keyCode]]) {
+
+                payload[KEYCODES[keyCode]]();
+                return;
+            }
+        }
+        else{
+
+            if(payload[KEYCODES[keyCode.keyCode]]) {
+
+                payload[KEYCODES[keyCode.keyCode]]();
+                return;
+            }
+        }
+
+        payload['else'] && payload['else']();
     };
 
     /**
@@ -691,6 +854,8 @@ var CORE = {};
         }
     }
 
+    var regex_query = /[[:=+>*,~(]/;
+
     /**
      * https://jsperf.com/xone-dom-selector-performance
      * @param {!string} query
@@ -698,109 +863,115 @@ var CORE = {};
      * @const
      */
 
-    CORE.query = function(query){
+    CORE.query = CORE.queryAll = function(query){
 
         if(DEBUG) {
 
             GRAPH.register('CORE.query');
         }
 
-        if(query.indexOf(' ') === -1){
+        if(!regex_query.test(query)){
 
-            var firstChar = query.charAt(0);
+            if(query.indexOf(' ') === -1){
 
-            if(firstChar === '.'){
+                var firstChar = query.charAt(0);
 
-                return CORE.getByClass(query.substring(1));
-            }
+                if(firstChar === '.'){
 
-            var dot_position = query.indexOf('.');
+                    return CORE.getByClass(query.substring(1));
+                }
 
-            if(dot_position > 0){
+                var dot_position = query.indexOf('.');
 
-                var class_name = query.substring(dot_position + 1);
+                if(dot_position > 0){
 
-                if(firstChar === '#'){
+                    var class_name = query.substring(dot_position + 1);
 
-                    return CORE.getByClass(class_name, query.substring(1, dot_position));
+                    if(firstChar === '#'){
+
+                        return CORE.getByClass(class_name, query.substring(1, dot_position));
+                    }
+                    else{
+
+                        var nodes = [];
+                        var found_nodes = CORE.getByTag(query.substring(0, dot_position));
+
+                        for(var i = 0; i < found_nodes.length; i++){
+
+                            if(CORE.hasClass(found_nodes[i], class_name)){
+
+                                nodes[nodes.length] = found_nodes[i];
+                            }
+                        }
+
+                        return nodes;
+                    }
+                }
+                else if(firstChar === '#'){
+
+                    return CORE.getById(query.substring(1));
                 }
                 else{
 
-                    var nodes = [];
-                    var found_nodes = CORE.getByTag(query.substring(0, dot_position));
-
-                    for(var i = 0; i < found_nodes.length; i++){
-
-                        nodes = nodes.concat(CORE.getByClass(class_name, query.substring(1, found_nodes[i])));
-                    }
-
-                    return nodes;
+                    return CORE.getByTag(query);
                 }
-            }
-            else if(firstChar === '#'){
-
-                return CORE.getById(query.substring(1));
             }
             else{
 
-                return CORE.getByTag(query);
-            }
-        }
-        else{
+                var parts = query.split(" ");
 
-            var parts = query.split(" ");
+                if(parts.length === 2){
 
-            if(parts.length === 2){
+                    var part1 = parts[0];
+                    var part2 = parts[1];
+                    var firstChar1 = part1.charAt(0);
+                    var firstChar2 = part2.charAt(0);
 
-                var part1 = parts[0];
-                var part2 = parts[1];
-                var firstChar1 = part1.charAt(0);
-                var firstChar2 = part2.charAt(0);
+                    if(firstChar1 === '#'){
 
-                if(firstChar1 === '#'){
+                        if(firstChar2 === '.'){
 
-                    if(firstChar2 === '.'){
-
-                        return CORE.getByClass(part2.substring(1), part1.substring(1));
-                    }
-                    else if(firstChar2 !== '#'){
-
-                        return CORE.getByTag(part2, part1.substring(1));
-                    }
-                }
-                else if(firstChar1 === '.'){
-
-                    if(firstChar2 === '#'){
-
-                        return CORE.getByClass(part1.substring(1), part2.substring(1));
-                    }
-                }
-                else{
-
-                    if(firstChar2 === '.'){
-
-                        var nodes = [];
-                        var class_name = part2.substring(1);
-
-                        if(part1 === 'document' || part1 === 'body'){
-
-                            return CORE.getByClass(class_name);
+                            return CORE.getByClass(part2.substring(1), part1.substring(1));
                         }
-                        else{
+                        else if(firstChar2 !== '#'){
 
-                            var found_nodes = CORE.getByTag(part1);
+                            return CORE.getByTag(part2, part1.substring(1));
+                        }
+                    }
+                    else if(firstChar1 === '.'){
 
-                            for(var i = 0; i < found_nodes.length; i++){
+                        if(firstChar2 === '#'){
 
-                                nodes.concat(CORE.getByClass(class_name, found_nodes[i]));
+                            return CORE.getByClass(part1.substring(1), part2.substring(1));
+                        }
+                    }
+                    else{
+
+                        if(firstChar2 === '.'){
+
+                            var nodes = [];
+                            var class_name = part2.substring(1);
+
+                            if(part1 === 'document' || part1 === 'body'){
+
+                                return CORE.getByClass(class_name);
                             }
+                            else{
 
-                            return nodes;
+                                var found_nodes = CORE.getByTag(part1);
+
+                                for(var i = 0; i < found_nodes.length; i++){
+
+                                    nodes.concat(CORE.getByClass(class_name, found_nodes[i]));
+                                }
+
+                                return nodes;
+                            }
                         }
-                    }
-                    else if(firstChar2 === '#'){
+                        else if(firstChar2 === '#'){
 
-                        return CORE.getByTag(part1, part2.substring(1));
+                            return CORE.getByTag(part1, part2.substring(1));
+                        }
                     }
                 }
             }
@@ -814,9 +985,59 @@ var CORE = {};
         return document.querySelectorAll(query);
     };
 
+    CORE.queryOne =  CORE.queryFirst = function(query){
+
+        var result = CORE.query(query);
+
+        if(CORE.isCollection(result)){
+
+            return result[0];
+        }
+        else{
+
+            return result;
+        }
+    };
+
+    CORE.getClosest = function(node, selector){
+
+        var direction = false;
+
+        if(((selector[0] === '<') && (direction = true)) || (selector[0] === '>')){
+
+            selector = CORE.trim(selector.substring(1));
+        }
+
+        if(direction){
+
+            if(node.closest){
+
+                return node.closest(selector);
+            }
+            else{
+
+                var result = CORE.query(selector),
+                    length = result.length,
+                    i;
+
+                while(node = node.parentElement){
+
+                    for(i = 0; i < length; i++){
+
+                        if(result[i] === node) return node;
+                    }
+                }
+            }
+        }
+        else{
+
+            return node.querySelector(selector);
+        }
+    };
+
     /**
      * @param {string} id
-     * @return {Node|Element|HTMLElement|null}
+     * @return {Node|Element|HTMLElement|HTMLInputElement|null}
      * @const
      */
 
@@ -836,7 +1057,7 @@ var CORE = {};
             }
         }
 
-        if(CONFIG.DOM_CACHE_ENABLED){
+        if(CONFIG.ENABLE_DOM_CACHE){
 
             return CORE.DOM[id] || (CORE.DOM[id] = document.getElementById(id));
         }
@@ -848,7 +1069,7 @@ var CORE = {};
 
     /**
      * @param {string} classname
-     * @param {Node|HTMLElement|Element|Window|string=} context
+     * @param {Node|HTMLElement|HTMLInputElement|Element|Window|string=} context
      * @return {NodeList}
      * @const
      */
@@ -875,7 +1096,7 @@ var CORE = {};
 
     /**
      * @param {string} tag
-     * @param {Node|HTMLElement|Element|Window|string=} context
+     * @param {Node|HTMLElement|HTMLInputElement|Element|Window|string=} context
      * @return {NodeList}
      * @const
      */
@@ -901,7 +1122,7 @@ var CORE = {};
     };
 
     /**
-     * @param {Node|HTMLDocument|Window|NodeList|Array<Node>|string|null} node
+     * @param {Node|NodeList|Array<Node>|string|null} node
      * @return {string}
      * @const
      */
@@ -917,7 +1138,7 @@ var CORE = {};
     };
 
     /**
-     * @param {Node|HTMLDocument|Window|NodeList|Array<Node>|string|null} node
+     * @param {Node|NodeList|Array<Node>|string|null} node
      * @param {string} value
      * @const
      */
@@ -1033,7 +1254,7 @@ var CORE = {};
      * Recursive Build Pattern
      * @param {Array<_pattern_struct>} pattern
      * @param {Node|Element|DocumentFragment} parent
-     * @param {Array<string, *>=} data
+     * @param {Object<string, *>=} data
      * @param {boolean=} recursive
      * @returns {Node|Element|DocumentFragment}
      * @const
@@ -1099,6 +1320,27 @@ var CORE = {};
             element.removeChild(child);
         }
     };
+
+	/**
+	 * @param {string|HTMLInputElement} input
+	 */
+
+	CORE.focusInput = function(input){
+
+		if(typeof input === 'string'){
+
+			input = CORE.query(input)[0];
+		}
+
+		CORE.paint(function(){
+
+			var tmp = input.value;
+
+			input.focus();
+			input.value = '';
+			input.value = tmp;
+		});
+	};
 
     /**
      * @type {_cache_struct}
@@ -1169,7 +1411,38 @@ var CORE = {};
         }
 
         return str;
-    }
+    };
+
+	/**
+	 * @param {string} value
+	 * @return {string}
+	 */
+
+	CORE.trim = function(value){
+
+		if(value){
+
+			var length = value.length,
+				start = 0,
+				end = length;
+
+			while(start < length && ((value[start] === " ") || (value[start] === "\t") || (value[start] === "\n"))){
+
+				start++
+			}
+			while(length > start && ((value[end - 1] === " ") || (value[end - 1] === "\t") || (value[end - 1] === "\n"))){
+
+				end--;
+			}
+
+			if(start || (end !== length)) {
+
+				return value.substring(start, end);
+			}
+		}
+
+    	return value;
+	};
 
     /**
      * @param {Array<string|number>} array
@@ -1455,6 +1728,8 @@ var CORE = {};
         return window.setTimeout(fn, delay);
     };
 
+
+
     /**
      * @param {Array<Function>|Function} fn
      * @param {number=} delay
@@ -1706,23 +1981,20 @@ var CORE = {};
         var parameter = parsed_fn[0];
         var fn_content = (
 
-            '(function(){' +
+            'var $i = 0, $length = $self.length, ' + parameter + ';' +
 
-                'var $length = this.length, ' + parameter + ';' +
+            'for(; $i < $length; $i++){' +
 
-                'for(var $i = 0; $i < $length; $i++){' +
+                parameter + ' = $self[$i];' +
+                parsed_fn[1] + parsed_fn[2] + ';' +
+            '}' +
 
-                    parameter + ' = this[$i];' +
-                    parsed_fn[2] +
-
-                '}' +
-
-                'return this;' +
-
-            '}).call(' + parameter + ');'
+            'return $self;'
         );
 
-        return Function(parameter, fn_content);
+        console.log(Function('$self', fn_content).toString());
+
+        return Function('$self', fn_content);
     };
 
     /**
@@ -1738,24 +2010,20 @@ var CORE = {};
         var parameter = parsed_fn[0];
         var fn_content = (
 
-            'return (function(){' +
+            'var $i = 0, $length = $self.length, $copy = $edit ? $self : new Array($length), ' + parameter + ';' +
 
-                'var $length = this.length, $copy = new Array($length), ' + parameter + ';' +
+            'for(; $i < $length; $i++){' +
 
-                'for(var $i = 0; $i < $length; $i++){' +
+                parameter + ' = $self[$i];' +
+                parsed_fn[1] +
+                '$copy[$i] = ' + parsed_fn[2] + ';' +
 
-                    parameter + ' = this[$i];' +
-                    parsed_fn[1] +
-                    '$copy[$i] = ' + parsed_fn[2] + ';' +
+            '}' +
 
-                '}' +
-
-                'return $copy;' +
-
-            '}).call(' + parameter + ');'
+            'return $copy;'
         );
 
-        return Function(parameter, fn_content);
+        return Function('$self', '$edit', fn_content);
     };
 
     /**
@@ -1769,26 +2037,24 @@ var CORE = {};
 
         var parsed_fn = parse_fn(fn);
         var parameter = parsed_fn[0];
+
         var fn_content = (
 
-            'return (function(){' +
+            'var $i = 0, $length = $self.length, $copy = $edit ? $self : [], $count = 0, ' + parameter + ';' +
 
-                'var $length = this.length, $copy = [], $count = 0, ' + parameter + ';' +
+            'for(; $i < $length; $i++){' +
 
-                'for(var $i = 0; $i < $length; $i++){' +
+                parameter + ' = $self[$i];' +
+                parsed_fn[1] +
+                'if($edit){ if(!(' + parsed_fn[2] + ')){$copy.splice($i--, 1); $length--;}}' +
+                'else if(' + parsed_fn[2] + ') $copy[$count++] = ' + parameter + ';' +
 
-                    parameter + ' = this[$i];' +
-                    parsed_fn[1] +
-                    'if(' + parsed_fn[2] + ') $copy[$count++] = ' + parameter + ';' +
+            '};' +
 
-                '}' +
-
-                'return $copy;' +
-
-            '}).call(' + parameter + ');'
+            'return $copy;'
         );
 
-        return Function(parameter, fn_content);
+        return Function('$self', '$edit', fn_content);
     };
 
     /**
@@ -2113,7 +2379,7 @@ var CORE = {};
         isAndroid: !!navigator.userAgent.match(/Android/i),
         /** @type {boolean} */
         isCordova: !!window['cordova']
-    }
+    };
 
     /** @type {boolean} */
     CORE.System.isIOS = CORE.System.isIphone || CORE.System.isIpod || CORE.System.isIpad;
@@ -2140,6 +2406,6 @@ var CORE = {};
         }
 
         return this[fn_name];
-    };
+    }
 
 })();
