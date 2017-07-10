@@ -434,7 +434,7 @@ var CORE = {};
 
                 if(text) log += text + '<br>';
 
-                if(CORE.getStyle(dom_console || (dom_console = CORE.getById('debug-log')), 'display') !== 'none' || CONFIG.SHOW_DEBUG || APP.CONFIG.SHOW_DEBUG){
+                if((dom_console || (dom_console = CORE.getById('debug-log')) && CORE.getStyle(dom_console, 'display') !== 'none') || CONFIG.SHOW_DEBUG || APP.CONFIG.SHOW_DEBUG){
 
                     CORE.setHTML(dom_console, log, function(){
 
@@ -1992,7 +1992,7 @@ var CORE = {};
             'return $self;'
         );
 
-        console.log(Function('$self', fn_content).toString());
+        //console.log(Function('$self', fn_content).toString());
 
         return Function('$self', fn_content);
     };

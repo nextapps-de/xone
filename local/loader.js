@@ -120,7 +120,7 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
             /*CONFIG.JASMINE_PATH +*/ 'lib/jasmine/jasmine.css',
             /*CONFIG.JASMINE_PATH +*/ 'lib/jasmine/jasmine.js',
             /*CONFIG.JASMINE_PATH +*/ 'lib/jasmine/jasmine-html.js',
-            /*CONFIG.JASMINE_PATH +*/ 'lib/jasmine/console.js',
+            ///*CONFIG.JASMINE_PATH +*/ 'lib/jasmine/console.js',
             /*CONFIG.JASMINE_PATH +*/ 'lib/jasmine/boot.js'
         ];
 
@@ -129,7 +129,7 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
         MANIFEST.dependencies.spec_xone = [
 
             MANIFEST.dependencies.xone + 'test/helper.js',
-            MANIFEST.dependencies.xone + 'test/core_spec.js',
+            MANIFEST.dependencies.xone + 'test/xone_spec.js',
             MANIFEST.dependencies.xone + 'test/dom_spec.js',
             MANIFEST.dependencies.xone + 'test/paint_spec.js',
             MANIFEST.dependencies.xone + 'test/array_spec.js',
@@ -164,7 +164,7 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
                         '<li class="ul_li"></li>' +
                     '</ul>' +
                     '<ul class="ul">' +
-                        '<li class="ul_li" style="top: 444px !important;"></li>' +
+                        '<li class="ul_li" style="top: 444px;"></li>' +
                         '<li class="ul_li"></li>' +
                     '</ul>' +
                 '</div>' +

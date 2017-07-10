@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1, maximum-scale=1.0, user-scalable=no">
+    <title></title>
+
+    <link type="image/png" rel="shortcut icon" href="../node_modules/jasmine-core/images/jasmine_favicon.png">
+
+    <style type="text/css" media="all">
+        body{
+            visibility: visible !important; transform: none !important; top: 0 !important; right:0; bottom:0; left:0; padding: 0; margin: 0; height: 100% !important; width: 100% !important; transform: none !important;
+        }
+        .jasmine_html-reporter{
+            text-align: left; position: absolute; z-index: 9999; height: 100%; width: 100%; left: 0; top: 0; right: 0; bottom: 0; padding: 0 !important; margin: 0 !important; overflow: auto;
+        }
+    </style>
+    <style type="text/css" media="all">
+        #test_wrapper{ position: absolute; top: 1px; height:100%; }
+        #test_content{ position: absolute; top: 2px; height:100%; }
+        #test_wrapper ul{ position: relative; top: 3px; height:100%; }
+        #test_wrapper ul li{ position: relative; top: 4px; height:100%; }
+        #test_content .ul{ top: 5px; height:100%; }
+        #test_content .ul_li{ top: 6px; height:100%; }
+        #test_wrapper.active ul{ position: absolute; top: 7px; height:200px; }
+        #test_wrapper.active .ul_li{ position: absolute; top: 8px; height:200px; }
+        #test_wrapper.inactive ul{ top: -7px; height:0px; }
+        #test_wrapper.inactive .ul_li{ top: -8px; height:0px; }
+    </style>
+
+    <link rel="stylesheet" href="../node_modules/jasmine-core/lib/jasmine-core/jasmine.css">
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/xone.css">
+
+    <script src="../node_modules/jasmine-core/lib/jasmine-core/jasmine.js"></script>
+    <script src="../node_modules/jasmine-core/lib/jasmine-core/jasmine-html.js"></script>
+    <!--<script src="../node_modules/jasmine-core/lib/console/console.js"></script>-->
+    <script src="../node_modules/jasmine-core/lib/jasmine-core/boot.js"></script>
+
+    <script src="../local/stub.js" data-cover-flags="branchTracking"></script>
+    <script src="../project/app/manifest.js"></script>
+    <script>goog.provide("PLATFORM"); var PLATFORM = MANIFEST.platform = ''; var ENV = MANIFEST.env = 'test';</script>
+    <script src="../lib/amd.js"></script>
+    <script src="../build/config.js"></script>
+    <!--<script>var DEBUG = CONFIG.DEBUG = true;</script>-->
+    <script src="../local/env.js"></script>
+    <script src="../core/polyfill.js"></script>
+    <script src="../interface/ajax.js"></script>
+    <script src="../interface/event.js"></script>
+    <script src="../interface/model.js"></script>
+    <script src="../interface/pattern.js"></script>
+    <script src="../interface/route.js"></script>
+    <script src="../interface/storage.js" data-cover-flags="branchTracking"></script>
+    <script src="../interface/template.js"></script>
+    <script src="../interface/view.js"></script>
+    <script src="../core/interface.js"></script>
+    <script src="../lib/graph.js"></script>
+    <script src="../core/core.js"></script>
+    <script src="../core/app.js"></script>
+    <script src="../lib/debug.js"></script>
+    <script src="../lib/paint.js"></script>
+    <script src="../lib/animate.js"></script>
+    <script src="../lib/event.js"></script>
+    <script src="../lib/retina.js"></script>
+    <script src="../lib/compress.js"></script>
+    <script src="../lib/storage.js"></script>
+    <script src="../core/model.js"></script>
+    <script src="../core/controller.js"></script>
+    <script src="../lib/layout.js"></script>
+    <script src="../lib/viewport.js"></script>
+    <script src="../lib/worker.js"></script>
+    <script src="../lib/validate.js"></script>
+    <!--
+    <script src="../project/app/tmp/layout.js"></script>
+    <script src="../project/app/tmp/view.js"></script>
+    -->
+    <script src="../test/helper.js"></script>
+    <script src="../test/xone_spec.js"></script>
+    <script src="../test/dom_spec.js"></script>
+    <script src="../test/paint_spec.js"></script>
+    <script src="../test/array_spec.js"></script>
+    <script src="../test/check_spec.js"></script>
+    <script src="../test/model_spec.js"></script>
+    <script src="../test/async_spec.js"></script>
+    <script src="../test/amd_spec.js"></script>
+</head>
+<body>
+    <div id="test_wrapper" style="top: 100px;">
+        <div id="test_content" style="position: relative; top: 200px; height:auto;">
+            <ul class="ul" style="top: 300px; height:100%;">
+                <li class="ul_li" style="top: 400px;"></li>
+                <li class="ul_li"></li>
+                </ul>
+            <ul class="ul">
+                <li class="ul_li" style="top: 444px;"></li>
+                <li class="ul_li"></li>
+                </ul>
+            </div>
+        </div>
+    <div id="test_layer" style="display: none"></div>'
+</body>
+</html>

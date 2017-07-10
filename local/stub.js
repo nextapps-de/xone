@@ -1,6 +1,6 @@
 /* CLOSURE COMPILER LOCAL FALLBACK */
 
-window.goog || (function(modules){
+(function(modules){
 
     window.goog = {
 
@@ -14,7 +14,7 @@ window.goog || (function(modules){
         },
         scope: function(fn){
 
-            fn.call(window);
+            //fn.call(window);
         },
         exportSymbol: function(a, b){},
         exportProperty: function(a, b){}

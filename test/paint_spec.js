@@ -574,6 +574,8 @@ describe("Check Paint Initialize Status", function() {
 
     it("Mixed Paint + Style + Class", function(done) {
 
+        CONFIG.ENABLE_STYLE_CACHE = false;
+
         /* Inline Styles */
 
         expect(CORE.getById('test_wrapper').style.top)

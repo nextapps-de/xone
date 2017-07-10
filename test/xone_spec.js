@@ -1,7 +1,15 @@
 describe("Check Core Initialize Status", function() {
 
-    it("Check if core ist loaded", function() {
+    it("Check if google dependency manager fallback was loaded", function() {
 
+        expect(window.goog).toBeDefined();
+        expect(window.goog.provide).toBeDefined();
+        expect(window.goog.require).toBeDefined();
+    });
+
+    it("Check if core was loaded", function() {
+
+        expect(MANIFEST).toBeDefined();
         expect(ENV).toBeDefined();
         expect(RACK).toBeDefined();
         expect(PLATFORM).toBeDefined();
@@ -49,6 +57,25 @@ describe("Check Core Initialize Status", function() {
         expect(CORE).toHaveMethod("ajax");
         //todo: to method
         expect(CORE).toHaveObject("console");
+    });
+
+    it("Check google dependency manager", function() {
+
+        spyOn(window.console, "warn");
+
+        window.goog.require('foobar');
+
+        expect(window.console.warn).toHaveBeenCalled();
+    });
+
+    it("Check google dependency manager", function() {
+
+        spyOn(window.console, "warn");
+
+        window.goog.provide('foobar');
+        window.goog.require('foobar');
+
+        expect(window.console.warn).not.toHaveBeenCalled();
     });
 
     it("Check CORE.parseNode()", function() {

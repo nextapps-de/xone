@@ -28,7 +28,7 @@ describe("Check Async Implementation", function() {
 
             value = 'foobar';
 
-        }, 10);
+        }, 50);
 
         value = 'bar';
 
@@ -43,7 +43,7 @@ describe("Check Async Implementation", function() {
                 expect(value).toBe('foobar');
                 done();
 
-            }, 10);
+            }, 50);
         });
     });
 
@@ -75,7 +75,7 @@ describe("Check Async Implementation", function() {
 
             value = 'foobar';
 
-        }, 10);
+        }, 50);
 
         value = 'bar';
 
@@ -90,7 +90,7 @@ describe("Check Async Implementation", function() {
                 expect(value).toBe('foobar');
                 done();
 
-            }, 10);
+            }, 50);
         });
     });
 

@@ -1,6 +1,12 @@
+sudo: false
 language: node_js
 node_js:
-  - "4"
-  - "5"
-  - "6"
+#  - "5"
+#  - "6"
   - "7"
+install: npm install jasmine@2.0
+script:
+  - "phantomjs plugin/run-jasmine2.js test/index.html"
+after_success:
+  - "npm run coveralls"
+#  - "node ./node_modules/coveralls/bin/coveralls.js < ./coverage/jscover.lcov"

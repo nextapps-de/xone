@@ -58,6 +58,58 @@ var customMatchers = {
                 };
             }
         };
+    },
+
+    toBeAnyOf: function(){
+
+        return {
+
+            compare: function(actual, expected){
+
+                for(var i = 0, l = expected.length; i < l; i++){
+
+                    if(actual === expected[i]){
+
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        };
+    },
+
+    toContainAnyOf: function(){
+
+        return {
+
+            compare: function(actual, expected){
+
+                var found;
+
+                for(var i = 0; i < expected.length; i++){
+
+                    found = false;
+
+                    for(var a = 0; a < actual.length; a++){
+
+                        if(actual[a] === expected[i]){
+
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if(!found) break;
+                }
+
+                return {
+
+                    pass: found, // true || false
+                    message: "Expected " + actual + " to contain any of '" + expected + "'"
+                };
+            }
+        };
     }
 };
 
