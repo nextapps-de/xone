@@ -172,7 +172,7 @@ Un-compiled sources located in: _workspace/my_project/app/*_
 ```bash
 my_project> xone build
 ```
-Production build located in: _workspace/my_project/bin/www/*_
+Production build located in: _workspace/my_project/public/www/*_
 
 > __Note:__ We recommended to use production builds for any external/public release and use the sources only for developing, testing and may some other internal purposes. To skip the build integration of Xone, you have to use the standalone version instead.
 
@@ -180,7 +180,7 @@ Production build located in: _workspace/my_project/bin/www/*_
 ```bash
 my_project> xone server
 ```
-Open your preferred webrowser and goto _'http://localhost/app/'_ or _'http://localhost/bin/www/'_
+Open your preferred webrowser and goto _'http://localhost/app/'_ or _'http://localhost/public/www/'_
 
 Optionally you can pass custom host and port:
 ```bash
@@ -190,11 +190,11 @@ Open your preferred webrowser and goto _'http://localhost:8080'_
 
 #### Run Xone project (Local Filesystem)
 
-Open _app/index.html_ from sources or _bin/www/index.html_ from production build in your preferred browser. 
+Open _app/index.html_ from sources or _public/www/index.html_ from production build in your preferred browser. 
 
 #### Deploy Xone project (Cordova, Web, etc.)
 
-Use production builds located in _workspace/my_project/bin/*_ to move forward into your Cordova-based projects or upload to a webserver. 
+Use production builds located in _workspace/my_project/public/*_ to move forward into your Cordova-based projects or upload to a webserver. 
 
 ---
 
@@ -217,7 +217,7 @@ Perform platform specific builds:
 ```bash
 my_project> xone build android
 ```
-Build destination: _workspace/my_project/bin/android/*_
+Build destination: _workspace/my_project/public/android/*_
 
 #### Add custom platforms
 
@@ -226,7 +226,7 @@ You can add unlimited custom platforms, e.g. create a platform 'webapp':
 my_project> xone platform add webapp
 my_project> xone build webapp
 ```
-Build destination: _workspace/my_project/bin/webapp/*_
+Build destination: _workspace/my_project/public/webapp/*_
 
 ---
 

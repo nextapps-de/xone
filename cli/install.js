@@ -35,12 +35,6 @@ switch(parameter){
     case '-current':
     case 'current':
 
-    case '--i':
-    case '-i':
-    case '--installed':
-    case '-installed':
-    case 'installed':
-
     case void 0:
 
         parameter = false;
@@ -86,7 +80,7 @@ else{
         lib.copyFolderRecursiveSync(path_to_folder + '/dist', parameter + '/app/lib/xone', true);
         lib.copyFolderRecursiveSync(path_to_folder + '/task', parameter + '/app/lib/xone', true);
         lib.copyFolderRecursiveSync(path_to_folder + '/local', parameter + '/app/lib/xone', true);
-        lib.copyFolderRecursiveSync(path_to_folder + '/spec', parameter + '/app/lib/xone', true);
+        lib.copyFolderRecursiveSync(path_to_folder + '/test', parameter + '/app/lib/xone', true);
         //lib.copyFileSync(path_to_folder + '/cli/cli.js', parameter + '/app/lib/xone/cli/cli.js', true);
         lib.copyFileSync(path_to_folder + '/project/app/js/build.js', parameter + '/app/js/build.js', true);
         lib.copyFileSync(path_to_folder + '/package.json', parameter + '/app/lib/xone/package.json', true);

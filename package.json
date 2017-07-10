@@ -1,6 +1,6 @@
 {
   "name": "xone",
-  "version": "0.0.522",
+  "version": "0.0.600",
   "description": "Open source Javascript framework for building modern web applications.",
   "keywords": [
     "Javascript Framework",
@@ -29,9 +29,11 @@
   "license": "Apache-2.0",
   "dependencies": {
     "benchmark": "^2.1.4",
+    "chart.js": "^2.6.0",
     "csso": "^3.1.1",
     "google-closure-compiler": "^20170521.0.0",
     "google-closure-compiler-js": "^20170521.0.0",
+    "highlight.js": "^9.12.0",
     "jasmine": "^2.6.0",
     "jsdoc": "^3.4.3",
     "less": "^2.7.2",

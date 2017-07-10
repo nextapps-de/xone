@@ -201,9 +201,9 @@ function checkPlatform(parameter){
         return false;
     }
 
-    else if(!fs.existsSync('bin/' + parameter)){
+    else if(!fs.existsSync('public/' + parameter)){
 
-        buildFolders('bin/' + parameter);
+        buildFolders('public/' + parameter);
     }
 
     return true;
@@ -229,10 +229,20 @@ function checkXoneIntegration(path){
 function getModule(name){
 
     var xone_config = loadJSON('xone.json');
+    var xone_manifest = loadJSON('app/manifest.js', 'MANIFEST');
     var resolved_path;
 
+    if(fs.existsSync(resolved_path = path.resolve("./app", xone_manifest.dependencies.xone, "node_modules", name))){
+
+        return resolved_path;
+    }
+    else if(fs.existsSync(resolved_path = path.resolve("./app", xone_manifest.dependencies.xone, "..", name))){
+
+        return resolved_path;
+    }
+
     // lookup in default node_modules:
-    if(fs.existsSync(resolved_path = path.resolve(xone_config.node_modules_path, name))){
+    else if(fs.existsSync(resolved_path = path.resolve(xone_config.node_modules_path, name))){
 
         return resolved_path;
     }
@@ -243,6 +253,20 @@ function getModule(name){
     }
     // lookup in default node_modules if already in xone/node_modules/:
     else if(fs.existsSync(resolved_path = path.resolve(xone_config.node_modules_path, '..', '..', name))){
+
+        return resolved_path;
+    }
+
+    // alternatives:
+    else if(fs.existsSync(resolved_path = path.resolve('app/node_modules/', name))){
+
+        return resolved_path;
+    }
+    else if(fs.existsSync(resolved_path = path.resolve('app/xone/', name))){
+
+        return resolved_path;
+    }
+    else if(fs.existsSync(resolved_path = path.resolve('xone/', name))){
 
         return resolved_path;
     }
@@ -292,11 +316,11 @@ function buildFolders(folder){
         folder.indexOf("/") !== -1 ?
 
             folder.split("/")
-        :
+            :
             folder.indexOf("\\\\") !== -1 ?
 
                 folder.split("\\\\")
-            :
+                :
                 folder.split("\\")
     );
 

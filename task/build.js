@@ -2,8 +2,11 @@
 
 /**
  * Example:
- * app build android debug
- * app build dist min ./folder/
+ * xone build
+ * xone build <platform>
+ * xone build bundle
+ * xone build lib
+ * xone build lib min
  */
 
 var platform = process.argv[2];
@@ -13,51 +16,6 @@ var build_path = process.argv[4];
 var fs = require('fs');
 var path = require('path');
 var lib = require('./lib.js');
-
-// var jsdom = require("jsdom");
-// var dom = new jsdom.JSDOM('<!DOCTYPE html>');
-//
-// root.DEBUG = false;
-// root.window = dom.window;
-// root.document = dom.window.document;
-// root.navigator = dom.window.navigator;
-// root.window.Math = root.Math;
-// root.goog = {
-//
-//     require: function(){},
-//     provide: function(){}
-// };
-//
-// require('./../local/stub.js');
-// var amd = require('./../lib/amd.js');
-// //console.log(amd);
-//
-// require('./../lib/amd.js');
-// require('./../core/polyfill.js');
-// require('./../core/interface.js');
-// require('./../lib/graph.js');
-// require('./../core/core.js');
-// require('./../core/app.js');
-// require('./../lib/debug.js');
-// require('./../lib/paint.js');
-// require('./../lib/event.js');
-// require('./../lib/retina.js');
-// require('./../lib/compress.js');
-// require('./../lib/storage.js');
-// require('./../core/model.js');
-// require('./../core/controller.js');
-// require('./../lib/layout.js');
-// require('./../lib/viewport.js');
-// require('./../lib/worker.js');
-// require('./../lib/validate.js');
-//
-// amd.define('test', function(){
-//
-//     return function(){
-//
-//       crazy;
-//     };
-// });
 
 var compress = false;
 
@@ -127,10 +85,10 @@ if(fs.existsSync(__dirname + '/build.js')){
         console.log("-----------------------------------------------------");
 
         var xone_config = lib.loadJSON('xone.json');
-        var node_config = lib.loadJSON('app/lib/xone/package.json');
-        //var app_config = lib.loadJSON('app/config/app.js', 'APP_CONFIG');
         var xone_manifest = lib.loadJSON('app/manifest.js', 'MANIFEST');
-        var dependencies = xone_manifest.dependencies.calculate ? lib.loadJSON('app/deps.js', 'DEPS') : [];
+        xone_manifest.dependencies.xone = './app/' + xone_manifest.dependencies.xone;
+        var node_config = lib.loadJSON(xone_manifest.dependencies.xone + 'package.json');
+        var dependencies = xone_manifest.dependencies.calculate ? lib.loadJSON('app/tmp/deps.js', 'DEPS') : [];
         var compiler_options = xone_config.closure_compiler_js.options;
 
         compiler_options.jsCode || (compiler_options.jsCode = []);
@@ -156,20 +114,17 @@ if(fs.existsSync(__dirname + '/build.js')){
             fs.mkdirSync('log/');
         }
 
-        fs.writeFileSync('tmp/config.js', "goog.provide('PLATFORM'); /** @define {string} */ var PLATFORM = '" + (platform || '') + "';", 'utf8');
+        fs.writeFileSync('tmp/platform.js', "goog.provide('PLATFORM'); /** @define {string} */ var PLATFORM = '" + (platform || '') + "';", 'utf8');
 
         if(parameter === 'bundle' || parameter === 'lib'){
 
-            if(parameter === 'bundle'){
+            if(parameter === 'bundle') {
+
+                xone_config.closure_compiler_jar.options.output_wrapper = "%output%";
+                compiler_options.outputWrapper = "%output%";
 
                 xone_config.closure_compiler_jar.options.compilation_level = "WHITESPACE_ONLY";
                 compiler_options.compilationLevel = "WHITESPACE_ONLY";
-
-                if(parameter === 'bundle') {
-
-                    xone_config.closure_compiler_jar.options.output_wrapper = "%output%";
-                    compiler_options.outputWrapper = "%output%";
-                }
             }
             else{
 
@@ -189,14 +144,14 @@ if(fs.existsSync(__dirname + '/build.js')){
                 //compiler_options.formatting = "PRETTY_PRINT";
             }
 
-            xone_config.closure_compiler_jar.options.js.push("'tmp/config.js'");
-            compiler_options.jsCode.push({path: "tmp/config.js"});
+            xone_config.closure_compiler_jar.options.js.push("'app/../tmp/platform.js'");
+            compiler_options.jsCode.push({path: "app/../tmp/platform.js"});
 
             if(parameter === 'lib'){
 
                 //xone_config.closure_compiler_jar.options.js.push("'!**/lib/xone/core/interface.js'");
-                xone_config.closure_compiler_jar.options.js.push("'app/lib/xone/build/interface.js'");
-                compiler_options.jsCode.push({path: "app/lib/xone/build/interface.js"});
+                xone_config.closure_compiler_jar.options.js.push("'" + xone_manifest.dependencies.xone + "build/interface.js'");
+                compiler_options.jsCode.push({path: xone_manifest.dependencies.xone + "build/interface.js"});
             }
             else{
 
@@ -204,11 +159,11 @@ if(fs.existsSync(__dirname + '/build.js')){
                 //compiler_options.jsCode.push({path: "app/lib/xone/core/interface.js"});
             }
 
-            xone_config.closure_compiler_jar.options.js.push("'app/lib/xone/build/config.js'");
-            compiler_options.jsCode.push({path: "app/lib/xone/build/config.js"});
+            xone_config.closure_compiler_jar.options.js.push("'" + xone_manifest.dependencies.xone + "build/config.js'");
+            compiler_options.jsCode.push({path: xone_manifest.dependencies.xone + "build/config.js"});
 
-            xone_config.closure_compiler_jar.options.js.push("'app/lib/xone/lib/amd.js'");
-            compiler_options.jsCode.push({path: "app/lib/xone/lib/amd.js"});
+            xone_config.closure_compiler_jar.options.js.push("'" + xone_manifest.dependencies.xone + "lib/amd.js'");
+            compiler_options.jsCode.push({path: xone_manifest.dependencies.xone + "lib/amd.js"});
 
             // if(xone_manifest.dependencies.calculate){
             //
@@ -221,27 +176,102 @@ if(fs.existsSync(__dirname + '/build.js')){
             xone_config.closure_compiler_jar.options.compilation_level = enum_compilation_level[xone_config.closure_compiler_level];
             compiler_options.compilationLevel = enum_compilation_level[xone_config.closure_compiler_level];
 
-            xone_config.closure_compiler_jar.options.js.unshift("'tmp/config.js'");
-            compiler_options.jsCode.unshift({path: "tmp/config.js"});
-            if(xone_manifest.dependencies.calculate) dependencies.unshift("lib/xone/build/env.js");
-            dependencies.unshift("../tmp/config.js");
+            xone_config.closure_compiler_jar.options.js.unshift("'app/../tmp/platform.js'");
+            compiler_options.jsCode.unshift({path: "app/../tmp/platform.js"});
+            if(xone_manifest.dependencies.calculate) dependencies.unshift("../" + xone_manifest.dependencies.xone + "build/env.js");
+            dependencies.unshift("../tmp/platform.js");
+
+            //todo move special config in seperate file
+            var config_contents = "";
+            var config_default_contents = "";
+            var app_config = {};
+            var app_default_config = {};
+            var tmp_str = (
+
+                "goog.provide('CONFIG');\n" +
+                "/**\n" +
+                " * The main config descriptor\n" +
+                " * @struct\n" +
+                " * @name CONFIG\n" +
+                " * @namespace CONFIG Application\n" +
+                " * @const\n" +
+                " */\n" +
+                "var CONFIG = {};\n"
+            );
 
             if(fs.existsSync("app/config/production.js")){
 
-                //xone_config.closure_compiler_jar.options.js.push("'app/lib/xone/core/interface.js'");
-                xone_config.closure_compiler_jar.options.js.push("'app/config/production.js'");
-                //compiler_options.jsCode.push({path: "app/lib/xone/core/interface.js"});
-                compiler_options.jsCode.push({path: "app/config/production.js"});
-                dependencies.unshift("config/production.js");
+                // //xone_config.closure_compiler_jar.options.js.push("'app/lib/xone/core/interface.js'");
+                // xone_config.closure_compiler_jar.options.js.push("'app/config/production.js'");
+                // //compiler_options.jsCode.push({path: "app/lib/xone/core/interface.js"});
+                // compiler_options.jsCode.push({path: "app/config/production.js"});
+                // dependencies.unshift("config/production.js");
+
+                config_contents = fs.readFileSync('app/config/production.js', 'utf8');
+                config_default_contents = fs.readFileSync(xone_manifest.dependencies.xone + 'build/config.js', 'utf8');
+
+                eval(config_contents.substring(config_contents.indexOf('var CONFIG')));
+                app_config = CONFIG;
             }
             else{
 
-                //xone_config.closure_compiler_jar.options.js.push("'app/lib/xone/core/interface.js'");
-                xone_config.closure_compiler_jar.options.js.push("'app/lib/xone/build/config.js'");
-                //compiler_options.jsCode.push({path: "app/lib/xone/core/interface.js"});
-                compiler_options.jsCode.push({path: "app/lib/xone/build/config.js"});
-                dependencies.unshift("lib/xone/build/config.js");
+                // //xone_config.closure_compiler_jar.options.js.push("'app/lib/xone/core/interface.js'");
+                // xone_config.closure_compiler_jar.options.js.push("'app/lib/xone/build/config.js'");
+                // //compiler_options.jsCode.push({path: "app/lib/xone/core/interface.js"});
+                // compiler_options.jsCode.push({path: "app/lib/xone/build/config.js"});
+                // dependencies.unshift("lib/xone/build/config.js");
+
+                //config_contents = fs.readFileSync(xone_manifest.dependencies.xone + 'build/config.js', 'utf8');
+                config_default_contents = fs.readFileSync(xone_manifest.dependencies.xone + 'build/config.js', 'utf8');
             }
+
+            eval(config_default_contents.substring(config_default_contents.indexOf('var CONFIG')));
+            app_default_config = CONFIG;
+
+            for(var key in app_default_config){
+
+                if(app_default_config.hasOwnProperty(key)){
+
+                    if(typeof app_config[key] === "undefined"){
+
+                        if(xone_manifest.config && (typeof xone_manifest.config[key] !== "undefined")){
+
+                            app_config[key] = xone_manifest.config[key];
+                        }
+                        else{
+
+                            app_config[key] = app_default_config[key];
+                        }
+                    }
+                }
+            }
+
+            for(var key in app_config){
+
+                if(app_config.hasOwnProperty(key)){
+
+                    switch(typeof app_config[key]){
+
+                        case "boolean":
+                            tmp_str += "/** @define {boolean} */ CONFIG." + key.toUpperCase() + " = " + (app_config[key] ? "true" : "false") + ";\n";
+                            break;
+
+                        case "number":
+                            tmp_str += "/** @define {number} */ CONFIG." + key.toUpperCase() + " = " + app_config[key] + ";\n";
+                            break;
+
+                        case "string":
+                            tmp_str += "/** @define {string} */ CONFIG." + key.toUpperCase() + " = \"" + app_config[key].replace(/\n/g, "\\n") + "\";\n";
+                            break;
+                    }
+                }
+            }
+
+            fs.writeFileSync('tmp/config.js', tmp_str, 'utf8');
+
+            xone_config.closure_compiler_jar.options.js.push("'app/../tmp/config.js'");
+            compiler_options.jsCode.push({path: "app/../tmp/config.js"});
+            dependencies.unshift("../tmp/config.js");
         }
 
         // xone_config.closure_compiler_jar.options.js.push("'app/lib/xone/core/**.js'");
@@ -250,41 +280,43 @@ if(fs.existsSync(__dirname + '/build.js')){
 
         var xone_dependencies = [
 
-            ///*app_config.XONE_PATH +*/ 'lib/xone/lib/amd.js',
-            /*app_config.XONE_PATH +*/ 'lib/xone/core/polyfill.js',
-            /*app_config.XONE_PATH +*/ 'lib/xone/interface/ajax.js',
-            /*app_config.XONE_PATH +*/ 'lib/xone/interface/event.js',
-            /*app_config.XONE_PATH +*/ 'lib/xone/interface/model.js',
-            /*app_config.XONE_PATH +*/ 'lib/xone/interface/pattern.js',
-            /*app_config.XONE_PATH +*/ 'lib/xone/interface/route.js',
-            /*app_config.XONE_PATH +*/ 'lib/xone/interface/storage.js',
-            /*app_config.XONE_PATH +*/ 'lib/xone/interface/template.js',
-            /*app_config.XONE_PATH +*/ 'lib/xone/interface/view.js',
-            /*app_config.XONE_PATH +*/ 'lib/xone/core/interface.js',
-            /*app_config.XONE_PATH +*/ 'lib/xone/build/env.js',
-            /*app_config.XONE_PATH +*/ 'lib/xone/lib/graph.js',
-            /*app_config.XONE_PATH +*/ 'lib/xone/core/core.js',
-            /*app_config.XONE_PATH +*/ 'lib/xone/core/app.js',
-            /*app_config.XONE_PATH +*/ 'lib/xone/lib/debug.js',
-            /*app_config.XONE_PATH +*/ 'lib/xone/lib/paint.js',
-            /*app_config.XONE_PATH +*/ 'lib/xone/lib/animate.js',
-            /*app_config.XONE_PATH +*/ 'lib/xone/lib/event.js',
-            /*app_config.XONE_PATH +*/ 'lib/xone/lib/retina.js',
-            /*app_config.XONE_PATH +*/ 'lib/xone/lib/compress.js',
-            /*app_config.XONE_PATH +*/ 'lib/xone/lib/storage.js',
-            /*app_config.XONE_PATH +*/ 'lib/xone/core/model.js',
-            /*app_config.XONE_PATH +*/ 'lib/xone/core/controller.js',
-            /*app_config.XONE_PATH +*/ 'lib/xone/lib/layout.js',
-            /*app_config.XONE_PATH +*/ 'lib/xone/lib/viewport.js',
-            /*app_config.XONE_PATH +*/ 'lib/xone/lib/worker.js',
-            /*app_config.XONE_PATH +*/ 'lib/xone/lib/validate.js'
+            //xone_manifest.dependencies.xone +'lib/amd.js',
+            xone_manifest.dependencies.xone +'core/polyfill.js',
+            xone_manifest.dependencies.xone +'interface/ajax.js',
+            xone_manifest.dependencies.xone +'interface/event.js',
+            xone_manifest.dependencies.xone +'interface/model.js',
+            xone_manifest.dependencies.xone +'interface/pattern.js',
+            xone_manifest.dependencies.xone +'interface/route.js',
+            xone_manifest.dependencies.xone +'interface/storage.js',
+            xone_manifest.dependencies.xone +'interface/template.js',
+            xone_manifest.dependencies.xone +'interface/view.js',
+            xone_manifest.dependencies.xone +'core/interface.js',
+            xone_manifest.dependencies.xone +'build/env.js',
+            xone_manifest.dependencies.xone +'lib/graph.js',
+            xone_manifest.dependencies.xone +'core/core.js',
+            xone_manifest.dependencies.xone +'core/app.js',
+            xone_manifest.dependencies.xone +'lib/debug.js',
+            xone_manifest.dependencies.xone +'lib/paint.js',
+            xone_manifest.dependencies.xone +'lib/animate.js',
+            xone_manifest.dependencies.xone +'lib/event.js',
+            xone_manifest.dependencies.xone +'lib/retina.js',
+            xone_manifest.dependencies.xone +'lib/compress.js',
+            xone_manifest.dependencies.xone +'lib/storage.js',
+            xone_manifest.dependencies.xone +'core/model.js',
+            xone_manifest.dependencies.xone +'core/controller.js',
+            xone_manifest.dependencies.xone +'lib/layout.js',
+            xone_manifest.dependencies.xone +'lib/viewport.js',
+            xone_manifest.dependencies.xone +'lib/worker.js',
+            xone_manifest.dependencies.xone +'lib/validate.js',
+            'app/tmp/layout.js',
+            'app/tmp/view.js'
         ];
 
         xone_config.closure_compiler_jar.options.js = xone_config.closure_compiler_jar.options.js.concat(
 
             xone_dependencies.map(function(value){
 
-                return "'app/" + value + "'";
+                return "'" + path.normalize(value) + "'";
             })
         );
 
@@ -294,24 +326,24 @@ if(fs.existsSync(__dirname + '/build.js')){
 
                 return {
 
-                    path: "app/" + value
+                    path: path.normalize(value)
                 };
             })
         );
 
         if(parameter === 'bundle' || parameter === 'lib'){
 
-            xone_config.closure_compiler_jar.options.js.push("'app/lib/xone/build/require.js'");
-            compiler_options.jsCode.push({path: "app/lib/xone/build/require.js"});
-            dependencies.push("app/lib/xone/build/require.js");
+            xone_config.closure_compiler_jar.options.js.push("'" + xone_manifest.dependencies.xone + "build/require.js'");
+            compiler_options.jsCode.push({path: xone_manifest.dependencies.xone + "build/require.js"});
+            dependencies.push(xone_manifest.dependencies.xone + "build/require.js");
 
             if(parameter === 'lib'){
 
-                xone_config.closure_compiler_jar.options.js.push("'app/lib/xone/build/app.js'");
-                compiler_options.jsCode.push({path: "app/lib/xone/build/app.js"});
+                xone_config.closure_compiler_jar.options.js.push("'" + xone_manifest.dependencies.xone + "build/app.js'");
+                compiler_options.jsCode.push({path: xone_manifest.dependencies.xone + "build/app.js"});
 
-                xone_config.closure_compiler_jar.options.js.push("'app/lib/xone/build/core.js'");
-                compiler_options.jsCode.push({path: "app/lib/xone/build/core.js"});
+                xone_config.closure_compiler_jar.options.js.push("'" + xone_manifest.dependencies.xone + "build/core.js'");
+                compiler_options.jsCode.push({path: xone_manifest.dependencies.xone + "build/core.js"});
             }
         }
         else{
@@ -328,8 +360,8 @@ if(fs.existsSync(__dirname + '/build.js')){
 
                 for(var i = 0; i < platform_js.length; i++){
 
-                    xone_config.closure_compiler_jar.options.js.push("'" + platform_js[i] + "'");
-                    compiler_options.jsCode.push({path: platform_js[i]});
+                    xone_config.closure_compiler_jar.options.js.push("'app/" + platform_js[i] + "'");
+                    compiler_options.jsCode.push({path: "app/" + platform_js[i]});
                 }
             }
         }
@@ -360,7 +392,7 @@ if(fs.existsSync(__dirname + '/build.js')){
                     );
                 }
 
-                compiled_code = compiled_code.substring(0, compiled_code.indexOf(';', compiled_code.lastIndexOf('@define')) + 1) + '\n\n(function(){' + compiled_code.substring(compiled_code.indexOf(';', compiled_code.lastIndexOf('@define')) + 1) + '}).call(this);';
+                if(parameter === 'lib') compiled_code = compiled_code.substring(0, compiled_code.indexOf(';', compiled_code.lastIndexOf('@define')) + 1) + '\n\n(function(){' + compiled_code.substring(compiled_code.indexOf(';', compiled_code.lastIndexOf('@define')) + 1) + '}).call(this);';
 
                 fs.writeFileSync('tmp/build_tmp.js', compiled_code, 'utf8');
             }
@@ -373,43 +405,43 @@ if(fs.existsSync(__dirname + '/build.js')){
             //     }), 'utf8');
             // }
 
-            lib.buildFolders('bin/' + target_platform + '/js');
+            lib.buildFolders('public/' + target_platform + '/js');
 
             var compiled_file;
 
             if(parameter === 'bundle'){
 
-                lib.copyFileSync('tmp/build_tmp.js', compiled_file = (build_path ? build_path + 'xone.bundle' + (compress ? '.min' : '') + '.js' : 'app/lib/xone/dist/xone.bundle' + (compress ? '.min' : '') + '.js'), true);
+                lib.copyFileSync('tmp/build_tmp.js', compiled_file = (build_path ? build_path + 'xone.bundle' + (compress ? '.min' : '') + '.js' : xone_manifest.dependencies.xone + 'dist/xone.bundle' + (compress ? '.min' : '') + '.js'), true);
             }
             else if(parameter === 'lib'){
 
-                lib.copyFileSync('tmp/build_tmp.js', compiled_file = (build_path ? build_path + 'xone.lib' + (compress ? '.min' : '') + '.js' : 'app/lib/xone/dist/xone.lib' + (compress ? '.min' : '') + '.js'), true);
+                lib.copyFileSync('tmp/build_tmp.js', compiled_file = (build_path ? build_path + 'xone.lib' + (compress ? '.min' : '') + '.js' : xone_manifest.dependencies.xone + 'dist/xone.lib' + (compress ? '.min' : '') + '.js'), true);
             }
             else{
 
                 lib.copyFileSync(xone_manifest.dependencies.js_extern.map(function(value){
 
-                    return 'app/' + value;
+                    return path.resolve("app", value);
 
-                }).concat(['tmp/build_tmp.js']), compiled_file = ('bin/' + target_platform + '/js/build.js'), true);
+                }).concat(['tmp/build_tmp.js']), compiled_file = ('public/' + target_platform + '/js/build.js'), true);
             }
 
             compiled_code = fs.readFileSync(compiled_file, 'utf8');
 
             compiled_code = (
 
-                "/**!\n" +
-                " * " + (parameter === 'bundle' ? '@preserve ' : '') + "Xone Javascript Framework (" + (parameter || 'Build') + ")\n" +
-                " * @version " + (node_config.version) +  "\n" +
-                " * @build " + lib.crc32(compiled_code) + "/" + ((new Date()).getTime() + "").substring(1, 10) + "\n" +
-                " * @author Thomas Wilkerling\n" +
-                " * @license Apache-2.0\n" +
-                " * @link https://www.npmjs.com/package/xone\n" +
-                " * @link https://github.com/next-apps/xone\n" +
-                " * @tutorial https://next-apps.github.io/xone/\n" +
-                " */\n"
+                    "/**!\n" +
+                    " * " + (parameter === 'bundle' ? '@preserve ' : '') + "Xone Javascript Framework (" + (parameter || 'Build') + ")\n" +
+                    " * @version " + (node_config.version) +  "\n" +
+                    " * @build " + lib.crc32(compiled_code) + "/" + ((new Date()).getTime() + "").substring(1, 10) + "\n" +
+                    " * @author Thomas Wilkerling\n" +
+                    " * @license Apache-2.0\n" +
+                    " * @link https://www.npmjs.com/package/xone\n" +
+                    " * @link https://github.com/next-apps/xone\n" +
+                    " * @tutorial https://next-apps.github.io/xone/\n" +
+                    " */\n"
 
-            ) + compiled_code;
+                ) + compiled_code;
 
             var pos;
 
@@ -435,13 +467,13 @@ if(fs.existsSync(__dirname + '/build.js')){
 
                     return {
 
-                        path: path.resolve("app/", value)
+                        path: path.normalize("app/"+ value)
                     };
                 });
             }
 
             // xone injection
-            compiler_options.jsCode.push({path: path.resolve("app/lib/xone/core/init.js")});
+            compiler_options.jsCode.push({path: path.resolve(xone_manifest.dependencies.xone + "core/init.js")});
 
             var tmp_code = "";
 
@@ -450,7 +482,9 @@ if(fs.existsSync(__dirname + '/build.js')){
                 if(fs.existsSync(path.normalize(compiler_options.jsCode[a].path))) tmp_code += (compiler_options.jsCode[a].src = fs.readFileSync(path.normalize(compiler_options.jsCode[a].path), 'utf8'));
             }
 
-            var compile = require(path.normalize(xone_config.closure_compiler_js.path)).compile;
+            var path_to_closure_compiler = fs.existsSync(xone_config.closure_compiler_js.path) ? xone_config.closure_compiler_js.path : lib.getModule('google-closure-compiler-js');
+
+            var compile = require(path_to_closure_compiler).compile;
             var out = compile(compiler_options);
 
             fs.writeFileSync('tmp/build_tmp.js', out.compiledCode, 'utf8');
@@ -470,22 +504,22 @@ if(fs.existsSync(__dirname + '/build.js')){
         else if(xone_config.closure_compiler_lib === 'jar'){
 
             /*
-            xone_config.closure_compiler_jar.options.externs = xone_manifest.dependencies.js_extern.map(function(value){
+             xone_config.closure_compiler_jar.options.externs = xone_manifest.dependencies.js_extern.map(function(value){
 
-                return "'app/" + value + "'";
-            });
-            */
+             return "'app/" + value + "'";
+             });
+             */
 
             if(xone_manifest.dependencies.calculate && (parameter !== 'bundle') && (parameter !== 'lib')){
 
                 xone_config.closure_compiler_jar.options.js = dependencies.map(function(value){
 
-                    return "'" + "app/" + value + "'";
+                    return "'" + path.normalize("app/" + value) + "'";
                 });
             }
 
             // xone injection
-            xone_config.closure_compiler_jar.options.js.push("'app/lib/xone/core/init.js'");
+            xone_config.closure_compiler_jar.options.js.push("'" + xone_manifest.dependencies.xone + "core/init.js'");
 
             var config_parameters = "";
 
@@ -507,17 +541,31 @@ if(fs.existsSync(__dirname + '/build.js')){
                 }
             }
 
-            lib.exec('java -jar "' + xone_config.closure_compiler_jar.path + '/compiler.jar"' + config_parameters, build_callback_success);
+            var path_to_closure_compiler = fs.existsSync(xone_config.closure_compiler_jar.path) ? xone_config.closure_compiler_jar.path : lib.getModule('google-closure-compiler');
+
+            lib.exec('java -jar ' + /*-Xms128m -Xmx4096m*/ '"' + path_to_closure_compiler + '/compiler.jar' + '"' + config_parameters + "", build_callback_success);
         }
 
         if(parameter !== 'bundle' && parameter !== 'lib'){
 
             var css = [
 
-                'app/lib/xone/css/reset.css',
-                'app/lib/xone/css/xone.css',
-                'app/css/build.css'
+                //'app/lib/xone/css/reset.css',
+                //'app/lib/xone/css/xone.css',
+                //'app/css/build.css'
             ];
+
+            xone_manifest.dependencies.css || (xone_manifest.dependencies.css = []);
+            xone_manifest.dependencies.css.push("." + xone_manifest.dependencies.xone + 'css/xone.css');
+            xone_manifest.dependencies.css.push('css/style.css');
+            xone_manifest.dependencies.css.push('css/build.css');
+
+            css = xone_manifest.dependencies.css;
+
+            css = css.map(function(value){
+
+                return path.resolve("./app/", value);
+            });
 
             if(platform && fs.existsSync("app/platform/" + platform + "/css/")){
 
@@ -541,12 +589,12 @@ if(fs.existsSync(__dirname + '/build.js')){
                     debug: false // 1, 2, 3
                 });
 
-                lib.buildFolders('bin/' + target_platform + '/css');
-                fs.writeFileSync('bin/' + target_platform + '/css/style.css', result.css, 'utf8');
+                lib.buildFolders('public/' + target_platform + '/css');
+                fs.writeFileSync('public/' + target_platform + '/css/style.css', result.css, 'utf8');
 
                 // yuicompressor:
                 // lib.exec('java -jar "' + xone_config.yui_compressor_path + 'build/yuicompressor-2.4.8.jar" -o tmp/style_tmp.css tmp/style_tmp.css -v --type css ' + xone_config.yui_compressor_options.join(' '), function(){
-                //     lib.copyFileSync('tmp/style_tmp.css', 'bin/' + target_platform + '/css/style.css', true);
+                //     lib.copyFileSync('tmp/style_tmp.css', 'public/' + target_platform + '/css/style.css', true);
                 // });
 
                 lib.exec('node "' + __dirname + '/refresh.js" ' + (platform || ''));

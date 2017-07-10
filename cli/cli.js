@@ -145,6 +145,7 @@ if(parameter === 'version' || parameter === 'help'){
         case '--global':
         case '-global':
         case 'global':
+
             use_global = true;
             break;
 
@@ -153,6 +154,7 @@ if(parameter === 'version' || parameter === 'help'){
         case '--local':
         case '-local':
         case 'local':
+
             use_local = true;
             break;
 
@@ -161,16 +163,19 @@ if(parameter === 'version' || parameter === 'help'){
         case '--current':
         case '-current':
         case 'current':
+
         case '--i':
         case '-i':
         case '--installed':
         case '-installed':
         case 'installed':
         case void 0:
+
             use_current = true;
             break;
 
         default:
+
             use_current = true;
             break;
     }
@@ -231,13 +236,20 @@ else {
         var fs = require('fs');
         var dir = 'app/lib/xone/task/' + parameter + '.js';
 
-        if(!fs.existsSync(path.normalize('./xone.json')) || !fs.existsSync(path.normalize(dir))){
+        if(!fs.existsSync(path.normalize('./xone.json')) || !fs.existsSync('./app/manifest.js')){
 
             console.log("Error: The current directory is not a valid xone project!");
         }
         else{
 
-            lib.exec('node ' + (parameter === "build" ? '--max-old-space-size=8192 ' : '') + '"' + path.normalize(dir) + '" ' + (process.argv[3] || '') + ' ' + (process.argv[4] || '') + ' ' + (process.argv[5] || ''));
+            var xone_manifest = lib.loadJSON('./app/manifest.js', 'MANIFEST');
+
+            if(xone_manifest.dependencies && xone_manifest.dependencies.xone){
+
+                dir = "app/" + xone_manifest.dependencies.xone + 'task/' + parameter + '.js';
+            }
+
+            lib.exec('node ' + (parameter === "build" ? '--max-old-space-size=8192 ' : '') + '"' + path.resolve(dir) + '" ' + (process.argv[3] || '') + ' ' + (process.argv[4] || '') + ' ' + (process.argv[5] || ''));
         }
     }
     else{

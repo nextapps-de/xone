@@ -1,0 +1,8 @@
+<section class="todoapp">
+	{{ include(layout/app/header) }}
+	{{ include(layout/app/main) }}
+	{{ include(layout/app/footer) }}
+</section>
+<footer class="info">
+	{{ include(layout/app/info) }}
+</footer>

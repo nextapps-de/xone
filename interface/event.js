@@ -17,14 +17,23 @@ var _event_struct = {
     /** @type {string} */
     to: '',
 
-    /** @type {Object<string, string|number>} */
-    params: {},
-
     /** @type {Function} */
     do: function(){},
 
     /** @type {string} */
+    at: '',
+
+    /** @type {string} */
+    in: '',
+
+    /** @type {string} */
+    by: '',
+
+    /** @type {string} */
     go: '',
+
+    /** @type {Object<string, string|number>} */
+    params: {},
 
     /** @type {boolean} */
     stopBubble: true,

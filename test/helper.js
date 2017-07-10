@@ -79,22 +79,30 @@ function register_names(namespaces){
 
     for(var i = 0; i < namespaces.length; i++){
 
-        window[namespaces[i]].__name = namespaces[i];
+        if(window[namespaces[i]]) {
 
-        (function loop(obj){
+            window[namespaces[i]].__name = namespaces[i];
 
-            for(var key in obj){
+            (function loop(obj){
 
-                if(obj.hasOwnProperty(key)){
+                for(var key in obj){
 
-                    if((typeof obj[key] === 'object') || (typeof obj[key] === 'function')){
+                    if(obj.hasOwnProperty(key)){
 
-                        obj[key].__name = key;
-                        loop(obj[key]);
+                        if((typeof obj[key] === 'object') || (typeof obj[key] === 'function')){
+
+                            obj[key].__name = key;
+
+                            loop(obj[key]);
+                        }
                     }
                 }
-            }
 
-        })(namespaces[i]);
+            })(namespaces[i]);
+        }
+        else{
+
+            console.warn('Namespace "' + namespaces[i] + '" was not found.');
+        }
     }
 };

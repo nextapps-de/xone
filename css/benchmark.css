@@ -1,0 +1,158 @@
+body{
+    font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, 'SFUID', 'Lato', 'Helvetica Neue', 'HelveticaNeue-Light', Helvetica, Arial, 'Lucida Grande', SansSerif, sans-serif;
+    height:100%;
+    overflow: hidden;
+}
+header, footer{
+    position: absolute;
+    left:0;
+    right:0;
+    height: 4em;
+    background: #262626;
+    color: #fff;
+    vertical-align: middle;
+    line-height: 4em;
+    z-index: 1;
+}
+header{
+    top:0;
+}
+footer{
+    bottom:0;
+    text-align: center;
+}
+footer img{
+    height: 1.75em;
+    width:auto;
+    padding:1.125em;
+    margin: 0 auto;
+    float: right;
+}
+input[type=checkbox]{
+    width:16px;
+    height:16px;
+    cursor: pointer;
+    position: relative;
+    top: 3px;
+}
+header input[type=button],
+footer select,
+header select{
+    float:left;
+    padding:0 1em;
+    margin: 0.75em;
+    height: 2.5em;
+    cursor: pointer;
+}
+footer select{
+    width: 15em;
+}
+footer table{
+    width:45%;
+    height:100%;
+    display: inline-table;
+}
+footer table td{
+    vert-align: middle;
+}
+#log{
+    white-space: pre-wrap;
+    font-size: 0.85em;
+    line-height: 1.5em;
+}
+main {
+    position: absolute;
+    top: 4em;
+    left: 0;
+    right: 0;
+    bottom: 4em;
+    overflow: auto;
+    z-index: 0;
+    background: #f0f0f0;
+    padding: 0 1.5em 1em 1.5em;
+    text-align: center;
+}
+section{
+    /*max-width: 800px;*/
+    text-align: left;
+}
+section, hr{
+    margin:1em auto;
+}
+section h2{
+    line-height: 2em;
+    padding: 0 0.2em 0.5em 0.2em;
+    font-size: 0.75em;
+    font-weight: 500;
+    font-family: 'Hack', monospace, sans-serif;
+}
+section div.right{
+    float:right;
+    width: 15%;
+    height:1em;
+    min-width: 10em;
+    padding: 1em;
+    margin: 0em 2em 0em 1em;
+    font-size:0.82em;
+    white-space: pre;
+    position: relative;
+}
+section div.left{
+    float:left;
+    width: 28px;
+    min-width: inherit;
+    padding:0;
+    margin:0;
+    font-size:0.82em;
+    white-space: pre;
+    line-height: 2.5em;
+    font-weight: 500;
+}
+section div.front,
+section div.back{
+    position: absolute;
+    top:0;
+    right:0;
+    bottom:0;
+    left:0;
+    padding: 1.5em 0em 1em 0em;
+    line-height: 0;
+    background-color: #f0f0f0;
+    transition: width 0.2s linear;
+}
+section div.front{
+    z-index: 1;
+    width: 0%;
+    overflow: hidden;
+}
+section div.back{
+    z-index: 0;
+    width: 100%;
+    color: #555;
+}
+section code{
+    padding: 1em !important;
+}
+hr{
+    height:0px;
+    border-top:1px solid #ddd;
+    border-bottom:1px solid #fff;
+}
+h1{
+    background-color: #999;
+    height:2em;
+    line-height: 2em;
+    padding:0 0.5em;
+    color: #fff;
+    font-size:1em;
+    font-weight:300;
+    width:100%;
+    clear: both;
+}
+code{
+    font-size:0.75em;
+    font-family: 'Hack', monospace, sans-serif;
+    letter-spacing: -0.04em;
+    line-height: 1.5em;
+    position: relative;
+}

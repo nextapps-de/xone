@@ -5,7 +5,7 @@
 | <br>**Main Folders** | |
 | `/`  | Project Root Folder |
 | `/app/`  | App Source Code |
-| `/bin/`  | Binary Build (Production) |
+| `/public/`  | Build (Production) |
 | `/doc/`  | Documentation (JSDoc, Markdown) |
 | `/lib/`  | External Dependencies (they are __not__ a part of production build!) |
 | `/log/`  | Log Folder |
@@ -24,16 +24,16 @@
 | /app/`.jshintrc`          | JSHint Config File (optional) |
 | /app/`.jscsrc`            | JSCS Config File (optional) |
 | <br>**App Folder** | |
-| /app/`assets/`            | Assets Folder |
+| /app/`asset/`            | Assets Folder |
 | /app/`config/`            | Configuration Folder |
 | /app/`css/`               | Stylesheets |
-| /app/`fonts/`             | Fonts |
+| /app/`font/`             | Fonts |
 | /app/`img/`               | Images |
 | /app/`js/`                | Javascript Codebase |
 | /app/`layout/`            | Layout Templates (Static Views, HTML/CSS/LESS/JSON) |
 | /app/`lib/`               | External Dependencies (they are __also__ a part of production build!) |
 | /app/`platform/`          | Platform Overrides & Appendix |
-| /app/`spec/`              | Unit Tests |
+| /app/`test/`              | Unit Tests |
 | /app/`view/`              | View Templates (Dynamic Views, HTML/CSS/LESS/JSON) |
 | /app/`index.html`         | App Start Page |
 | /app/`.htaccess`          | Apache WebServer Configuration File (Provides Webapp Manifest Support, optional) |

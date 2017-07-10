@@ -4,135 +4,164 @@ goog.require('APP');
 
 (function(CONTROLLER, ROUTE){
 
-    if(CONFIG.SERVER_HOST){
+    /**
+     * @param {Array<*>|string} route
+     * @param {Function|Object<string, *>=} params
+     * @param {Function=} callback
+     * @param {Function=} error
+     * @param {Function=} update_cache
+     * @const
+     */
 
-        /**
-         * @param {Array<*>|string} route
-         * @param {Function|Object<string, *>=} params
-         * @param {Function=} callback
-         * @param {Function=} error
-         * @param {Function=} update_cache
-         * @const
-         */
+    CONTROLLER.request = function request(route, params, callback, error, update_cache){
 
-        CONTROLLER.request = function request(route, params, callback, error, update_cache){
+        if(route.constructor === Array){
 
-            if(route.constructor === Array){
+            return CONTROLLER.requestBatch(
+                /** @type {Array<*>} */
+                (route),
+                /** @type {Function|null} */
+                (params)
+            );
+        }
 
-                return CONTROLLER.requestBatch(
-                    /** @type {Array<*>} */
-                    (route),
-                    /** @type {Function|null} */
-                    (params)
-                );
+        if(CORE.isType(params, 'function')){
+
+            update_cache = error;
+            error = callback;
+            callback = /** @type {Function|null} */ (params);
+            params = null;
+        }
+
+        if(!route){
+
+            if(ROUTE['#/']){
+
+                 route = '#/';
+            }
+            else if(ROUTE['#!/']){
+
+                route = '#!/';
+            }
+            else{
+
+                if(DEBUG) CORE.console.err('ERROR: No route specified for "' + route + '"!');
+
+                return;
+            }
+        }
+
+        route = /** @type {string} */ (route);
+
+        if(!CORE.isType(ROUTE[route])){
+
+            //ROUTE[route] = {};
+
+            if(DEBUG) CORE.console.warn('WARNING: No route specified for "' + route + '"!');
+        }
+
+        params || (params = APP.PAYLOAD[route] ? APP.PAYLOAD[route]() : ROUTE[route].params || null);
+
+        (function(route, route_obj, callback, update_cache){
+
+            var route_action = route_obj.action;
+
+            // if(!update_cache && route_action && APP.LAYOUT.lastAction === route_action){
+            //
+            //     var nodes = CORE.getByTag('main', CORE.getById('content-' + route_action).parentNode.parentNode);
+            //
+            //     for(var i = 0; i < nodes.length; i++){
+            //
+            //         CORE.scrollToTop(nodes[i]);
+            //     }
+            // }
+
+            APP.LAYOUT.lastAction = route_action || APP.LAYOUT.lastAction || '';
+
+            if(!update_cache && route_action){
+
+                APP.LAYOUT.handleCache(route_action, function(update_cache){
+
+                    //CORE.async(function() {
+
+                    CONTROLLER.request(route, params, callback, error, update_cache);
+
+                    //}, APP.LAYOUT.lastAction === route_action ? 400 : 0);
+                });
+
+                return;
             }
 
-            if(CORE.isType(params, 'function')){
+            if(route[0] === '#'){
 
-                update_cache = error;
-                error = callback;
-                callback = /** @type {Function|null} */ (params);
-                params = null;
+                // TODO: refactor
+                var data = params;
+                params = CORE.query('a[href="' + route + '"]')[0];
+
+                fn_success(data);
+                return;
             }
 
-            route = /** @type {string} */ (route);
+            route_obj.header || (route_obj.header = {});
+            route_obj.header["Accept"] || (route_obj.header["Accept"] = "application/json");
+            route_obj.header["Content-Type"] || (route_obj.header["Content-Type"] = "application/json");
 
-            if(!CORE.isType(ROUTE[route])){
+            /* Append default headers from APP.VARS.HEADER */
 
-                ROUTE[route] = {};
+            var default_headers = APP.VARS.HEADER;
 
-                if(DEBUG) CORE.console.warn('WARNING: No route specified for "' + route + '"!');
+            for(var key in default_headers){
+
+                if(default_headers.hasOwnProperty(key)){
+
+                    route_obj.header[key] = default_headers[key];
+                }
             }
 
-            params || (params = APP.PAYLOAD[route] ? APP.PAYLOAD[route]() : ROUTE[route].params || null);
+            /* Replace dynamic params in query string */
 
-            (function(route, route_obj, callback, update_cache){
+            var pos;
 
-                var route_action = route_obj.action;
+            if((pos = route.indexOf('/:')) !== -1){
 
-                // if(!update_cache && route_action && APP.LAYOUT.lastAction === route_action){
-                //
-                //     var nodes = CORE.getByTag('main', CORE.getById('content-' + route_action).parentNode.parentNode);
-                //
-                //     for(var i = 0; i < nodes.length; i++){
-                //
-                //         CORE.scrollToTop(nodes[i]);
-                //     }
-                // }
+                var custom_field = route.substring(pos + 2, route.indexOf('/', pos + 2));
+                route = route.replace('/:' + custom_field, '/' + params[custom_field]);
+            }
 
-                APP.LAYOUT.lastAction = route_action || APP.LAYOUT.lastAction || '';
+            /* Determine request type and replace markers */
 
-                if(!update_cache && route_action){
+            var request_type = 'GET';
 
-                    APP.LAYOUT.handleCache(route_action, function(update_cache){
+            if(route.indexOf('GET:') !== -1){
 
-                        //CORE.async(function() {
+                route = route.substring(4);
+            }
+            else if(route.indexOf('POST:') !== -1){
 
-                        CONTROLLER.request(route, params, callback, error, update_cache);
+                request_type = 'POST';
+                route = route.substring(5);
+            }
+            else if(route.indexOf('DELETE:') !== -1){
 
-                        //}, APP.LAYOUT.lastAction === route_action ? 400 : 0);
-                    });
+                request_type = 'DELETE';
+                route = route.substring(7);
+            }
+            else if(route.indexOf('PATCH:') !== -1){
 
-                    return;
-                }
+                request_type = 'PATCH';
+                route = route.substring(6);
+            }
 
-                route_obj.header || (route_obj.header = {});
-                route_obj.header["Accept"] || (route_obj.header["Accept"] = "application/json");
-                route_obj.header["Content-Type"] || (route_obj.header["Content-Type"] = "application/json");
+            function fn_success(data){
 
-                /* Append default headers from APP.VARS.HEADER */
+                if(CORE.isArray(data) || CORE.isObject(data)){
 
-                var default_headers = APP.VARS.HEADER;
-
-                for(var key in default_headers){
-
-                    if(default_headers.hasOwnProperty(key)){
-
-                        route_obj.header[key] = default_headers[key];
-                    }
-                }
-
-                /* Replace dynamic params in query string */
-
-                var pos;
-
-                if((pos = route.indexOf('/:')) !== -1){
-
-                    var custom_field = route.substring(pos + 2, route.indexOf('/', pos + 2));
-                    route = route.replace('/:' + custom_field, '/' + params[custom_field]);
-                }
-
-                /* Determine request type and replace markers */
-
-                var request_type = 'GET';
-
-                if(route.indexOf('GET:') !== -1){
-
-                    route = route.substring(4);
-                }
-                else if(route.indexOf('POST:') !== -1){
-
-                    request_type = 'POST';
-                    route = route.substring(5);
-                }
-                else if(route.indexOf('DELETE:') !== -1){
-
-                    request_type = 'DELETE';
-                    route = route.substring(7);
-                }
-                else if(route.indexOf('PATCH:') !== -1){
-
-                    request_type = 'PATCH';
-                    route = route.substring(6);
-                }
-
-                var fn_success = function fn_success(data){
                     // perform data field index
                     if(route_obj.field) data = data[route_obj.field] || [];
                     // perform filter
                     if(route_obj.filter) data = data.filter(route_obj.filter);
                     // perform arrayfilter
-                    if(route_obj.arrayfilter) data = route_obj.arrayfilter(data, params);
+                    if(route_obj.arrayfilter) data = route_obj.arrayfilter(data/*, params*/);
                     // perform sort
                     if(route_obj.sort) data = data.sort(route_obj.sort);
                     // limit result
@@ -142,132 +171,140 @@ goog.require('APP');
                     // map array values
                     if(route_obj.map) data.map(route_obj.map);
                     // arraymap array values
-                    if(route_obj.arraymap) route_obj.arraymap(data, params);
+                    if(route_obj.arraymap) route_obj.arraymap(data/*, params*/);
                     // update cache
                     if(update_cache) update_cache();
+                }
 
-                    (callback || (
+                (callback || (
 
-                            callback = (
+                        callback = (
 
-                                route_obj.do ? (
+                            route_obj.do ? (
 
-                                    route_obj.do.charAt ?
+                                typeof route_obj.do === 'string' ?
 
-                                        APP.HANDLER[route_obj.do]
-                                    :
-                                        route_obj.do
-                                )
-                                :(
-                                    route_obj.to ?
+                                    APP.HANDLER[route_obj.do]
+                                :
+                                    route_obj.do
+                            )
+                            :(
+                                route_obj.to ? (
+
+                                    typeof route_obj.to === 'string' ?
 
                                         CONTROLLER[route_obj.to]
                                     :
+                                        route_obj.to
+                                ):
+                                    typeof route_obj === 'function' ?
+
+                                        route_obj
+                                    :
                                         null
-                                )
                             )
                         )
-                    );
+                    )
+                );
 
-                    // perform callback and pass data
-                    if(callback) callback(data, params);
-                };
-
-                /* Perform request */
-
-                CORE.ajax(/** @type {_ajax_struct}*/ ({
-
-                    url: CONFIG.SERVER_HOST + (route_obj.url || route),
-                    params: params,
-                    type: route_obj.type || request_type,
-                    header: route_obj.header,
-                    cache: route_obj.cache,
-                    clear: route_obj.clear,
-                    success: fn_success,
-                    error: function fn_error(status, data){
-                        if(route_obj.default) fn_success(route_obj.default());
-                        if(error) error(status, data);
-                        else if(route_obj.error) route_obj.error(status, data);
-                    }
-                }));
-
-                /* Analytics */
-
-                // if(APP.PLUGIN.Analytics){
-                //
-                //     APP.PLUGIN.Analytics.event(
-                //         /* Category: */
-                //         'Request',
-                //         /* Event: */
-                //         (route_obj.type || request_type).toUpperCase() + ': ' + (route_obj.url || route),
-                //         /* Label: */
-                //         'Hits',
-                //         /* Integer Value: */
-                //         1
-                //     );
-                // }
-
-            })(route, /** @type {_route_struct} */ (ROUTE[route]), callback, update_cache);
-        };
-
-        /**
-         * @param {Array<*>} requests
-         * @param {Function=} callback
-         * @const
-         */
-
-        CONTROLLER.requestBatch = function(requests, callback){
-
-            for(var i = 0; i < requests.length; i++){
-
-                (function(request, callback){
-
-                    if(CORE.isType(request, 'string')){
-
-                        request = [request, null, CONTROLLER[ROUTE[/** @type {string} */ (request)].to]];
-                    }
-
-                    CONTROLLER.request(request[0], request[1], function(data){
-
-                        if(request[2]) request[2](data);
-                        if(callback) callback();
-                    });
-
-                })(requests[i], i === requests.length - 1 ? callback : null)
-            }
-        };
-
-        /**
-         * @param {Array<*>} _requests
-         * @param {Function=} _callback
-         * @param {number=} i
-         * @const
-         */
-
-        CONTROLLER.requestSync = function(_requests, _callback, i){
-
-            var requests = _requests;
-            var callback = _callback;
-
-            var request = requests[i || (i = 0)];
-
-            if(CORE.isType(request, 'string')){
-
-                request = [request, null, CONTROLLER[ROUTE[/** @type {string} */ (request)].to]];
+                // perform callback and pass data
+                if(callback) callback(data, params);
             }
 
-            CONTROLLER.request(request[0], request[1], function(data){
+            /* Perform request */
 
-                if(request[2]) request[2](data);
+            CORE.ajax(/** @type {_ajax_struct}*/ ({
 
-                if(++i < requests.length){
-
-                    CONTROLLER.requestSync(requests, callback, i);
+                url: CONFIG.SERVER_HOST + (route_obj.url || route),
+                params: params,
+                type: route_obj.type || request_type,
+                header: route_obj.header,
+                cache: route_obj.cache,
+                clear: route_obj.clear,
+                success: fn_success,
+                error: function fn_error(status, data){
+                    if(route_obj.default) fn_success(route_obj.default());
+                    if(error) error(status, data);
+                    else if(route_obj.error) route_obj.error(status, data);
                 }
-                else if(callback) callback();
-            });
-        };
-    }
+            }));
+
+            /* Analytics */
+
+            // if(APP.PLUGIN.Analytics){
+            //
+            //     APP.PLUGIN.Analytics.event(
+            //         /* Category: */
+            //         'Request',
+            //         /* Event: */
+            //         (route_obj.type || request_type).toUpperCase() + ': ' + (route_obj.url || route),
+            //         /* Label: */
+            //         'Hits',
+            //         /* Integer Value: */
+            //         1
+            //     );
+            // }
+
+        })(route, /** @type {_route_struct} */ (ROUTE[route]), callback, update_cache);
+    };
+
+    /**
+     * @param {Array<*>} requests
+     * @param {Function=} callback
+     * @const
+     */
+
+    CONTROLLER.requestBatch = function(requests, callback){
+
+        for(var i = 0; i < requests.length; i++){
+
+            (function(request, callback){
+
+                if(CORE.isType(request, 'string')){
+
+                    request = [request, null, CONTROLLER[ROUTE[/** @type {string} */ (request)].to]];
+                }
+
+                CONTROLLER.request(request[0], request[1], function(data){
+
+                    if(request[2]) request[2](data);
+                    if(callback) callback();
+                });
+
+            })(requests[i], i === requests.length - 1 ? callback : null)
+        }
+    };
+
+    /**
+     * @param {Array<*>} _requests
+     * @param {Function=} _callback
+     * @param {number=} i
+     * @const
+     */
+
+    CONTROLLER.requestSync = function(_requests, _callback, i){
+
+        var requests = _requests;
+        var callback = _callback;
+
+        var request = requests[i || (i = 0)];
+
+        if(CORE.isType(request, 'string')){
+
+            request = [request, null, CONTROLLER[ROUTE[/** @type {string} */ (request)].to]];
+        }
+
+        CONTROLLER.request(request[0], request[1], function(data){
+
+            if(request[2]) request[2](data);
+
+            if(++i < requests.length){
+
+                CONTROLLER.requestSync(requests, callback, i);
+            }
+            else if(callback) callback();
+        });
+    };
 
     /**
      * Build a HTML template through linear pattern
@@ -303,7 +340,7 @@ goog.require('APP');
                 // var map_to_view_cache = item.mapToViewCache || (item.mapToViewCache = {});
                 //     map_to_view_cache['id'] || (map_to_view_cache['id'] = new Array(_view.length));
                 // var map_to_view_cache = item.mapToViewCache || (item.mapToViewCache = new Array(_view.length));
-                var map_to_view_cache = item['mapToViewCache'] || (item['mapToViewCache'] = {});
+                var map_to_view_cache = CONFIG.ENABLE_MAPPER_CACHE ? item['mapToViewCache'] || (item['mapToViewCache'] = {}) : {};
 
                 /* Temporary holders to split object notations into its components */
 
@@ -428,10 +465,10 @@ goog.require('APP');
                                 // map_to_view_cache = item_loop.mapToViewCache || (item_loop.mapToViewCache = {});
                                 // map_to_view_cache['id'] || (map_to_view_cache['id'] = new Array(_view.length));
                                 //map_to_view_cache = item_loop.mapToViewCache || (item_loop.mapToViewCache = new Array(_view.length));
-                                map_to_view_cache = item_loop['mapToViewCache'] || (item_loop['mapToViewCache'] = {});
+                                if(CONFIG.ENABLE_MAPPER_CACHE) map_to_view_cache = item_loop['mapToViewCache'] || (item_loop['mapToViewCache'] = {});
                             }
 
-                            else if(CORE.isType(item_loop.mapToView)) map_to_view_cache = item_loop['mapToViewCache'] || (item_loop['mapToViewCache'] = {});
+                            else if(CONFIG.ENABLE_MAPPER_CACHE && CORE.isType(item_loop.mapToView)) map_to_view_cache = item_loop['mapToViewCache'] || (item_loop['mapToViewCache'] = {});
 
                             /* Delegate additional index attribute to the view mapper */
 
@@ -449,7 +486,8 @@ goog.require('APP');
                                 var key = template_map[i];
 
                                 // Mapper Cache:
-                                if(CORE.isType(map_to_view_cache[key])){
+;
+                                if(CONFIG.ENABLE_MAPPER_CACHE && CORE.isType(map_to_view_cache[key])){
 
                                     template_html += map_to_view_cache[key];
 
@@ -483,13 +521,13 @@ goog.require('APP');
 
                                                     //template_data[i] = map_to_view[model][field][extra](tmp[field][extra], tmp);
                                                     mapped_value = map_to_view[model][field][extra](tmp[field][extra], tmp);
-                                                    map_to_view_cache[key] = mapped_value;
+													if(CONFIG.ENABLE_MAPPER_CACHE) map_to_view_cache[key] = mapped_value;
                                                 }
                                                 else{
 
                                                     //template_data[i] = map_to_view[model][field](tmp[field], tmp);
                                                     mapped_value = map_to_view[model][field](tmp[field], tmp);
-                                                    map_to_view_cache[key] = mapped_value;
+													if(CONFIG.ENABLE_MAPPER_CACHE) map_to_view_cache[key] = mapped_value;
                                                 }
                                             }
 
@@ -525,7 +563,7 @@ goog.require('APP');
 
                                                         //template_data[i] = map_to_view[model][field][extra](val, tmp || item_loop);
                                                         mapped_value = map_to_view[model][field][extra](val, tmp || item_loop);
-                                                        map_to_view_cache[key] = mapped_value;
+														if(CONFIG.ENABLE_MAPPER_CACHE) map_to_view_cache[key] = mapped_value;
                                                     }
                                                     else{
 
@@ -537,7 +575,7 @@ goog.require('APP');
 
                                                     //template_data[i] = map_to_view[model][field](tmp[field], tmp || item_loop);
                                                     mapped_value = map_to_view[model][field](tmp[field], tmp || item_loop);
-                                                    map_to_view_cache[key] = mapped_value;
+													if(CONFIG.ENABLE_MAPPER_CACHE) map_to_view_cache[key] = mapped_value;
                                                 }
                                             }
                                             else if(tmp[field] && tmp[field][extra]){
@@ -574,7 +612,7 @@ goog.require('APP');
 
                                         //template_data[i] = map_to_view[key](item_loop[key], item_loop);
                                         mapped_value = map_to_view[key](item_loop[key], item_loop);
-                                        map_to_view_cache[key] = mapped_value;
+                                        if(CONFIG.ENABLE_MAPPER_CACHE) map_to_view_cache[key] = mapped_value;
                                     }
                                     else if(key === 'item'){
 
@@ -642,7 +680,14 @@ goog.require('APP');
 
         if(data){
 
-            dest = CORE.getById(/** @type {string} */ (target));
+            dest = (
+
+                typeof target === 'string' ?
+
+                    CORE.queryOne(target)
+                :
+                    target
+            );
 
             CORE.removeNodes(dest);
             CORE.buildPattern(data, dest);
@@ -651,20 +696,18 @@ goog.require('APP');
         }
         else if(target.data){
 
-            // if(target.data.constructor !== Array) target.data = [target.data];
-
             dest = (
 
                 typeof target.target === 'string' ?
 
-                    CORE.getById(target.target)
+                    CORE.queryOne(target.target)
                 :
                     target.target
             );
 
             if(!dest){
 
-                if(DEBUG) CORE.console.warn("Element not found: " + target.target);
+                if(DEBUG) CORE.console.warn("Controller Error: Element not found: " + target.target);
 
                 return;
             }

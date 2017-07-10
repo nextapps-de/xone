@@ -361,7 +361,7 @@ walkSync('./app/view/', function(filePath){
 
     /* EXPO */
 
-    fs.writeFileSync(filePath.replace('.shtml', '.json'), JSON.stringify(template), 'utf8');
+    //fs.writeFileSync(filePath.replace('.shtml', '.json'), JSON.stringify(template), 'utf8');
 
     //status = compile_view_to_json(filePath);
     //status = compile_view_to_array(filePath);
@@ -372,8 +372,8 @@ if(status){
 
     var output = JSON.stringify(views).replace(/"data":/g, 'data:').replace(/"map":/g, 'map:').replace(/"if":/g, 'if:').replace(/"else":/g, 'else:').replace(/"include":/g, 'include:');
 
-    lib.buildFolders('app/view/');
-    fs.writeFileSync('app/view/view.js', "goog.provide('APP.VIEW');\nAPP.VIEW = " + output + ";\n", 'utf8');
+    lib.buildFolders('app/tmp/');
+    fs.writeFileSync('app/tmp/view.js', "/* AUTO GENERATED SCRIPT (DO NOT MODIFY) */\ngoog.provide('APP.VIEW');\nAPP.VIEW = " + output + ";\n", 'utf8');
 }
 
 console.log(
@@ -398,7 +398,7 @@ walkSync('./app/layout/', function(filePath){
 
     /* EXPO */
 
-    fs.writeFileSync(filePath.replace('.shtml', '.json'), JSON.stringify(template), 'utf8');
+    //fs.writeFileSync(filePath.replace('.shtml', '.json'), JSON.stringify(template), 'utf8');
 
     //status = compile_view_to_json(filePath);
     //status = compile_view_to_array(filePath);
@@ -409,8 +409,8 @@ if(status){
 
     var output = JSON.stringify(views).replace(/"data":/g, 'data:').replace(/"map":/g, 'map:').replace(/"if":/g, 'if:').replace(/"else":/g, 'else:').replace(/"include":/g, 'include:');
 
-    lib.buildFolders('app/layout/');
-    fs.writeFileSync('app/layout/layout.js', "goog.provide('APP.HTML');\nAPP.HTML = " + output + ";\n", 'utf8');
+    lib.buildFolders('app/tmp');
+    fs.writeFileSync('app/tmp/layout.js', "/* AUTO GENERATED SCRIPT (DO NOT MODIFY) */\ngoog.provide('APP.HTML');\nAPP.HTML = " + output + ";\n", 'utf8');
 }
 
 console.log(

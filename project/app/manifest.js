@@ -25,6 +25,8 @@ var MANIFEST = {
         // Enable dependency autosort (strict mode)
         "calculate": false,
 
+        "xone": "lib/xone/", //"../node_modules/xone/",
+
         "build": [
 
             "index.html",
@@ -50,11 +52,7 @@ var MANIFEST = {
         "js": [
 
             "js/init.js",
-            "layout/layout.js",
-            "view/view.js",
-            "js/require.js",
-            "js/main.js",
-            "js/setup.js"
+            "js/main.js"
         ],
         "production": [],
         "development": [],
@@ -62,8 +60,21 @@ var MANIFEST = {
         "test": [],
         "spec": [
 
-            "spec/helper.js",
-            "spec/main_spec.js"
+            "test/helper.js",
+            "test/main_spec.js"
         ]
+    },
+
+    // Define default configs for all environments
+    "config": {
+
+        "ENABLE_EVENT_CACHE": true,
+        "ENABLE_MODEL_CACHE": true,
+        "ENABLE_STORAGE_CACHE": true,
+        "ENABLE_MAPPER_CACHE": true,
+        "ENABLE_DOM_CACHE": false,
+        "ENABLE_STYLE_CACHE": false,
+        "ENABLE_CLASS_CACHE": false,
+        "ENABLE_HTML_CACHE": false
     }
 };

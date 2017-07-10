@@ -81,8 +81,8 @@ In `app/manifest.js` manage your codebase dependencies manually ordered (did __n
     "benchmark": [],
     "test": [],
     "spec": [
-        "spec/helper.js",
-        "spec/main_spec.js"
+        "test/helper.js",
+        "test/main_spec.js"
     ]
 }
 ```
