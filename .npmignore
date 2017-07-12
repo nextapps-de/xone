@@ -6,3 +6,6 @@ doc
 .gitignore
 .coveralls.yml
 .travis.yml
+coverage
+dev
+demo

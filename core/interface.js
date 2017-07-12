@@ -132,25 +132,6 @@ _fatjob_interface.prototype.colorHandler;
 
 //------------------------------------------------------------------------------
 
-/**
- * @interface
- * @public
- */
-function FAT_CLASS(){
-
-    /**
-     * @type {boolean}
-     */
-    this.isRender;
-    /**
-     * @type {boolean}
-     */
-    this.EXEC;
-}
-
-
-//------------------------------------------------------------------------------
-
 
 /**
  * @interface

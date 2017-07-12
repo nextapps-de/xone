@@ -61,8 +61,15 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
         /* Register custom mappings to the model */
 
-        this[key].Model.prototype.mapToView = MAPPER[key] ? MAPPER[key].mapToView : false;
-        this[key].Model.prototype.mapToStorage = map || false;
+        if(CONFIG.ENABLE_MAPPER_CACHE){
+
+            this[key].Model.prototype.mapToView = MAPPER[key] ? MAPPER[key].mapToView : false;
+        }
+
+        if(map) {
+
+            this[key].Model.prototype.mapToStorage = map;
+        }
 
         // TODO: Improve Mapping Integration
         //var mapper = MAPPER[key];
@@ -157,7 +164,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
         /* Fallback: Handle passed Models */
 
-        if(data.constructor.prototype instanceof ModelClass){
+        if(data instanceof ModelClass){
 
             return /** @type {_model_class} */ (data);
         }
@@ -179,8 +186,8 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
             if(!tmp_record) return null;
 
-            //todo:
-            tmp_record['id'] = null; // delete tmp_record['id'];
+            //TODO:
+            delete tmp_record['id'];
 
             // var copy = {};
             // for(var key in data){
@@ -264,9 +271,8 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
             var item = this.new(data[i], persistent, /* batch? */ i < length - 1);
 
-            //todo: why this check?
-            //if(item && Object.keys(item).length)
-            	models[pos++] = item;
+            // TODO: remove empty objects?
+            if(item && Object.keys(item).length) models[pos++] = item;
         }
 
         /* Returns model instances */
@@ -309,7 +315,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
                 var data_key = data[key];
 
-                if(data_key !== null){
+                if((data_key !== null) && (typeof data_key !== 'undefined')){
 
                     if(data_key.constructor === Object){
 
@@ -375,7 +381,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
     };
 
     /**
-     * @param {Node|string} id
+     * @param {Element|string} id
      * @return {_model_class|null}
      */
 
@@ -393,14 +399,19 @@ APP.MODEL = (function(MAPPER, STORAGE){
     };
 
     /**
-     * @param {Node|string} id
+     * @param {Element|string|ModelClass} id
      */
 
     ModelHelper.prototype.delete = function(id){
 
         if(id){
 
-            if(id.dataset){
+            if(id instanceof ModelClass){
+
+                this.parse(id['id']).delete();
+            }
+
+            else if(id.dataset){
 
                 this.parse(id.dataset.id).delete();
             }
@@ -413,24 +424,30 @@ APP.MODEL = (function(MAPPER, STORAGE){
     };
 
     /**
-     * @param {Node|string} id
+     * @param {Element|string|ModelClass} id
      * @param {string|Object<string, *>} params
      * @param {*|boolean=} persistent
      * @param {boolean=} _persistent
-     * @return {_model_class|null}
+     * @return {_model_class|null|undefined}
      */
 
     ModelHelper.prototype.update = function(id, params, persistent, _persistent){
 
         if(id){
 
-            if(id.dataset){
+            if(id instanceof ModelClass){
+
+                return this.parse(id['id']).update(params, persistent, _persistent);
+            }
+
+            else if(id.dataset){
 
                 return this.parse(id.dataset.id).update(params, persistent, _persistent);
             }
         }
 
-        return this.parse(/** @type {string} */ (id)).update(params, persistent, _persistent);
+        //return null;
+        //return this.parse(/** @type {string} */ (id)).update(params, persistent, _persistent);
     };
 
     /**
@@ -779,14 +796,14 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
                             var data_field_index = data_field[i];
 
-                            if(data_field_index.constructor.prototype instanceof ModelClass) {
+                            if(data_field_index instanceof ModelClass) {
 
                                 data_field_index.save(persistent);
 
                                 copy[field][i] = {
 
                                     '_id': '' + data_field_index['id'],
-                                    '_type': data_field_index.constructor.prototype.modelName
+                                    '_type': data_field_index.modelName
                                 };
 
                                 has_object_keys = true;
@@ -883,10 +900,10 @@ APP.MODEL = (function(MAPPER, STORAGE){
      * @this _model_class
      */
 
-    ModelClass.prototype.save_to_cache = function(){
-
-        return this.save(/* persistent? */ false);
-    };
+    // ModelClass.prototype.save_to_cache = function(){
+    //
+    //     return this.save(/* persistent? */ false);
+    // };
 
     /*
        Model.update(key, value, save?, batch?);
@@ -980,7 +997,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
     ModelClass.prototype.restore = function(){
 
-        return this.prototype.parse.call(this, '' + this['id'], true);
+        return APP.MODEL[this.modelName].parse.call(APP.MODEL[this.modelName], '' + this['id'], true);
     };
 
     /**
@@ -996,8 +1013,11 @@ APP.MODEL = (function(MAPPER, STORAGE){
 		}
 
         APP.MODEL[this.modelName].data.del('' + this['id']);
-        //delete APP.MODEL[this.modelName].data['' + this['id']];
+        this.data.del('' + this['id']);
+
         delete APP.MODEL[this.modelName].cache['' + this['id']];
+        delete this.cache['' + this['id']];
+
         if(!_batch) APP.MODEL[this.modelName].keys = this.data.keys();
 
 		if(this.onDelete) this.onDelete();

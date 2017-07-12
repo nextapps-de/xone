@@ -124,6 +124,78 @@ describe("Check Core Initialize Status", function() {
         expect(node.dataset.id).toBe('id_1');
     });
 
+    it("Check CORE.switchKeyCode()", function() {
+
+        var fn = {
+            enter: function(){},
+            esc: function(){},
+            else: function(){}
+        };
+
+        spyOn(fn, 'enter');
+        spyOn(fn, 'esc');
+        spyOn(fn, 'else');
+
+        CORE.switchKeyCode(13, fn);
+
+        expect(fn.enter).toHaveBeenCalled();
+        expect(fn.esc).not.toHaveBeenCalled();
+        expect(fn.else).not.toHaveBeenCalled();
+
+        CORE.switchKeyCode(100, fn);
+
+        expect(fn.else).toHaveBeenCalled();
+    });
+
+    it("Check CORE.switchKeyCode()", function() {
+
+        var fn = {
+            enter: function(){},
+            esc: function(){}
+        };
+
+        var event = {keyCode: 27};
+
+        spyOn(fn, 'enter');
+        spyOn(fn, 'esc');
+
+        CORE.switchKeyCode(event, fn);
+
+        expect(fn.enter).not.toHaveBeenCalled();
+        expect(fn.esc).toHaveBeenCalled();
+    });
+
+    it("Check CORE.Math.min()", function() {
+
+        expect(CORE.Math.min(3, 1, -1, 2)).toBe(-1);
+        expect(CORE.Math.min([3, 1, -1, 2])).toBe(-1);
+        expect(CORE.Math.min(3, 2)).toBe(2);
+        expect(CORE.Math.min(2)).toBe(2);
+    });
+
+    it("Check CORE.Math.max()", function() {
+
+        expect(CORE.Math.max(1, -1, 3, 2)).toBe(3);
+        expect(CORE.Math.max([1, -1, 3, 2])).toBe(3);
+        expect(CORE.Math.max(2, 3)).toBe(3);
+        expect(CORE.Math.max(2)).toBe(2);
+    });
+
+    it("Check CORE.Math.round()", function() {
+
+        expect(CORE.Math.round(1.49999)).toBe(1);
+        expect(CORE.Math.round(1.5)).toBe(2);
+        expect(CORE.Math.round(-1.49999)).toBe(-1);
+        expect(CORE.Math.round(-1.5)).toBe(-2);
+    });
+
+    it("Check CORE.Math.abs()", function() {
+
+        expect(CORE.Math.abs(2.5)).toBe(2.5);
+        expect(CORE.Math.abs(-1.5)).toBe(1.5);
+        expect(CORE.Math.abs(0)).toBe(0);
+    });
+
     //it("Check CORE.setMouseTouchEvent()", function() {
     //
     //    CORE.setMouseTouchEvent('search-input-field', function(){}, true);

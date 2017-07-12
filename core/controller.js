@@ -5,7 +5,7 @@ goog.require('APP');
 (function(CONTROLLER, ROUTE){
 
     /**
-     * @param {Array<*>|string} route
+     * @param {Array<string>|string} route
      * @param {Function|Object<string, *>=} params
      * @param {Function=} callback
      * @param {Function=} error
@@ -15,14 +15,21 @@ goog.require('APP');
 
     CONTROLLER.request = function request(route, params, callback, error, update_cache){
 
-        if(route.constructor === Array){
+        if(route && (route.constructor === Array)){
 
-            return CONTROLLER.requestBatch(
-                /** @type {Array<*>} */
-                (route),
-                /** @type {Function|null} */
-                (params)
-            );
+            for(var i = 0; i < route.length; i++){
+
+                CONTROLLER.request(route[i], params, i < route.length - 1 ? callback : null, error, update_cache);
+            }
+
+            return;
+
+            // return CONTROLLER.requestBatch(
+            //     /** @type {Array<*>} */
+            //     (route),
+            //     /** @type {Function|null} */
+            //     (params)
+            // );
         }
 
         if(CORE.isType(params, 'function')){
@@ -45,7 +52,7 @@ goog.require('APP');
             }
             else{
 
-                if(DEBUG) CORE.console.err('ERROR: No route specified for "' + route + '"!');
+                if(DEBUG) CORE.console.warn('WARNING: No route specified for "' + route + '"!');
 
                 return;
             }
@@ -55,7 +62,7 @@ goog.require('APP');
 
         if(!CORE.isType(ROUTE[route])){
 
-            //ROUTE[route] = {};
+            ROUTE[route] = {};
 
             if(DEBUG) CORE.console.warn('WARNING: No route specified for "' + route + '"!');
         }

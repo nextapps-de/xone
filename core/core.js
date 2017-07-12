@@ -179,7 +179,7 @@ var CORE = {};
 
         if(DEBUG) GRAPH.register('CORE.isCollection');
 
-        return HTMLCollection.prototype.isPrototypeOf(value);
+        return HTMLCollection.prototype.isPrototypeOf(value) || NodeList.prototype.isPrototypeOf(value);
     };
 
     /**
@@ -192,7 +192,7 @@ var CORE = {};
 
         if(DEBUG) GRAPH.register('CORE.isCollection');
 
-        return value.nodeType && value.nodeName ? true : false;
+        return value && value.nodeType && value.nodeName ? true : false;
     };
 
     /**
@@ -859,11 +859,12 @@ var CORE = {};
     /**
      * https://jsperf.com/xone-dom-selector-performance
      * @param {!string} query
+     * @param {boolean=} _flag_query_one
      * @return {Array<Node|null>|NodeList|Node|null}
      * @const
      */
 
-    CORE.query = CORE.queryAll = function(query){
+    CORE.query = CORE.queryAll = function(query, _flag_query_one){
 
         if(DEBUG) {
 
@@ -874,7 +875,7 @@ var CORE = {};
 
             if(query.indexOf(' ') === -1){
 
-                var firstChar = query.charAt(0);
+                var firstChar = query[0];
 
                 if(firstChar === '.'){
 
@@ -887,11 +888,11 @@ var CORE = {};
 
                     var class_name = query.substring(dot_position + 1);
 
-                    if(firstChar === '#'){
-
-                        return CORE.getByClass(class_name, query.substring(1, dot_position));
-                    }
-                    else{
+                    // if(firstChar === '#'){
+                    //
+                    //     return CORE.getByClass(class_name, query.substring(1, dot_position));
+                    // }
+                    // else{
 
                         var nodes = [];
                         var found_nodes = CORE.getByTag(query.substring(0, dot_position));
@@ -905,7 +906,7 @@ var CORE = {};
                         }
 
                         return nodes;
-                    }
+                    //}
                 }
                 else if(firstChar === '#'){
 
@@ -924,8 +925,8 @@ var CORE = {};
 
                     var part1 = parts[0];
                     var part2 = parts[1];
-                    var firstChar1 = part1.charAt(0);
-                    var firstChar2 = part2.charAt(0);
+                    var firstChar1 = part1[0];
+                    var firstChar2 = part2[0];
 
                     if(firstChar1 === '#'){
 
@@ -940,39 +941,56 @@ var CORE = {};
                     }
                     else if(firstChar1 === '.'){
 
-                        if(firstChar2 === '#'){
-
-                            return CORE.getByClass(part1.substring(1), part2.substring(1));
-                        }
-                    }
-                    else{
-
-                        if(firstChar2 === '.'){
+                        if(firstChar2 !== '#' && firstChar2 !== '.'){
 
                             var nodes = [];
-                            var class_name = part2.substring(1);
+                            var found_nodes = CORE.getByClass(part1.substring(1));
 
-                            if(part1 === 'document' || part1 === 'body'){
+                            for(var i = 0; i < found_nodes.length; i++){
 
-                                return CORE.getByClass(class_name);
+                                nodes = nodes.concat(
+
+                                    Array.prototype.slice.call(
+
+                                        CORE.getByTag(part2, found_nodes[i])
+                                    )
+                                );
                             }
-                            else{
 
-                                var found_nodes = CORE.getByTag(part1);
-
-                                for(var i = 0; i < found_nodes.length; i++){
-
-                                    nodes.concat(CORE.getByClass(class_name, found_nodes[i]));
-                                }
-
-                                return nodes;
-                            }
-                        }
-                        else if(firstChar2 === '#'){
-
-                            return CORE.getByTag(part1, part2.substring(1));
+                            return nodes;
                         }
                     }
+                    else if(firstChar2 === '.'){
+
+                        var nodes = [];
+                        var class_name = part2.substring(1);
+
+                        if(part1 === 'document' || part1 === 'body'){
+
+                            return CORE.getByClass(class_name);
+                        }
+                        else{
+
+                            var found_nodes = CORE.getByTag(part1);
+
+                            for(var i = 0; i < found_nodes.length; i++){
+
+                                nodes = nodes.concat(
+
+                                    Array.prototype.slice.call(
+
+                                        CORE.getByClass(class_name, found_nodes[i])
+                                    )
+                                );
+                            }
+
+                            return nodes;
+                        }
+                    }
+                    // else if(firstChar2 === '#'){
+                    //
+                    //     return CORE.getByTag(part1, part2.substring(1));
+                    // }
                 }
             }
         }
@@ -982,14 +1000,14 @@ var CORE = {};
             APP.STATS.count_dom++;
         }
 
-        return document.querySelectorAll(query);
+        return document[_flag_query_one ? 'querySelector' : 'querySelectorAll'](query);
     };
 
     CORE.queryOne =  CORE.queryFirst = function(query){
 
-        var result = CORE.query(query);
+        var result = CORE.query(query, /* query one: */ true);
 
-        if(CORE.isCollection(result)){
+        if(CORE.isCollection(result) || CORE.isArray(result)){
 
             return result[0];
         }
@@ -2248,32 +2266,20 @@ var CORE = {};
         /**
          * @param {!Array<number>|number} a
          * @param {!number=} b
+         * @param {!number=} c
          * @returns {!number}
          */
 
-        min: function min(a, b){
+        min: function min(a, b, c){
 
             if(DEBUG) GRAPH.register('CORE.Math.min');
 
-            if(a.constructor === Array){
+            if(typeof c !== 'undefined'){
 
-                var min = a[0];
-
-                for(var i = 0; i < a.length; i++){
-
-                    if(i === 0){
-
-                        min = a[0];
-                    }
-                    else if(a[i] < min){
-
-                        min = a[i];
-                    }
-                }
-
-                return min;
+                a = Array.prototype.slice.call(arguments);
             }
-            else{
+
+            else if(typeof b !== 'undefined'){
 
                 return /** @type {number} */ (
 
@@ -2284,19 +2290,54 @@ var CORE = {};
                         a
                 );
             }
+
+            if(CORE.isArray(a)){
+
+                var min = a[0];
+
+                for(var i = 1; i < a.length; i++){
+
+                    if(a[i] < min){
+
+                        min = a[i];
+                    }
+                }
+
+                return min;
+            }
+
+            return /** @type {number} */ (a);
         },
 
         /**
          * @param {!Array<number>|number} a
          * @param {!number=} b
+         * @param {!number=} c
          * @returns {!number}
          */
 
-        max: function max(a, b){
+        max: function max(a, b, c){
 
             if(DEBUG) GRAPH.register('CORE.Math.max');
 
-            if(a.constructor === Array){
+            if(typeof c !== 'undefined'){
+
+                a = Array.prototype.slice.call(arguments);
+            }
+
+            else if(typeof b !== 'undefined'){
+
+                return /** @type {number} */ (
+
+                    a < b ?
+
+                        b
+                    :
+                        a
+                );
+            }
+
+            if(CORE.isArray(a)){
 
                 var max = a[0];
 
@@ -2314,17 +2355,8 @@ var CORE = {};
 
                 return max;
             }
-            else{
 
-                return /** @type {number} */ (
-
-                    a < b ?
-
-                        b
-                    :
-                        a
-                );
-            }
+            return /** @type {number} */ (a);
         },
 
         rad: window.Math.PI / 180,

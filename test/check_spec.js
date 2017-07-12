@@ -155,6 +155,102 @@ describe("Checks", function() {
             .toBe(true);
     });
 
+    it("CORE.isString(*)", function() {
+
+        expect(CORE.isString())
+            .toBe(false);
+
+        expect(CORE.isString(void 0))
+            .toBe(false);
+
+        expect(CORE.isString(null))
+            .toBe(false);
+
+        expect(CORE.isString(""))
+            .toBe(true);
+
+        expect(CORE.isString(0))
+            .toBe(false);
+
+        expect(CORE.isString(false))
+            .toBe(false);
+
+        expect(CORE.isString(NaN))
+            .toBe(false);
+    });
+
+    it("CORE.isNumber(*)", function() {
+
+        expect(CORE.isNumber())
+            .toBe(false);
+
+        expect(CORE.isNumber(void 0))
+            .toBe(false);
+
+        expect(CORE.isNumber(null))
+            .toBe(false);
+
+        expect(CORE.isNumber("0"))
+            .toBe(false);
+
+        expect(CORE.isNumber(0))
+            .toBe(true);
+
+        expect(CORE.isNumber(false))
+            .toBe(false);
+
+        expect(CORE.isNumber(NaN))
+            .toBe(true);
+    });
+
+    it("CORE.isBoolean(*)", function() {
+
+        expect(CORE.isBoolean())
+            .toBe(false);
+
+        expect(CORE.isBoolean(void 0))
+            .toBe(false);
+
+        expect(CORE.isBoolean(null))
+            .toBe(false);
+
+        expect(CORE.isBoolean("0"))
+            .toBe(false);
+
+        expect(CORE.isBoolean(0))
+            .toBe(false);
+
+        expect(CORE.isBoolean(false))
+            .toBe(true);
+
+        expect(CORE.isBoolean(NaN))
+            .toBe(false);
+    });
+
+    it("CORE.isCollection(*)", function() {
+
+        expect(CORE.isCollection())
+            .toBe(false);
+
+        expect(CORE.isCollection([CORE.queryOne('.ul_li'), CORE.queryOne('.ul_li')]))
+            .toBe(false);
+
+        expect(CORE.isCollection(CORE.query('.ul_li')))
+            .toBe(true);
+    });
+
+    it("CORE.isNode(*)", function() {
+
+        expect(CORE.isNode())
+            .toBe(false);
+
+        expect(CORE.isNode(CORE.queryOne('.ul_li')))
+            .toBe(true);
+
+        expect(CORE.isNode(CORE.query('.ul_li')))
+            .toBe(false);
+    });
+
     it("CORE.hasValue(*)", function() {
 
         expect(CORE.hasValue())

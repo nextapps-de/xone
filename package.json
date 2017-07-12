@@ -1,6 +1,6 @@
 {
   "name": "xone",
-  "version": "0.0.601",
+  "version": "0.0.602",
   "description": "Open source Javascript framework for building modern web applications.",
   "keywords": [
     "Javascript Framework",
@@ -24,7 +24,7 @@
     "url": "https://github.com/next-apps/xone.git"
   },
   "scripts": {
-    "coverage-test": "istanbul cover phantomjs plugin/run-jasmine2.js test/index.html",
+    "coverage-test": "istanbul cover phantomjs dev/run-jasmine2.js test/index.html",
     "coveralls": "npm run coverage-test && cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "homepage": "https://next-apps.github.io/xone/",

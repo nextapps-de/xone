@@ -2,14 +2,7 @@ describe("Check DOM States", function() {
 
     var toArray = function(list){
 
-        var array = new Array(list.length);
-
-        for(var i = 0; i < list.length; i++){
-
-            array[i] = list[i];
-        }
-
-        return array;
+        return Array.prototype.slice.call(list);
     };
 
     it("Check if core contains all required functions", function() {
@@ -51,16 +44,61 @@ describe("Check DOM States", function() {
 
         expect(toArray(CORE.query('#test_wrapper ul.ul_li')))
             .toEqual(toArray(document.querySelectorAll('#test_wrapper ul.ul_li')));
+
+        expect(toArray(CORE.query('li.ul_li')))
+            .toEqual(toArray(document.querySelectorAll('li.ul_li')));
+
+        expect(toArray(CORE.query('ul .ul_li')))
+            .toEqual(toArray(document.querySelectorAll('ul .ul_li')));
+
+        expect(toArray(CORE.query('.test_content .ul_li')))
+            .toEqual(toArray(document.querySelectorAll('.test_content .ul_li')));
+
+        expect(toArray(CORE.query('.test_content li')))
+            .toEqual(toArray(document.querySelectorAll('.test_content li')));
+
+        expect(toArray(CORE.query('body .ul_li')))
+            .toEqual(toArray(document.querySelectorAll('body .ul_li')));
+
+        expect(toArray(CORE.query('.ul_li #test_wrapper')))
+            .toEqual(toArray(document.querySelectorAll('.ul_li #test_wrapper')));
+
+        expect(toArray(CORE.query('div #test_wrapper')))
+            .toEqual(toArray(document.querySelectorAll('div #test_wrapper')));
+    });
+
+    it("Check CORE.queryOne()", function() {
+
+        expect(toArray(CORE.queryOne('ul')))
+            .toEqual(toArray(document.querySelector('ul')));
+
+        expect(toArray(CORE.queryOne('.ul_li')))
+            .toEqual(toArray(document.querySelector('.ul_li')));
+
+        expect(toArray(CORE.queryOne('#test_wrapper ul')))
+            .toEqual(toArray(document.querySelector('#test_wrapper ul')));
+
+        expect(toArray(CORE.queryOne('#test_wrapper')))
+            .toEqual(toArray(document.querySelector('#test_wrapper')));
+    });
+
+    it("Check CORE.getClosest()", function() {
+
+        expect(CORE.getClosest(CORE.queryOne('li'), '< ul'))
+            .toEqual(document.querySelector('li').closest('ul'));
+
+        expect(CORE.getClosest(CORE.queryOne('ul'), '> li'))
+            .toEqual(document.querySelector('ul li'));
     });
 
     it("Check CORE.getById()", function() {
 
         expect(CORE.getById('test_wrapper'))
-        .toBe(document.getElementById('test_wrapper'));
+            .toBe(document.getElementById('test_wrapper'));
 
         // Check Cache
         expect(CORE.getById('test_wrapper'))
-        .toBe(document.getElementById('test_wrapper'));
+            .toBe(document.getElementById('test_wrapper'));
     });
 
     it("Check CORE.getByClass()", function() {
