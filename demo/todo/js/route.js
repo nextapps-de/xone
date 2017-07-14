@@ -1,25 +1,19 @@
 goog.provide('APP.ROUTE.App');
 goog.require('APP.CONTROLLER.Main');
 
-(function(ROUTE, CONTROLLER){
+APP.ROUTE = {
 
-	ROUTE['#/'] = (
+	'#/': APP.CONTROLLER.Main,
 
-		CONTROLLER.Main
-	);
+	'#/active': {
 
-	ROUTE['#/active'] = {
-
-		to: CONTROLLER.Main,
+		to: APP.CONTROLLER.Main,
 		params: 'active'
-	};
+	},
 
-	ROUTE['#/completed'] = {
+	'#/completed': {
 
-		to: CONTROLLER.Main,
+		to: APP.CONTROLLER.Main,
 		params: 'completed'
-	};
-})(
-	APP.ROUTE,
-	APP.CONTROLLER
-);
+	}
+};

@@ -1,77 +1,78 @@
 goog.provide('APP.HANDLER.Event');
 goog.require('APP.MODEL.Todo');
 
-(function(HANDLER, Todo){
+APP.HANDLER = (function(Todo){
 
-	HANDLER.createTodo = function(event, target){
+	return {
 
-		var value = CORE.trim(this.value);
+		createTodo: function(event, target){
 
-		if(value){
+			var value = CORE.trim(this.value);
 
-			Todo.create({
+			if(value){
 
-				'id': CORE.randomString(8),
-				'title': value,
-				'completed': false
-			});
-		}
-	};
+				Todo.create({
 
-	HANDLER.editTodo = function(event, target){
+					'id': CORE.randomString(8),
+					'title': value,
+					'completed': false
+				});
+			}
+		},
 
-		var value = CORE.trim(this.value);
+		editTodo: function(event, target){
 
-		if(value){
+			var value = CORE.trim(this.value);
 
-			Todo.update(target, 'title', value, /* save? */ true);
-		}
-		else{
+			if(value){
+
+				Todo.update(target, 'title', value, /* save? */ true);
+			}
+			else{
+
+				Todo.delete(target);
+			}
+		},
+
+		cancelCreate: function(event, target){
+
+			this.value = '';
+		},
+
+		cancelEdit: function(event, target){
+
+			this.value = CORE.getClosest(target, '>.title').textContent;
+
+			CORE.removeClass(target, 'editing');
+		},
+
+		updateState: function(event, target){
+
+			Todo.find(target)
+				.update('completed', this.checked)
+				.save();
+		},
+
+		toggleAllStates: function(event, target){
+
+			Todo.updateAll('completed', this.checked, /* save? */ true);
+		},
+
+		deleteCompleted: function(event, target){
+
+			Todo.deleteWhere('completed', true);
+		},
+
+		deleteTodo: function(event, target){
 
 			Todo.delete(target);
+		},
+
+		enterEditMode: function(event, target){
+
+			CORE.addClass(target, 'editing');
+			CORE.focusInput(CORE.getClosest(target, '>.edit'));
 		}
 	};
 
-	HANDLER.cancelCreate = function(event, target){
-
-		this.value = '';
-	};
-
-	HANDLER.cancelEdit = function(event, target){
-
-		this.value = CORE.getClosest(target, '>.title').textContent;
-
-		CORE.removeClass(target, 'editing');
-	};
-
-	HANDLER.updateState = function(event, target){
-
-		Todo.find(target)
-			.update('completed', this.checked)
-			.save();
-	};
-
-	HANDLER.toggleAllStates = function(event, target){
-
-		Todo.updateAll('completed', this.checked, /* save? */ true);
-	};
-
-	HANDLER.deleteCompleted = function(event, target){
-
-		Todo.deleteWhere('completed', true);
-	};
-
-	HANDLER.deleteTodo = function(event, target){
-
-		Todo.delete(target);
-	};
-
-	HANDLER.enterEditMode = function(event, target){
-
-		CORE.addClass(target, 'editing');
-		CORE.focusInput(CORE.getClosest(target, '>.edit'));
-	};
-})(
-	APP.HANDLER,
-    APP.MODEL.Todo
-);
+})(APP.MODEL.Todo);

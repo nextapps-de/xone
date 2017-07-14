@@ -8,7 +8,7 @@ var MANIFEST = {
 
         "calculate": false,
 		"xone": "lib/xone/",
-        "build": [
+        "copy": [
             "index.html"
         ],
         "css": [

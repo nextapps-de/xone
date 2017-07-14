@@ -34,13 +34,12 @@ __Xone__ provides a lightweight full stack environment to develop beautiful appl
 
 ### Overview
 
-* Manage and execute production, development and test environments seamlessly at the same time
+* Manage and execute production, development and test environments seamlessly
 * Integrates fast development in a web browser environment (develop > build > deploy)
 * Provides HTML-CSS-friendly templating system with which designers (non-coders) can also work
 * Xone libraries completely compiles with your codebase (only the used code remains in a single javascript binary file)
 * Therefore you will get the most lightweight footprint possible
 * Provides advanced MVC architecture for your app (e.g. persistent models, routes, request controller, event controller, handlers, views, mapper)
-* Incredibly accellerate DOM changes through a performance optimized render engine
 * Simple, fast and natural usage out of the box
 * Targeting products: hybrid apps, progressive web apps, cordova/phonegap/ionic, single-page web apps, browser apps
 
@@ -299,12 +298,14 @@ Docs will be generated in _'docs/api/'_.
 </html>
 ```
 
----
-
+<!--
 ### Xone Render Engine
-
+-->
+<!--
 The render engine provides an optional "fast mode" to get the most out of performance. All internal processes of Xone takes advantage when "fast mode" is enabled (e.g. render templates, animate elements, toggle views). When it runs in "fast mode" the render engine has a very closed infrastructure you should keep notice:
+-->
 
+<!--
 1. CSS Styles
     * Change styles
     * Get styles
@@ -314,10 +315,14 @@ The render engine provides an optional "fast mode" to get the most out of perfor
 3. HTML Content
     * Change contents
     * Get contents
+-->
 
+<!--
 > __Note:__ When "fast mode" is enabled it should not be mixed by any other external manipulations of the same category listed above. We recommended to disable the "fast mode" when style issues occurs by any direct style manipulations (e.g. when using an extern library).
-
+-->
+<!--
 > __Note:__ The "fast mode" is enabled by default in a _Xone Project_ (may change in future) and is disabled by default in the _Xone Extern Library_.
+-->
 
 <!--
 ###### Performance Comparison: Native VS. jQuery VS. Xone
@@ -329,10 +334,14 @@ The render engine provides an optional "fast mode" to get the most out of perfor
 * https://jsperf.com/xone-dom-selector-performance
 -->
 
+<!--
 ###### Restrictions (when "fast mode" is enabled)
-
+-->
+<!--
 The problem:
+-->
 
+<!--
 ```js
 var display;
 
@@ -351,9 +360,13 @@ console.log(display); // -> 'none'
 display = document.getElementById('my_div').style.display;
 console.log(display); // -> 'block' !!!
 ```
+-->
 
+<!--
 Instead do this:
+-->
 
+<!--
 ```js
 var display;
 
@@ -368,8 +381,7 @@ CORE.paint(function(){
     console.log(display); // -> 'none'
 });
 ```
-
----
+-->
 
 ### Development Environments
 
@@ -411,10 +423,12 @@ my_project> xone env add offline
 
 Build destination: _workspace/my_project/app/config/offline.js_
 
----
 
+<!--
 ### TODO
+-->
 
+<!--
 - [x] Provide Standalone Version (dependency-less)
 - [x] Create/Install (CLI)
 - [x] Use npm modules for system tasks (supports all platforms)
@@ -447,11 +461,13 @@ Build destination: _workspace/my_project/app/config/offline.js_
     - [x] MacOS
     - [x] Windows
     - [x] Linux
+-->
 
----
 
+<!--
 ### Features
-
+-->
+<!--
 * Manage Development Environments:
     * production, development, test, benchmark
 * Manage Process Environments (Rack):
@@ -507,6 +523,7 @@ Build destination: _workspace/my_project/app/config/offline.js_
 * JSDoc Integration
 * Provides the most possible performance while ensuring maximum crossplatform support
 * Compatible with almost each library out there (also can be mixed with similar technologies like: Angular or React)
+-->
 
 <!--
 <img src="http://nextapps.de/img/xone_workflow.png">

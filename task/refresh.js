@@ -13,7 +13,7 @@ if(platform) {
 }
 
 var xone_manifest = lib.loadJSON('app/manifest.js', 'MANIFEST');
-var dependencies = xone_manifest.dependencies.build;
+var dependencies = xone_manifest.dependencies.copy;
 
 for(var i = 0; i < dependencies.length; i++){
 
