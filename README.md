@@ -3,7 +3,7 @@
     <img src="http://nextapps.de/img/xone.svg?rnd=1" alt="Xone Javascript Development Environment" width="50%">
     <br><br>
     <a target="_blank" href="https://www.npmjs.com/package/xone"><img src="https://img.shields.io/npm/v/xone.svg"></a>
-    <img src="https://img.shields.io/badge/status-ALPHA-orange.svg">
+    <img src="https://img.shields.io/badge/status-BETA-orange.svg">
     <a target="_blank" href="https://travis-ci.org/next-apps/xone"><img src="https://travis-ci.org/next-apps/xone.svg?branch=master"></a>
     <a target="_blank" href="https://coveralls.io/github/next-apps/xone?branch=master"><img src="https://coveralls.io/repos/github/next-apps/xone/badge.svg?branch=master"></a>
     <a target="_blank" href="https://github.com/next-apps/xone/issues"><img src="https://img.shields.io/github/issues/next-apps/xone.svg"></a>
@@ -12,11 +12,17 @@
 
 <h1></h1>
 
-<h3>Javascript framework for building modern web applications</h3>
+<h3>WebApp Development Kit / MVC Framework</h3>
 
-__Xone__ provides a lightweight full stack environment to develop beautiful applications for every use and enables the optimal integration of an universal codebase into a wide range of systems (e.g. mobile devices, tablets, desktops, browser environments).
+__Xone__ provides you a lightweight full stack environment to develop beautiful web-based applications for every use and enables the optimal integration of an universal codebase into a wide range of systems (e.g. mobile devices, tablets, desktops, browser environments).
 
-> __Notice:__ Actually this is an alpha state of this repository. Some breaking changes could possibly be introduced in upcoming versions. Do not use for production until this message has been removed.
+<!--
+> __Notice:__ Actually this is a beta state of this repository.
+-->
+
+<!--
+Some breaking changes could possibly be introduced in upcoming versions. Do not use for production until this message has been removed.
+-->
 
 * [License](LICENSE.md)
 * [Installation](doc/install.md)
@@ -29,19 +35,23 @@ __Xone__ provides a lightweight full stack environment to develop beautiful appl
 * [Dependency Management & Calculation](doc/xone_deps.md)
 * [AMD Loader, Build Plugin](doc/xone_amd.md)
 * [Validations](doc/xone_validate.md)
+* [Demo/Tutorial: Todo App](https://next-apps.github.io/xone/)
 
 ---
 
-### Overview
+### Features
 
-* Manage and execute production, development and test environments seamlessly
-* Integrates fast development in a web browser environment (develop > build > deploy)
-* Provides HTML-CSS-friendly templating system with which designers (non-coders) can also work
-* Xone libraries completely compiles with your codebase (only the used code remains in a single javascript binary file)
-* Therefore you will get the most lightweight footprint possible
-* Provides advanced MVC architecture for your app (e.g. persistent models, routes, request controller, event controller, handlers, views, mapper)
-* Simple, fast and natural usage out of the box
-* Targeting products: hybrid apps, progressive web apps, cordova/phonegap/ionic, single-page web apps, browser apps
+Basically Xone  <!-- is a "cherry-picked" mixture of common programming paradigm used by major technologies like Ruby on Rails, Mustache/Handlebars, Node.js, Mithril, Google Closure and combines them into a lightweight application development environment. For this purpose Xone --> has an easy to learn high-level interface without forcing you to implement any low-level "framework-cryptofied" code as you would do with Angular or React. That also preserves huge flexibility to your codebase for upcoming technologies, ports or any other major changes.
+
+* Manage and execute _production_, _development_, _benchmark_ and _test_ environments
+* Developing seamlessly in a web browser environment (saves you tons of time!)
+* Provides a dynamic template system which is readable for designers <!-- * Therefore you will get the most lightweight footprint for your codebase -->
+* Provides an advanced declarative MVC architecture for your app (e.g. persistent models, routes, controller, events, views, handlers, mapper)
+* Uses Closure Compiler to achieve optimal dead code elimination
+* Xone libraries compiles with your codebase (the used code remains in a single javascript build file)
+* Others: build system, dependency management, environment management, platform management, unit test integration, benchmark integration
+* Simple, fast and natural usage out of the box without loosing any "framework magics"
+* Targeting products: hybrid apps, progressive web apps, apps based on cordova/phonegap/ionic/electron, single-page application, browser apps
 
 ---
 
@@ -80,8 +90,8 @@ Xone basically is available in 3 different versions:
 | CLI Tools | <img src="http://nextapps.de/img/icon_check.png?v=2"> | - | - |
 | Support Closure Compiler Advanced Mode | <img src="http://nextapps.de/img/icon_check.png?v=2"> | <img src="http://nextapps.de/img/icon_check.png?v=2"> | - |
 | Dead Code Removal | <img src="http://nextapps.de/img/icon_check.png?v=2"> | <img src="http://nextapps.de/img/icon_check.png?v=2"> | - |
-| Not strictly bound by Conventions | - | <img src="http://nextapps.de/img/icon_check.png?v=2"> | <img src="http://nextapps.de/img/icon_check.png?v=2"> |
-| Does not require Node.js | - | <img src="http://nextapps.de/img/icon_check.png?v=2"> | <img src="http://nextapps.de/img/icon_check.png?v=2"> |
+| Is __not__ strictly bound by Conventions | - | <img src="http://nextapps.de/img/icon_check.png?v=2"> | <img src="http://nextapps.de/img/icon_check.png?v=2"> |
+| Does __not__ require Node.js | - | <img src="http://nextapps.de/img/icon_check.png?v=2"> | <img src="http://nextapps.de/img/icon_check.png?v=2"> |
 | Use as a Standalone Library (like jQuery/Underscore) | - | <img src="http://nextapps.de/img/icon_check.png?v=2"> | <img src="http://nextapps.de/img/icon_check.png?v=2"> |
 | Use as a Framework (like Bootstrap/Angular) | <img src="http://nextapps.de/img/icon_check.png?v=2"> | <img src="http://nextapps.de/img/icon_check.png?v=2"> | - |
 | Use as a Dev Environment (like Sencha/Meteor) | <img src="http://nextapps.de/img/icon_check.png?v=2"> | - | - |
@@ -248,6 +258,24 @@ Build destination: _workspace/my_project/app/js/xone.lib.min.js_
 
 > __Note:__ The order of passed parameters cannot be changed actually.
 
+### Using Xone Standalone Library
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <!-- END_OF_BODY -->
+    <!-- LOAD XONE: -->
+    <script src="js/xone.lib.min.js"></script>
+    <!-- YOUR APP CODE: -->
+    <script src="js/app.js"></script>
+</body>
+</html>
+```
+
 ---
 
 ### Configure Build Tool
@@ -279,24 +307,6 @@ my_project> xone docs
 Docs will be generated in _'docs/api/'_.
 
 ---
-
-## Using Xone Standalone Library
-
-```html
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-</head>
-<body>
-    <!-- END_OF_BODY -->
-    <!-- LOAD XONE: -->
-    <script src="js/xone.lib.min.js"></script>
-    <!-- YOUR APP CODE: -->
-    <script src="js/app.js"></script>
-</body>
-</html>
-```
 
 <!--
 ### Xone Render Engine

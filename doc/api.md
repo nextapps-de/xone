@@ -7,7 +7,7 @@ Uppercase identifiers helps you to determine:
 * __special definitions__ in object notation to fulfill conventions of Xone automated system
 * __special members__ and classes also used by the automated system
 
-> __Note:__ Therefore all members of `APP.*` are uppercase to symbolize that they are connected each other a part of the automated concept. Corresponding types are described by its interfaces. The descision to use these concept is open to you, also most of them can be used directly outside the automated chain.
+> __Note:__ You are free to use or not to use these automated concept, most of those features can also be used directly outside of the automated chain.
 
 ## Global Constants
 
@@ -16,17 +16,22 @@ Uppercase identifiers helps you to determine:
 * __`PLATFORM`__
 * __`DEBUG`__
 
+> __Note:__ Globals only available in non-production environments. All globals are removed in production compilation builds.
+
 ## Global Namespaces
 
 * __`APP`__
 * __`CORE`__
 * __`CONFIG`__
+* __`MANIFEST`__
 <!--
 * __`UTILS`__
 -->
 <!--
 * __`VARS`__
 -->
+
+> __Note:__ Globals only available in non-production environments. All globals are removed in production compilation builds.
 
 ## CONFIG.*
 
@@ -37,7 +42,7 @@ _Constants: (read-only)_
 * CONFIG.__`PLATFORM`__
 * CONFIG.__`DEBUG`__
 
-_read full description [here](app_config.md)_
+_get more details [here](app_config.md)_
 
 ## APP.*
 
@@ -51,8 +56,8 @@ _read full description [here](app_config.md)_
 
 * APP.__`MODEL`__
     * _Methods:_
-        * APP.MODEL.__`new`__: function(model, data<, persistent>)
-        * APP.MODEL.__`create`__: function(model, data)
+        * APP.MODEL.__`new`__: function(name, data<, persistent>)
+        * APP.MODEL.__`create`__: function(name, data)
         * APP.MODEL.__`register`__: function(name, model)
 * APP.__`CONTROLLER`__
     * _Methods:_
@@ -131,7 +136,7 @@ _read full description [here](app_config.md)_
         * APP.SETTINGS.__`set`__: function(index, value)
         * APP.SETTINGS.__`update`__: function(index, value)
 * APP.__`LAYOUT`__ _(deprecated)_
-* APP.__`STORAGE`__ _(in progress)_
+* APP.__`STORAGE`__ (extends ___StorageAdapter___)
 * APP.__`WORKER`__
     * _Methods:_
         * APP.WORKER.__`register`__: function(name, worker<, callback>)
@@ -155,14 +160,18 @@ _read full description [here](app_config.md)_
 #### DOM
 
 * CORE.__`query`__: function(query)
+* CORE.__`queryOne`__: function(query)
+* CORE.__`queryAll`__: function(query)
 * CORE.__`getByClass`__: function(classname, context)
 * CORE.__`getById`__: function(id)
 * CORE.__`getByTag`__: function(tag, context)
+* CORE.__`getClosest`__: function(query)
 * CORE.__`getHTML`__: function(node)
-* CORE.__`getNode`__: function(element)
+* CORE.__`getText`__: function(node)
+* ~~CORE.__`getNode`__: function(element)~~ _(deprecated)_
 * CORE.__`getValue`__: function(node)
 * CORE.__`setHTML`__: function(node, html, async)
-* CORE.__`setTextContent`__: function(node, val)
+* CORE.__`setText`__: function(node, val)
 * CORE.__`setValue`__: function(node, value)
 
 #### Styles
@@ -184,6 +193,7 @@ _read full description [here](app_config.md)_
 * CORE.__`toggleClass`__: function(node, name, callback)
 * CORE.__`toggleStyle`__: function(obj, css, val)
 * CORE.__`setStyle`__: function(obj, css, val)
+* CORE.__`hasStyle`__: function(obj, css, val)
 
 #### Event
 
@@ -199,6 +209,7 @@ _read full description [here](app_config.md)_
 * CORE.__`handleEvent`__: function(event, elem, fn, preventDefault, stopBubble)
 * CORE.__`preventEvent`__: function(event, prevent, stop)
 * CORE.__`triggerMouseEvent`__: function(node, event)
+* CORE.__`switchKeyCode`__: function(keycode, payload)
 
 #### Checks
 
@@ -208,11 +219,19 @@ _read full description [here](app_config.md)_
 * CORE.__`isDefined`__: function(value)
 * CORE.__`isEmpty`__: function(value)
 * CORE.__`isObject`__: function(value)
+* CORE.__`isString`__: function(value, item)
+* CORE.__`isNumber`__: function(value, item)
+* CORE.__`isBoolean`__: function(value, item)
+* CORE.__`isCollection`__: function(value, item)
+* CORE.__`isNode`__: function(value, item)
 * CORE.__`isType`__: function(value<, type>)
+* CORE.__`is`__: function(item<, type>)
 * CORE.__`hasValue`__: function(value)
-* CORE.__`hasValues`__: function(value)
+* CORE.__`hasValues`__: function(array)
+* CORE.__`hasKeys`__: function(object)
+* CORE.__`has`__: function(item<, type>)
 
-#### Environment
+#### System
 
 * CORE.__`Browser`__
     * _Constants: (read-only)_
@@ -221,6 +240,7 @@ _read full description [here](app_config.md)_
         * CORE.Browser.__`isSafari`__: Boolean
         * CORE.Browser.__`isMSIE`__: Boolean
         * CORE.Browser.__`isChrome`__: Boolean
+        * CORE.Browser.__`is`__: function(type)
 * CORE.__`System`__
     * _Constants: (read-only)_
         * CORE.System.__`isIphone`__: Boolean
@@ -231,6 +251,7 @@ _read full description [here](app_config.md)_
         * CORE.System.__`isWindows`__: Boolean
         * CORE.System.__`isCordova`__: Boolean
         * CORE.System.__`isWebapp`__: Boolean
+        * CORE.System.__`is`__: function(type)
 * CORE.__`Device`__
     * _Constants: (read-only)_
         * CORE.Device.__`isMobile`__: Boolean
@@ -238,6 +259,7 @@ _read full description [here](app_config.md)_
         * CORE.Device.__`isTouch`__: Boolean
         * CORE.Device.__`isOnline`__: Boolean
         * CORE.Device.__`isOffline`__: Boolean
+        * CORE.Device.__`is`__: function(type)
   
 #### Array
 
@@ -266,6 +288,8 @@ _read full description [here](app_config.md)_
 
 * CORE.__`replace`__: function(string, find, replace)
 * CORE.__`count`__: function(string, find)
+* CORE.__`randomString`__: function(pattern)
+* CORE.__`trim`__: function(string)
 
 #### Process
 
@@ -292,8 +316,8 @@ _read full description [here](app_config.md)_
 #### Format
 
 * CORE.__`formatDate`__: function(date)
-* CORE.__`capitalize`__: function(text)
 * CORE.__`formatNumber`__: function(number, places, decimal, seperator)
+* CORE.__`capitalize`__: function(text)
 
 #### Template
 
@@ -322,46 +346,53 @@ _read full description [here](app_config.md)_
 * CORE.__`loadStyle`__: function(src, media)
 * ~~CORE.__`prefix`__~~ _(deprecated)_
 * ~~CORE.__`preloadImages`__: function(images)~~ _(deprecated)_
+* CORE.__`focusInput`__: function(input_element)
 
 ## Interfaces
 
-#### Model implements ModelHelper
+#### Model Definition implements ModelHelper
 
 > Each model class provide some built ins.
 
-* Model.__`register`__
-* Model.__`new`__
-* Model.__`create`__
-* ~~Model.__`newFromList`__~~ _(deprecated)_
-* ~~Model.__`createFromList`__~~ _(deprecated)_
-* Model.__`parse`__
-* Model.__`find`__
-* Model.__`all`__
-* Model.__`range`__
-* Model.__`count`__
-* Model.__`findBy`__
-* Model.__`each`__
-* Model.__`where`__
-* Model.__`like`__
-* Model.__`saveAll`__
-* Model.__`deleteAll`__
-* Model.__`updateAll`__
+* ModelHelper.__`new`__: function(data)
+* ModelHelper.__`create`__: function(data)
+* ~~ModelHelper.__`newFromList`__~~ _(deprecated)_
+* ~~ModelHelper.__`createFromList`__~~ _(deprecated)_
+* ModelHelper.__`parse`__
+* ModelHelper.__`find`__
+* ModelHelper.__`all`__
+* ModelHelper.__`range`__
+* ModelHelper.__`count`__
+* ModelHelper.__`findBy`__
+* ModelHelper.__`each`__
+* ModelHelper.__`where`__
+* ModelHelper.__`like`__
+* ModelHelper.__`saveAll`__
+* ModelHelper.__`deleteAll`__
+* ModelHelper.__`updateAll`__
+    * Constructor:
+        * ModelHelper.constructor.__`beforeUpdate`__
+        * ModelHelper.constructor.__`beforeCreate`__
+        * ModelHelper.constructor.__`beforeSave`__
+        * ModelHelper.constructor.__`onCreate`__
+        * ModelHelper.constructor.__`onUpdate`__
+        * ModelHelper.constructor.__`onSave`__
 
-#### Model implements ModelClass
+#### Model Instance implements ModelClass
 
 > All instances of a model provide some built ins.
 
-* Model.__`save`__
-* Model.__`update`__
-* Model.__`restore`__
-* Model.__`delete`__
+* ModelClass.__`save`__
+* ModelClass.__`update`__
+* ModelClass.__`restore`__
+* ModelClass.__`delete`__
     * Constructor:
-        * Model.constructor.__`beforeUpdate`__
-        * Model.constructor.__`beforeCreate`__
-        * Model.constructor.__`beforeSave`__
-        * Model.constructor.__`onCreate`__
-        * Model.constructor.__`onUpdate`__
-        * Model.constructor.__`onSave`__
+        * ModelClass.constructor.__`beforeUpdate`__
+        * ModelClass.constructor.__`beforeCreate`__
+        * ModelClass.constructor.__`beforeSave`__
+        * ModelClass.constructor.__`onCreate`__
+        * ModelClass.constructor.__`onUpdate`__
+        * ModelClass.constructor.__`onSave`__
 
 #### Controller implements ControllerInterface
 
@@ -408,7 +439,7 @@ _read full description [here](app_config.md)_
 
 #### Template implements TemplateStruct _(comming soon)_
 
-> Templates will be __auto generated__ at the moment (compile).
+> Templates will be __auto generated__ by built-in compilation.
 
 * Template.__`if`__
 * Template.__`map`__
@@ -431,12 +462,11 @@ _read full description [here](app_config.md)_
 
 > The view cache is automatically used by the __view controller__. 
 
-* ViewCache.__`set`__
-* ViewCache.__`get`__
-* ViewCache.__`update`__
-* ViewCache.__`del`__
-* ViewCache.__`clear`__
-* ViewCache.__`keys`__
+* ViewCache.__`set`__, __`update`__: function(key, view)
+* ViewCache.__`get`__: function(key)
+* ViewCache.__`del`__, __`delete`__: function(key)
+* ViewCache.__`clear`__: function()
+* ViewCache.__`has`__: function(key)
 
 #### Pattern implements PatternStruct
 
@@ -445,7 +475,7 @@ _read full description [here](app_config.md)_
 * Pattern.__`tag`__
 * Pattern.__`attr`__
 * Pattern.__`text`__
-* Pattern.__`child`__
+* Pattern.__`child`__, __`childs`__
 * Pattern.__`length`__
 
 #### Event implements EventStruct
@@ -454,6 +484,7 @@ _read full description [here](app_config.md)_
 
 * Event.__`on`__
 * Event.__`if`__
+* Event.__`at`__
 * Event.__`to`__
 * Event.__`do`__
 * Event.__`go`__
@@ -474,18 +505,20 @@ _read full description [here](app_config.md)_
 * Request.__`clear`__
 * Request.__`cache`__
 
-#### Storage implements StorageInterface
+#### StorageAdapter implements StorageInterface
 
-> A storage can be one of both: __persistent__ or __temporary__.
+> A storage can be one of both: __persistent__ or __temporary__ (cache).
 
-* Storage.__`get`__
-* Storage.__`set`__
-* Storage.__`update`__
-* Storage.__`del`__
-* Storage.__`clear`__
-* Storage.__`keys`__
+* Storage.__`new`__, __`create`__, __`register`__ function(name, persistent?) : Storage
+* Storage.__`get`__ function(key) : value
+* Storage.__`set`__ function(key, data)
+* Storage.__`update`__ function(key, data) : hasUpdate?
+* Storage.__`del`__, __`delete`__ function(key)
+* Storage.__`clean`__, __`cleanup`__ function()
+* Storage.__`clear`__ function()
+* Storage.__`has`__ function(key) : value
 
-#### FileSystem implements FilesystemInterface
+#### FileSystemAdapter implements FileSystemInterface
 
 > The filesystem provides access to __larger capacity__ and can also be one of both: __persistent__ or __temporary__.
 
@@ -493,4 +526,6 @@ _read full description [here](app_config.md)_
 * FileSystem.__`load`__
 * FileSystem.__`save`__
 * FileSystem.__`delete`__
+* FileSystem.__`copy`__
+* FileSystem.__`move`__
 * FileSystem.__`exist`__
