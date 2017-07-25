@@ -21,9 +21,9 @@
     <link rel='stylesheet' href='https://cdn.jsdelivr.net/font-hack/2.020/css/hack.min.css'>
     <link rel="stylesheet" href="page/lib/highlight/styles/agate.css">
 
-    <meta property="og:url" content="https://next-apps.github.io/xone/">
+    <meta property="og:url" content="https://nextapps-de.github.io/xone/">
     <meta property="og:title" content="Xone - Javascript framework for building modern web applications">
-    <meta property="og:image" content="https://next-apps.github.io/xone/page/img/xone.png?rnd=1">
+    <meta property="og:image" content="https://nextapps-de.github.io/xone/page/img/xone.png?rnd=1">
     <meta property="og:description" content="Xone provides you a lightweight full stack environment to develop beautiful web-based applications for every use and enables the optimal integration of an universal codebase into a wide range of systems (e.g. mobile devices, tablets, desktops, browser environments).">
 </head>
 <body>
@@ -258,37 +258,6 @@
 
             <h2>Implementation (Javascript)</h2>
 
-            <input class="toggle-box" id="toggle-box-6" type="checkbox">
-            <label class="toggle-box-title" for="toggle-box-6">app/manifest.js</label>
-            <div class="toggle-box-content">
-
-                Define all app dependencies in <span class="highlight">app/manifest.js</span>:
-                <br>
-                <pre>
-                    <code class="json">var MANIFEST = {
-
-    "dependencies": {
-
-        "calculate": true,
-		"xone": "lib/xone/",
-        "copy": [
-            "index.html"
-        ],
-        "css": [
-			"node_modules/todomvc-common/base.css",
-			"node_modules/todomvc-app-css/index.css"
-        ],
-        "js_extern": [
-			"node_modules/todomvc-common/base.js"
-		],
-        "js": []
-    }
-};</code>
-                </pre>
-                <br>
-                <br>
-            </div>
-
             <input class="toggle-box" id="toggle-box-11" type="checkbox">
             <label class="toggle-box-title" for="toggle-box-11">app/js/model.js</label>
             <div class="toggle-box-content">
@@ -345,15 +314,12 @@ APP.HANDLER = (function(Todo){
 
 			var value = CORE.trim(this.value);
 
-			if(value){
+			if(value) Todo.create({
 
-				Todo.create({
-
-					'id': CORE.randomString(8),
-					'title': value,
-					'completed': false
-				});
-			}
+                'id': CORE.randomString(8),
+                'title': value,
+                'completed': false
+            });
 		},
 
 		editTodo: function(event, target){
@@ -632,6 +598,37 @@ APP.CONFIG.LAYOUT = [
 APP.MAIN = function(){
 
 	APP.CONTROLLER.request(window.location.hash);
+};</code>
+                </pre>
+                <br>
+                <br>
+            </div>
+
+            <input class="toggle-box" id="toggle-box-6" type="checkbox">
+            <label class="toggle-box-title" for="toggle-box-6">app/manifest.js</label>
+            <div class="toggle-box-content">
+
+                Define all app dependencies in <span class="highlight">app/manifest.js</span>:
+                <br>
+                <pre>
+                    <code class="json">var MANIFEST = {
+
+    "dependencies": {
+
+        "calculate": true,
+		"xone": "lib/xone/",
+        "copy": [
+            "index.html"
+        ],
+        "css": [
+			"node_modules/todomvc-common/base.css",
+			"node_modules/todomvc-app-css/index.css"
+        ],
+        "js_extern": [
+			"node_modules/todomvc-common/base.js"
+		],
+        "js": []
+    }
 };</code>
                 </pre>
                 <br>

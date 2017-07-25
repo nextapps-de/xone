@@ -5,8 +5,8 @@
  * @author Thomas Wilkerling
  * @license Apache-2.0
  * @link https://www.npmjs.com/package/xone
- * @link https://github.com/next-apps/xone
- * @tutorial https://next-apps.github.io/xone/
+ * @link https://github.com/nextapps-de/xone
+ * @tutorial https://nextapps-de.github.io/xone/
  */
 (function(){window.requestFileSystem||(window.requestFileSystem=window.webkitRequestFileSystem);navigator.persistentStorage||(navigator.persistentStorage=navigator.webkitPersistentStorage);navigator.temporaryStorage||(navigator.temporaryStorage=navigator.webkitTemporaryStorage);
 JSON||(window.JSON={parse:function(k){return eval("("+k+")")},stringify:function(){function k(k){return m[k]||"\\u"+(k.charCodeAt(0)+65536).toString(16).substr(1)}var n=Object.prototype.toString,p=Array.isArray||function(k){return"[object Array]"===n.call(k)},m={'"':'\\"',"\\":"\\\\","\b":"\\b","\f":"\\f","\n":"\\n","\r":"\\r","\t":"\\t"},u=/[\\"\u0000-\u001F\u2028\u2029]/g;return function t(m){if(null==m)return"null";if("number"===typeof m)return isFinite(m)?m.toString():"null";if("boolean"===typeof m)return m.toString();

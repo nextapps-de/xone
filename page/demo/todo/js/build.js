@@ -5,8 +5,8 @@
  * @author Thomas Wilkerling
  * @license Apache-2.0
  * @link https://www.npmjs.com/package/xone
- * @link https://github.com/next-apps/xone
- * @tutorial https://next-apps.github.io/xone/
+ * @link https://github.com/nextapps-de/xone
+ * @tutorial https://nextapps-de.github.io/xone/
  */
 
 /* global _ */

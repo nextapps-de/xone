@@ -16,7 +16,7 @@ Uppercase identifiers helps you to determine:
 * __`PLATFORM`__
 * __`DEBUG`__
 
-> __Note:__ Globals only available in non-production environments. All globals are removed in production compilation builds.
+> __Note:__ Globals only available in non-production environments. All globals are removed in production builds.
 
 ## Global Namespaces
 
@@ -31,7 +31,7 @@ Uppercase identifiers helps you to determine:
 * __`VARS`__
 -->
 
-> __Note:__ Globals only available in non-production environments. All globals are removed in production compilation builds.
+> __Note:__ Globals only available in non-production environments. All globals are removed in production builds.
 
 ## CONFIG.*
 
@@ -348,7 +348,7 @@ _get more details [here](app_config.md)_
 * ~~CORE.__`preloadImages`__: function(images)~~ _(deprecated)_
 * CORE.__`focusInput`__: function(input_element)
 
-## Interfaces
+## Adapter, Interfaces & Structs (Type Definitions)
 
 #### Model Definition implements ModelHelper
 
@@ -358,12 +358,14 @@ _get more details [here](app_config.md)_
 * ModelHelper.__`create`__: function(data)
 * ~~ModelHelper.__`newFromList`__~~ _(deprecated)_
 * ~~ModelHelper.__`createFromList`__~~ _(deprecated)_
-* ModelHelper.__`parse`__
+* ~~ModelHelper.__`parse`__~~ _(deprecated)_
 * ModelHelper.__`find`__
+* ModelHelper.__`findBy`__
 * ModelHelper.__`all`__
 * ModelHelper.__`range`__
 * ModelHelper.__`count`__
-* ModelHelper.__`findBy`__
+* ModelHelper.__`countBy`__
+* ModelHelper.__`countWhere`__
 * ModelHelper.__`each`__
 * ModelHelper.__`where`__
 * ModelHelper.__`like`__
@@ -465,6 +467,7 @@ _get more details [here](app_config.md)_
 * ViewCache.__`set`__, __`update`__: function(key, view)
 * ViewCache.__`get`__: function(key)
 * ViewCache.__`del`__, __`delete`__: function(key)
+* ViewCache.__`clean`__, __`cleanup`__ function()
 * ViewCache.__`clear`__: function()
 * ViewCache.__`has`__: function(key)
 
@@ -505,7 +508,7 @@ _get more details [here](app_config.md)_
 * Request.__`clear`__
 * Request.__`cache`__
 
-#### StorageAdapter implements StorageInterface
+#### Storage implements StorageInterface
 
 > A storage can be one of both: __persistent__ or __temporary__ (cache).
 
@@ -518,7 +521,7 @@ _get more details [here](app_config.md)_
 * Storage.__`clear`__ function()
 * Storage.__`has`__ function(key) : value
 
-#### FileSystemAdapter implements FileSystemInterface
+#### FileSystem implements FileSystemInterface
 
 > The filesystem provides access to __larger capacity__ and can also be one of both: __persistent__ or __temporary__.
 

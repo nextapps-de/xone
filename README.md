@@ -4,10 +4,10 @@
     <br><br>
     <a target="_blank" href="https://www.npmjs.com/package/xone"><img src="https://img.shields.io/npm/v/xone.svg"></a>
     <img src="https://img.shields.io/badge/status-BETA-orange.svg">
-    <a target="_blank" href="https://travis-ci.org/next-apps/xone"><img src="https://travis-ci.org/next-apps/xone.svg?branch=master"></a>
-    <a target="_blank" href="https://coveralls.io/github/next-apps/xone?branch=master"><img src="https://coveralls.io/repos/github/next-apps/xone/badge.svg?branch=master"></a>
-    <a target="_blank" href="https://github.com/next-apps/xone/issues"><img src="https://img.shields.io/github/issues/next-apps/xone.svg"></a>
-    <a target="_blank" href="https://github.com/next-apps/xone/blob/master/LICENSE.md"><img src="https://img.shields.io/npm/l/xone.svg"></a>
+    <a target="_blank" href="https://travis-ci.org/nextapps-de/xone"><img src="https://travis-ci.org/nextapps-de/xone.svg?branch=master"></a>
+    <a target="_blank" href="https://coveralls.io/github/nextapps-de/xone?branch=master"><img src="https://coveralls.io/repos/github/nextapps-de/xone/badge.svg?branch=master"></a>
+    <a target="_blank" href="https://github.com/nextapps-de/xone/issues"><img src="https://img.shields.io/github/issues/nextapps-de/xone.svg"></a>
+    <a target="_blank" href="https://github.com/nextapps-de/xone/blob/master/LICENSE.md"><img src="https://img.shields.io/npm/l/xone.svg"></a>
 </p>
 
 <h1></h1>
@@ -35,7 +35,7 @@ Some breaking changes could possibly be introduced in upcoming versions. Do not 
 * [Dependency Management & Calculation](doc/xone_deps.md)
 * [AMD Loader, Build Plugin](doc/xone_amd.md)
 * [Validations](doc/xone_validate.md)
-* [Demo/Tutorial: Todo App](https://next-apps.github.io/xone/)
+* [Demo/Tutorial: Todo App](https://nextapps-de.github.io/xone/)
 
 ---
 
@@ -62,11 +62,11 @@ Xone basically is available in 3 different versions:
     * Provides you a scalable development stack for modern web-based applications on top of Node.js
     * Is intended for a compilation/build
 2. __Xone Extern Bundle__ (Standalone)
-    * [_xone.bundle.js_](//cdn.rawgit.com/next-apps/xone/master/dist/xone.bundle.js)
+    * [_xone.bundle.js_](//cdn.rawgit.com/nextapps-de/xone/master/dist/xone.bundle.js)
     * Alternatively use this bundle to add Xone as a dependency to an already existing build/compiler system (compatible with Closure Compiler "Advanced Mode")
     * Is intended for a compilation/build
 3. __Xone Extern Library__ (Standalone)
-    * [_xone.lib.js_](//cdn.rawgit.com/next-apps/xone/master/dist/xone.lib.js)  >  [_xone.lib.min.js_](//cdn.rawgit.com/next-apps/xone/master/dist/xone.lib.min.js)
+    * [_xone.lib.js_](//cdn.rawgit.com/nextapps-de/xone/master/dist/xone.lib.js)  >  [_xone.lib.min.js_](//cdn.rawgit.com/nextapps-de/xone/master/dist/xone.lib.min.js)
     * Skips the build part completely and make Xone using like a jQuery library in your web-based project
     * Is not intended for a compilation
 
@@ -103,7 +103,7 @@ Xone basically is available in 3 different versions:
 ```
 > __Note:__ To make the _Xone CLI_ globally available, you have to install Xone as a global npm module (also in addition to any local installation if you want to keep simple as most as possible). You can also use a local custom versions of Xone as well as using the CLI without any global installations (read further).
 
-> __Note:__ Xone Project binaries typically has to be installed via "xone create" or "xone install" and comes with its own pre-defined folder structure (followed by some conventions). You can pick one of the two [stand-alone](//github.com/next-apps/xone/tree/master/dist) versions optionally to skip as many conventions as possible (e.g. Xone acts like an extern Javascript Plugin).
+> __Note:__ Xone Project binaries typically has to be installed via "xone create" or "xone install" and comes with its own pre-defined folder structure (followed by some conventions). You can pick one of the two [stand-alone](//github.com/nextapps-de/xone/tree/master/dist) versions optionally to skip as many conventions as possible (e.g. Xone acts like an extern Javascript Plugin).
 
 #### Windows
 

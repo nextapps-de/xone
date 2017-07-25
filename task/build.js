@@ -437,8 +437,8 @@ if(fs.existsSync(__dirname + '/build.js')){
                     " * @author Thomas Wilkerling\n" +
                     " * @license Apache-2.0\n" +
                     " * @link https://www.npmjs.com/package/xone\n" +
-                    " * @link https://github.com/next-apps/xone\n" +
-                    " * @tutorial https://next-apps.github.io/xone/\n" +
+                    " * @link https://github.com/nextapps-de/xone\n" +
+                    " * @tutorial https://nextapps-de.github.io/xone/\n" +
                     " */\n"
 
                 ) + compiled_code;
