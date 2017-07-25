@@ -781,7 +781,7 @@ goog.require('APP');
 
             var node = nodes[i];
 
-            CORE.setTextContent(node, (APP.LANG[lang || 'en'] || APP.LANG['en'])[
+            CORE.setText(node, (APP.LANG[lang || 'en'] || APP.LANG['en'])[
 
                 node.classList ?
 

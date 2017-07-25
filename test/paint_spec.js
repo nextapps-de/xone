@@ -8,7 +8,7 @@ describe("Check Paint Initialize Status", function() {
         expect(CORE).toHaveMethod("hasClass");
         expect(CORE).toHaveMethod("setStyle");
         expect(CORE).toHaveMethod("getStyle");
-        expect(CORE).toHaveMethod("setTextContent");
+        expect(CORE).toHaveMethod("setText");
     });
 
     it("Check CORE.getStyle()", function() {
@@ -52,9 +52,9 @@ describe("Check Paint Initialize Status", function() {
             .toBe(true);
     });
 
-    it("Check CORE.setTextContent()", function() {
+    it("Check CORE.setText()", function() {
 
-        CORE.setTextContent('#test_layer', 'test');
+        CORE.setText('#test_layer', 'test');
         expect(CORE.getById('test_layer').textContent)
             .toBe("test");
     });

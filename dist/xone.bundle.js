@@ -3357,16 +3357,16 @@ CORE.addCssRule = function(selector, rules, value) {
  @param {(Node|HTMLDocument|Window|NodeList|Array<Node>|string|null)} node
  @param {string} val
  */
-CORE.setTextContent = function setTextContent(node, val) {
+CORE.setText = function setText(node, val) {
     if (DEBUG) {
-      GRAPH.register("CORE.setTextContent");
+      GRAPH.register("CORE.setText");
     }
     if (typeof node === "string") {
       node = CORE.query(node);
     }
     if (node.length >= 0) {
       for (var i = 0; i < node.length; i++) {
-        CORE.setTextContent(node[i], val);
+        CORE.setText(node[i], val);
       }
       return;
     }
@@ -4724,7 +4724,7 @@ CONTROLLER.changeLanguage = function(lang) {
     var nodes = CORE.getByClass("i18n");
     for (var i = 0; i < nodes.length; i++) {
       var node = nodes[i];
-      CORE.setTextContent(node, (APP.LANG[lang || "en"] || APP.LANG["en"])[node.classList ? node.classList[1] : node.className.split(" ")[1]]);
+      CORE.setText(node, (APP.LANG[lang || "en"] || APP.LANG["en"])[node.classList ? node.classList[1] : node.className.split(" ")[1]]);
     }
   };
 })(/** @type {_controller_struct} */ (APP.CONTROLLER), APP.ROUTE);

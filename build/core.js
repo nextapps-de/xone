@@ -119,7 +119,7 @@ APP.SETUP = APP.MAIN;
         "toggleStyle": CORE.toggleStyle,
         "css": CORE.css,
         "addCssRule": CORE.addCssRule,
-        "setTextContent": CORE.setTextContent,
+        "setText": CORE.setText,
         "setHTML": CORE.setHTML,
         "getHTML": CORE.getHTML,
         "paint": CORE.paint,

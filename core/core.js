@@ -2359,6 +2359,42 @@ var CORE = {};
             return /** @type {number} */ (a);
         },
 
+        /**
+         * @param {!Array<number>|number} a
+         * @param {!number=} b
+         * @param {!number=} c
+         * @returns {!number}
+         */
+
+        med: function med(a, b, c){
+
+            if(DEBUG) GRAPH.register('CORE.Math.med');
+
+            if(typeof c !== 'undefined'){
+
+                a = Array.prototype.slice.call(arguments);
+            }
+
+            else if(typeof b !== 'undefined'){
+
+                return /** @type {number} */ ((a + b) / 2);
+            }
+
+            if(CORE.isArray(a)){
+
+                var sum = 0;
+
+                for(var i = 0; i < a.length; i++){
+
+                    sum += a[i];
+                }
+
+                return sum / a.length;
+            }
+
+            return /** @type {number} */ (a);
+        },
+
         rad: window.Math.PI / 180,
         cos: window.Math.cos,
         sin: window.Math.sin,
