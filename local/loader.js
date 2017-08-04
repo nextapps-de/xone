@@ -117,11 +117,11 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
 
         MANIFEST.dependencies.test_xone = [
 
-            /*CONFIG.JASMINE_PATH +*/ 'lib/jasmine/jasmine.css',
-            /*CONFIG.JASMINE_PATH +*/ 'lib/jasmine/jasmine.js',
-            /*CONFIG.JASMINE_PATH +*/ 'lib/jasmine/jasmine-html.js',
-            ///*CONFIG.JASMINE_PATH +*/ 'lib/jasmine/console.js',
-            /*CONFIG.JASMINE_PATH +*/ 'lib/jasmine/boot.js'
+            MANIFEST.dependencies.xone + '../jasmine-core/lib/jasmine-core/jasmine.css',
+            MANIFEST.dependencies.xone + '../jasmine-core/lib/jasmine-core/jasmine.js',
+            MANIFEST.dependencies.xone + '../jasmine-core/lib/jasmine-core/jasmine-html.js',
+            MANIFEST.dependencies.xone + '../jasmine-core/lib/console/console.js',
+            MANIFEST.dependencies.xone + '../jasmine-core/lib/jasmine-core/boot.js'
         ];
 
         /* XONE TESTS */
@@ -143,7 +143,7 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
 
             /* IMPORT TEST CONTENT */
 
-            '<link type="image/png" rel="shortcut icon" href="' + /*CONFIG.JASMINE_PATH +*/ 'lib/xone/lib/jasmine/jasmine_favicon.png">' +
+            '<link type="image/png" rel="shortcut icon" href="' + MANIFEST.dependencies.xone + '../jasmine-core/images/jasmine_favicon.png">' +
             '<style type="text/css" media="all">body{ visibility: visible !important; transform: none !important; top: 0 !important; right:0; bottom:0; left:0; padding: 0; margin: 0; height: 100% !important; width: 100% !important; transform: none !important; } .jasmine_html-reporter{ text-align: left; position: absolute; z-index: 9999; height: 100%; width: 100%; left: 0; top: 0; right: 0; bottom: 0; padding: 0 !important; margin: 0 !important; overflow: auto; }</style>' +
             '<style type="text/css" media="all">' +
                 '#test_wrapper{ position: absolute; top: 1px; height:100%; }' +
@@ -187,10 +187,10 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
 
         MANIFEST.dependencies.benchmark = [
 
-            MANIFEST.dependencies.xone + 'node_modules/lodash/lodash.min.js',
-            MANIFEST.dependencies.xone + 'node_modules/benchmark/benchmark.js',
+            MANIFEST.dependencies.xone + '../lodash/lodash.min.js',
+            MANIFEST.dependencies.xone + '../benchmark/benchmark.js',
             MANIFEST.dependencies.xone + 'page/lib/highlight/highlight.pack.js',
-            MANIFEST.dependencies.xone + 'node_modules/chart.js/dist/Chart.min.js',
+            MANIFEST.dependencies.xone + '../chart.js/dist/Chart.min.js',
             MANIFEST.dependencies.xone + 'dist/xone.bundle.js',
             MANIFEST.dependencies.xone + 'local/benchmark.js'
         ];
@@ -248,7 +248,7 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
             '</header>' +
             '<main></main>' +
             '<footer>' +
-                '<img src="lib/xone/page/img/xone.svg">' +
+                '<img src="' + MANIFEST.dependencies.xone + 'page/img/xone.svg">' +
                 '<select>' + suites + '</select>' +
                 '<div style="float: left">&emsp;<input id="options_chart" type="checkbox" checked> Charts</div>' +
                 '<table><tr><td id="log"></td></tr></table>' +
