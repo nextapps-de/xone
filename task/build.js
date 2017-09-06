@@ -199,13 +199,15 @@ if(fs.existsSync(__dirname + '/build.js')){
                 "var CONFIG = {};\n"
             );
 
-            if(fs.existsSync("app/config/production.js")){
+            if(fs.existsSync("app/platform/" + target_platform + "/config/production.js")){
 
-                // //xone_config.closure_compiler_jar.options.js.push("'app/lib/xone/core/interface.js'");
-                // xone_config.closure_compiler_jar.options.js.push("'app/config/production.js'");
-                // //compiler_options.jsCode.push({path: "app/lib/xone/core/interface.js"});
-                // compiler_options.jsCode.push({path: "app/config/production.js"});
-                // dependencies.unshift("config/production.js");
+                config_contents = fs.readFileSync("app/platform/" + target_platform + "/config/production.js", 'utf8');
+                config_default_contents = fs.readFileSync(xone_manifest.dependencies.xone + 'build/config.js', 'utf8');
+
+                eval(config_contents.substring(config_contents.indexOf('var CONFIG')));
+                app_config = CONFIG;
+            }
+            else if(fs.existsSync("app/config/production.js")){
 
                 config_contents = fs.readFileSync('app/config/production.js', 'utf8');
                 config_default_contents = fs.readFileSync(xone_manifest.dependencies.xone + 'build/config.js', 'utf8');
