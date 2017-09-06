@@ -1,6 +1,6 @@
 {
   "name": "xone",
-  "version": "0.0.614",
+  "version": "0.0.615",
   "description": "Open source Javascript framework for building modern web applications.",
   "keywords": [
     "Javascript Framework",
@@ -37,15 +37,15 @@
     "google-closure-compiler": "^20170521.0.0",
     "google-closure-compiler-js": "^20170521.0.0",
     "highlight.js": "^9.12.0",
-    "jasmine": "^2.0.1",
-    "jsdoc": "^3.4.3",
+    "jasmine": "^2.8.0",
+    "jsdoc": "^3.5.4",
     "less": "^2.7.2",
     "less-plugin-clean-css": "^1.5.1",
     "web-servo": "^0.5.1"
   },
   "devDependencies": {
-    "phantomjs-prebuilt": "^2.1.14",
     "coveralls": "^2.13.1",
-    "istanbul": "^0.4.5"
+    "istanbul": "^0.4.5",
+    "phantomjs-prebuilt": "^2.1.15"
   }
 }

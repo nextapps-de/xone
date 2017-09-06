@@ -204,7 +204,7 @@ if(fs.existsSync(__dirname + '/build.js')){
                 config_contents = fs.readFileSync("app/platform/" + target_platform + "/config/production.js", 'utf8');
                 config_default_contents = fs.readFileSync(xone_manifest.dependencies.xone + 'build/config.js', 'utf8');
 
-                eval(config_contents.substring(config_contents.indexOf('var CONFIG')));
+                eval('var PLATFORM = "' + target_platform + '";' + config_contents.substring(config_contents.indexOf('var CONFIG')));
                 app_config = CONFIG;
             }
             else if(fs.existsSync("app/config/production.js")){
@@ -212,7 +212,7 @@ if(fs.existsSync(__dirname + '/build.js')){
                 config_contents = fs.readFileSync('app/config/production.js', 'utf8');
                 config_default_contents = fs.readFileSync(xone_manifest.dependencies.xone + 'build/config.js', 'utf8');
 
-                eval(config_contents.substring(config_contents.indexOf('var CONFIG')));
+                eval('var PLATFORM = "' + target_platform + '";' + config_contents.substring(config_contents.indexOf('var CONFIG')));
                 app_config = CONFIG;
             }
             else{
@@ -227,7 +227,7 @@ if(fs.existsSync(__dirname + '/build.js')){
                 config_default_contents = fs.readFileSync(xone_manifest.dependencies.xone + 'build/config.js', 'utf8');
             }
 
-            eval(config_default_contents.substring(config_default_contents.indexOf('var CONFIG')));
+            eval('var PLATFORM = "' + target_platform + '";' + config_default_contents.substring(config_default_contents.indexOf('var CONFIG')));
             app_default_config = CONFIG;
 
             for(var key in app_default_config){
