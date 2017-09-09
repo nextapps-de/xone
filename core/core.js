@@ -2256,6 +2256,25 @@ var CORE = {};
         img.src = src;
     };
 
+    CORE.getCookies = function(){
+
+        var cookie = decodeURIComponent(document.cookie);
+        var cookie_entries = cookie.split(';');
+        var result = {}, entry, pair;
+
+        for(var i = 0; i < cookie_entries.length; i++){
+
+            entry = cookie_entries[i];
+
+            while(entry.charAt(0) === ' ') entry = entry.substring(1);
+
+            pair = entry.split('=');
+            result[pair[0]] = pair[1];
+        }
+
+        return result;
+    };
+
     /**
      * @const
      * @struct
