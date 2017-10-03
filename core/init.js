@@ -627,7 +627,7 @@ goog.require('APP.LAYOUT');
                     for(var i = 0; i < events.length; i++) {
 
                         /**
-                         * @type _event_struct
+                         * @type _xone_event_struct
                          */
 
                         var event = events[i];

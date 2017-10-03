@@ -20,7 +20,7 @@ var CONFIG = {
      * @type {string}
      */
 
-    RACK: 'cordova' || 'webapp' || 'cordova_test' || 'alpha' || 'stage' || 'local',
+    RACK: 'cordova' || 'webapp' || 'cordova-test' || 'alpha' || 'stage' || 'local',
 
     /**
      * Turn on/off debug infos to the console:
@@ -86,7 +86,7 @@ var CONFIG = {
     MAX_ASPECT_RATIO: 1.35,
 
     /**
-     * Turn on/off visibility of StatusBar:
+     * Turn on/off visibility of Statusbar:
      * @type {boolean}
      */
 

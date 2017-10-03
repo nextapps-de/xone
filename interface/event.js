@@ -2,11 +2,11 @@ goog.provide('INTERFACE.EVENT');
 
 /**
  * Event Interface
- * @typedef {_event_struct}
+ * @typedef {_xone_event_struct}
  * @const
  */
 
-var _event_struct = {
+var _xone_event_struct = {
 
     /** @type {string} */
     on: '',

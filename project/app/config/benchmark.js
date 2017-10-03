@@ -81,7 +81,7 @@ var CONFIG = {
     MAX_ASPECT_RATIO: 1.35,
 
     /**
-     * Turn on/off visibility of StatusBar:
+     * Turn on/off visibility of Statusbar:
      * @type {boolean}
      * @const
      */

@@ -709,10 +709,9 @@ var CORE = {};
         /**
          * @param {string} key
          * @param {*} val
-         * @param {boolean=} force
          */
 
-        this.set = function set(key, val, force){
+        this.set = function set(key, val){
 
             if(DEBUG) {
 
@@ -721,7 +720,7 @@ var CORE = {};
             }
 
             data[key] = val;
-            (!force && timer[key]) || (timer[key] = (new Date()).getTime());
+            timer[key] = (new Date()).getTime();
         };
 
         /**
@@ -738,14 +737,18 @@ var CORE = {};
                 CORE.console.log("Get Cache from: " + key);
             }
 
-            return (
+            if(timer[key]){
 
-                timer[key] && (force || ((new Date()).getTime() - timer[key] < (CONFIG.MAX_CACHE_TIME || 300000))) ?
+                if(force || (
 
-                    data[key]
-                :
-                    null
-            );
+                    ((new Date()).getTime() - timer[key]) < (CONFIG.MAX_CACHE_TIME || 300000)
+                )){
+
+                    return data[key];
+                }
+            }
+
+            return timer[key] = data[key] = null;
         };
 
         /**
@@ -1703,8 +1706,8 @@ var CORE = {};
                 var node = CORE.parseNode(/** @type _pattern_struct */({
 
                     tag: 'div',
-                    id: 'image-preload',
                     attr: {
+                        'id': 'image-preload',
                         'style': 'display:none;position:absolute;height:0px;width:0px;overflow:hidden;pointer-events:none'
                     }
                 }));
@@ -2254,6 +2257,35 @@ var CORE = {};
         };
 
         img.src = src;
+    };
+
+    /**
+     * @param {!string} url
+     * @param {!Function} callback
+     */
+
+    CORE.readAsDataUrl = function(url, callback){
+
+        var xhr = new XMLHttpRequest();
+
+        xhr.onload = function() {
+
+            var reader = new FileReader();
+
+            reader.onloadend = function(){
+
+                callback(this['result']);
+            }
+
+            if(xhr.response) {
+
+                reader.readAsDataURL(/** @type {!Blob} */ (xhr.response));
+            }
+        };
+
+        xhr.open('GET', url);
+        xhr.responseType = 'blob';
+        xhr.send();
     };
 
     CORE.getCookies = function(){

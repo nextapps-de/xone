@@ -192,19 +192,19 @@ _pattern_struct.length;
 
 
 /** @export */
-_event_struct.on;
+_xone_event_struct.on;
 /** @export */
-_event_struct.if;
+_xone_event_struct.if;
 /** @export */
-_event_struct.to;
+_xone_event_struct.to;
 /** @export */
-_event_struct.do;
+_xone_event_struct.do;
 /** @export */
-_event_struct.go;
+_xone_event_struct.go;
 /** @export */
-_event_struct.stopBubble;
+_xone_event_struct.stopBubble;
 /** @export */
-_event_struct.preventDefault;
+_xone_event_struct.preventDefault;
 
 
 
