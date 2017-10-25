@@ -39,6 +39,57 @@ Some breaking changes could possibly be introduced in upcoming versions. Do not 
 
 ---
 
+### Announcement Xone v1.0.0
+
+Xone will get some major changes. This was required to open capabilities for upcoming features we are working now like __Xone Native__.
+
+##### v0.7.0
+
+- Support for Web Components
+- Support for HTML5 Templates
+- Support for Native Filesystem
+- Implements Web Animation API
+- Virtual DOM Integration (Inferno)
+- Xone Native Adapter for Cordova-based Apps
+    - Popups, Alerts, Confirmations, Status
+    - Filesystem Storage
+    - Native Transition
+    - Action Sheet
+    - Notifications
+    - Reminder
+    - Calendar
+    - Native Image Library
+    - Native Map
+- New View Controller Engine 
+- New Layout Controller (the old was completely removed)
+- Simplified Project Structure
+- Build Extensions:
+    - CSS Auto-Prefixer
+    - Manage Hooks
+    - Manage Optional Dependencies
+- Xone Development User Interface (Browser replacement for any console commands)
+- Improved persistent storing of models
+- Improved Auto Resizing Layout 
+- Lazy image loader (with offline filesystem cache)
+- User Interface Components
+    - Navigation Bar
+    - Toolbar
+    - Scrollpane (vertical, horizontal)
+    - Lists
+    - Tables
+    - Grid Layout
+    - Pull to refresh
+    - Swipe-back views
+- View Manager controls components
+
+Those features will become deprecated for now (unsupported):
+
+- Using the _CONFIG.RACK_
+- Layout Controller (any calls to _APP.LAYOUT_)
+- View Helpers (slides, pulls, popups, alerts, ...)
+
+---
+
 ### Features
 
 Basically Xone  <!-- is a "cherry-picked" mixture of common programming paradigm used by major technologies like Ruby on Rails, Mustache/Handlebars, Node.js, Mithril, Google Closure and combines them into a lightweight application development environment. For this purpose Xone --> has an easy to learn high-level interface without forcing you to implement any low-level "framework-cryptofied" code as you would do with Angular or React. That also preserves huge flexibility to your codebase for upcoming technologies, ports or any other major changes.
