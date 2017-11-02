@@ -1,0 +1,727 @@
+@import "config.less";
+
+html, body{
+    position: absolute;
+    top:0;
+    right:0;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:100%;
+    margin:0;
+    padding:0;
+    background: #fff;
+    overflow: hidden;
+    touch-action: none;
+}
+body {
+    /* prevent callout to copy image, etc when tap to hold */
+    -webkit-touch-callout: none;
+    /* prevent webkit from resizing text to fit */
+    -webkit-text-size-adjust: none;
+    /* prevent copy paste, to allow, change 'none' to 'text' */
+    -webkit-user-select: none;
+    /*  Default Font */
+    font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, "SFUID", "SFUIDisplay", "Helvetica Neue", Agenda, "Roboto", "Open Sans", Arial, sans-serif !important;
+    font-size: 100%;
+    font-weight: 400;
+}
+body *{
+    /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+img, .img{
+    -webkit-image-orientation: from-image;
+    image-orientation: from-image;
+}
+table{
+    table-layout: fixed;
+    width:100%;
+    height: auto;
+}
+table, tr, td, th, thead, tbody{
+    padding:0;
+    margin:0;
+    border: none;
+}
+input{
+    -webkit-user-select: text;
+}
+a:link {
+    text-decoration: inherit;
+    color: inherit;
+}
+a:visited {
+    text-decoration: inherit;
+    color: inherit;
+}
+.clear{
+    clear:both;
+}
+.sticky {
+    position: fixed;
+    position: -webkit-sticky;
+    position: -moz-sticky;
+    position: -ms-sticky;
+    position: -o-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+/*
+.sticky:before,
+.sticky:after {
+    content: '';
+    display: table;
+}
+.sticky:active{
+    position: absolute;
+}
+*/
+
+.border-hairline-bottom{
+    box-shadow: 0 1px 1px -1px rgba(200, 199, 204, .5);
+}
+
+/* Default Layout Definitions */
+
+/*
+
+// Page Fullscreen + Stretch:
+// ------------------------------------------
+
+<main>
+  <content>
+</main>
+
+// Page Fullscreen + Scroll List:
+// ------------------------------------------
+
+<main>
+  <section>
+    <ul>
+      <li><img>Text</li>
+      <li>Text<img></li>
+      <li>
+    <ul>
+  </section>
+</main>
+
+// View + Header + Footer:
+// ------------------------------------------
+
+<header>
+  <nav>
+  <h1><img></h1>
+  <nav>
+</header>
+<main>
+  <section>
+    <content>
+  </section>
+  <section>
+    <content>
+  </section>
+</main>
+<footer>
+  <nav>
+</footer>
+
+
+<xone-header>
+  <xone-nav></xone-nav>
+  <xone-title><xone-img></xone-title>
+  <xone-nav></xone-nav>
+</xone-header>
+<xone-main>
+  <xone-section></xone-section>
+  <xone-section-scroll-xy></xone-section-scroll-xy>
+</xone-main>
+<xone-footer>
+  <xone-nav></xone-nav>
+</xone-footer>
+
+
+// View Content + Inner Header/Footer:
+// ------------------------------------------
+
+<main>
+  <section>
+    <header>
+    <content>
+    <footer>
+  </section>
+</main>
+
+// Menu
+// ------------------------------------------
+
+<menu>
+  <menuitem>
+  <menuitem>
+<menu>
+
+
+// Navigation
+// ------------------------------------------
+
+<nav>
+  <a><img></a>
+  <a><img></a>
+</nav>
+
+
+// Header
+// ------------------------------------------+
+
+<header>
+  <nav>
+  <h1><img></h1>
+  <nav>
+</header>
+
+// Footer
+// ------------------------------------------
+
+<footer>
+  <nav>
+</footer>
+
+// View
+// ------------------------------------------
+
+<main>
+  <header>
+  <section>
+  <footer>
+</main>
+
+// List
+// ------------------------------------------
+
+<ul>
+  <li>
+    <img> Text <button>
+  </li>
+</ul>
+
+// Forms
+// ------------------------------------------
+
+<form>
+  <fieldset>
+    <legend>
+    <label>
+    <input>
+    <label>
+    <select>
+      <optgroup>
+      <option>
+      <optgroup>
+      <option>
+    </select>
+  </fieldset>
+<form>
+
+// Grid Flex Layout
+// ------------------------------------------
+
+<table>
+    <caption>
+    <thead>
+    <tfoot>
+    <tbody>
+</table>
+
+// Content Styles
+// ------------------------------------------
+
+<article>
+  <center>
+    <title>
+    <hr>
+    <p>
+    <font>
+    <time>
+    <mark>
+  </center>
+</article>
+
+// Unused
+// ------------------------------------------
+
+<figure>
+  <img>
+  <figcaption>
+<figure>
+
+<details>
+    <summary>
+    <p>
+</details>
+
+<data>
+<datalist>
+<dialog>
+<output>
+<param>
+<source>
+
+
+<dl>
+    <dt>
+    <dd>
+    <dd>
+    <dd>
+    <dt>
+    <dd>
+</dl>
+
+data-*
+hidden
+lang
+tabindex
+title
+translate
+autofocus
+disabled
+label
+name
+target
+type
+value
+icon
+src
+href
+alt
+
+ */
+
+xone-main,
+xone-section{
+    position: absolute;
+    top:0;
+    right:0;
+    left:0;
+    width:100%;
+    height:auto;
+    margin:0;
+    padding:0;
+}
+xone-main{
+    bottom:0;
+}
+xone-section{
+    background-color: #fff;
+}
+xone-main{
+    visibility: hidden;
+    pointer-events: none;
+    touch-action: none;
+    z-index:-1;
+}
+xone-header{
+    top:0;
+    height: @xone-navbar-height - 1;
+    /* NOTE: the border should be excluded from the opacity fade animation */
+    /*border-bottom: 1px solid #dee3ed;*/
+}
+xone-tabbar{
+    bottom:0;
+    height: @xone-tabbar-height;
+    border-top: 1px solid @xone-border-color;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+    visibility: hidden;
+}
+xone-header,
+xone-tabbar{
+    position: absolute;
+    width: 100%;
+    right: 0;
+    left: 0;
+    z-index: 9;
+    background: #fff;
+    text-align: center;
+    display: table;
+    table-layout: fixed;
+}
+xone-main xone-header ~ xone-section{
+    top: @xone-navbar-height - 1;
+}
+xone-main[role="main"]{
+    bottom: @xone-tabbar-height;
+    background: #fff;
+}
+xone-main.hide{
+    z-index: 0;
+    pointer-events: none;
+}
+xone-main.show{
+    z-index: 2;
+    pointer-events: auto;
+}
+xone-main[role="main"].show{
+    z-index: 1;
+}
+xone-main.slide,
+xone-main.slideBottom {
+    z-index: 10;
+}
+xone-main.slide.show,
+xone-main.slideBottom.show {
+    z-index: 12;
+}
+xone-main:after{
+    content: "";
+    position: absolute;
+    top: @xone-navbar-height - 1;
+    left:0;
+    right:0;
+    width:100%;
+    height:100%;
+    background: #fff;
+    z-index: -1;
+}
+xone-main:not([popup]):before{
+    content: "";
+    position: absolute;
+    top: @xone-navbar-height - 1;
+    left:0;
+    right:0;
+    width:100%;
+    height:1px;
+    border-top: 1px solid @xone-border-color;
+    z-index: 10;
+}
+hr{
+    border: none;
+    border-bottom: 1px solid @xone-border-color;
+    padding-top:0;
+    margin-bottom:10px;
+    background: none;
+}
+xone-header h1{
+    position: absolute;
+    top:0;
+    right:0;
+    left:0;
+    height: @xone-navbar-height - 1;
+    line-height: @xone-navbar-height - 1;
+    font-size: 17px;
+    font-weight: 600;
+    color: #000;
+    z-index: -1;
+    display: inline-block;
+    vertical-align: middle;
+}
+xone-header h1 img {
+    height: 17px;
+    width: auto;
+    position: relative;
+    top: 3px;
+}
+
+/* Navigation */
+
+xone-header nav,
+xone-tabbar nav{
+    display: table-row-group;
+}
+xone-header nav a,
+xone-tabbar nav a{
+    display: table-cell;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
+}
+xone-header nav{
+    height: @xone-navbar-height - 1;
+    line-height: @xone-navbar-height - 1;
+}
+xone-tabbar nav{
+    height: @xone-tabbar-height;
+}
+xone-header nav a{
+    width: @xone-navbar-height - 1;
+    height: @xone-navbar-height - 1;
+}
+xone-tabbar nav a{
+    width: auto;
+    height: @xone-tabbar-height;
+}
+xone-header nav img{
+    width: auto;
+    height: @xone-navbar-height - 1;
+}
+xone-tabbar nav img{
+    height: @xone-tabbar-height;
+    width: auto;
+    margin:0 auto;
+}
+nav a img:nth-of-type(1){
+    display:block;
+}
+nav a img:nth-of-type(2){
+    display:none;
+}
+nav a.active img:nth-of-type(1){
+    display:none;
+}
+nav a.active img:nth-of-type(2){
+    display:block;
+}
+xone-header nav,
+xone-header nav img{
+    float: left;
+    text-align: left;
+}
+xone-header h1 + nav,
+xone-header h1 + nav img,
+xone-header nav:nth-of-type(2){
+    float: right;
+    text-align: right;
+}
+
+/* Scrollpane */
+
+xone-section,
+.scrollpane,
+.scrollpane-y,
+.scrollpane-x{
+    position: absolute;
+    bottom:0;
+    right:0;
+    left:0;
+    width:auto;
+    height:auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+    overflow-scrolling: touch;
+}
+.scrollpane-x{
+    overflow-x: auto;
+    overflow-y: hidden;
+    touch-action: pan-x;
+}
+xone-section:before,
+.scrollpane:before,
+.scrollpane-y:before{
+    content: "";
+    position: absolute;
+    top:0;
+    bottom:0;
+    right:0;
+    left:0;
+    width: 100%;
+    min-height:100.1%;
+    pointer-events: none;
+}
+.scrollpane-x:before{
+    content: "";
+    position: absolute;
+    top:0;
+    bottom:0;
+    right:0;
+    left:0;
+    height: 100%;
+    min-width: 100.1%;
+    pointer-events: none;
+}
+.shadow {
+    position:absolute;
+    left: 0;
+    top: @xone-navbar-height - 1;
+    right:0;
+    bottom:0;
+    height:100%;
+    width:43px;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACsAAAH0CAMAAACTnCS8AAAAdVBMVEX///8AAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQHwovl+AAAAJ3RSTlMAAQIDBAUGBwgKDA0PERMWGBodICMmKSwvMzY6PkJGSk1RVFdaXWAI3rA2AAAAXUlEQVR4nO3KQQ0AMBAEoVn/pqvgkgqAN6tW++K6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruueHo2rTC2o11w0AAAAAElFTkSuQmCC');
+    background-repeat: repeat-y;
+    background-position: left center;
+    z-index: 0;
+}
+
+/* Slide Wrapper */
+
+/*
+.zoom-in-wrapper{
+    opacity:0;
+    transform: scale(0.8);
+    transition: transform 350ms ease-out, opacity 350ms ease-out;
+    will-change: transform, opacity;
+}
+.slide-left-wrapper{
+    opacity: 1 !important;
+    transform: translateX(100%);
+    transition: transform 350ms ease-out;
+    will-change: transform;
+}
+.slide-top-wrapper{
+    transform: translateY(100%);
+    transition: transform 350ms cubic-bezier(0.23, 1, 0.32, 1);
+    will-change: transform;
+}
+*/
+.no-transition{
+    transition: none !important;
+}
+
+/* Confirmation Box */
+
+/*
+#confirmation-wrapper{
+    z-index: 100;
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    opacity: 0;
+    transition: all 350ms ease-out;
+    display: none;
+}
+#confirmation-inner{
+    position: absolute;
+    top:25px;
+    bottom:25px;
+    left:25px;
+    right:25px;
+    text-align: center;
+    vertical-align: middle;
+    transform: scale(0.9);
+    transition: all 350ms ease-out;
+}
+#confirmation-inner table.confirmation-table-outer{
+    width: auto;
+    max-width:50%;
+    height: 100%;
+    table-layout: fixed;
+    margin: auto;
+    position: relative;
+}
+#confirmation-inner table.confirmation-table-outer table{
+    width: 100%;
+    height: auto;
+    table-layout: fixed;
+    margin: auto;
+    position: relative;
+}
+#confirmation-inner table.confirmation-table-outer table td{
+    background-color: #fff;
+    padding: 2em;
+    border-radius: 8px;
+    height: auto;
+    max-height: 80%;
+    position: relative;
+    overflow: hidden;
+}
+#confirmation-content{
+    height: auto;
+    max-height: 420px;
+    text-align: center;
+    line-height: 20px;
+    color: #555;
+    margin-bottom: 2em;
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+#confirmation-yes,
+#confirmation-no{
+    text-align: center;
+    line-height: 45px;
+    height: 45px;
+    border-radius: 4px;
+    margin: auto;
+    background: #555;
+    color: #fff;
+    font-weight: 500;
+    display: inline-block;
+    width: 46%;
+}
+#confirmation-yes{
+    float:left;
+}
+#confirmation-no{
+    float:right;
+}
+*/
+
+.swipe{
+    content: "";
+    width:25px;
+    height:100%;
+    position: absolute;
+    top:0;
+    left:0;
+    bottom:0;
+    z-index:10;
+}
+.spinner{
+    width:25px;
+    height:25px;
+    position: absolute;
+    top:0;
+    left:0;
+    bottom:0;
+    z-index:1;
+}
+.pull{
+    opacity: 0;
+    height:35px;
+    width: 100%;
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    pointer-events: none;
+}
+.pull.pause .spinner div{
+    animation: none !important;
+}
+/* Demo Screen */
+
+#demo{
+    position: absolute;
+    top:0;
+    right:0;
+    bottom:0;
+    left:0;
+    width: 100%;
+    height: 100%;
+    border:1em solid #444;
+    text-align: center;
+    font-family: "Open Sans", Helvetica, Arial, sans-serif;
+    /*text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);*/
+    z-index: 1;
+    background-color:#222;
+}
+#demo div:nth-of-type(1){
+    font-weight: 600;
+    font-size: 5em;
+    height: 25vmin;
+    width: 100%;
+    background-image: url(https://nextapps-de.github.io/xone/page/img/xone.svg);
+    background-repeat: no-repeat;
+    background-size: 66vmin auto;
+    background-position: center center;
+}
+#demo div:nth-of-type(2){
+    color: #eee;
+    font-weight: 100;
+    font-size: 4vmax;
+    padding:0 2em 1.5em 2em;
+    display: none;
+}
+
+
+/* Ionic Fix */
+
+/*
+*, :after, :before {
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+}
+td{
+    vertical-align: middle ;
+}
+*/

@@ -13,15 +13,43 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
         window.location.href.indexOf('file://') === -1
     );
 
+    var prefix = '';
+
+    if(MANIFEST.dependencies.xone.indexOf('node_modules') === -1){
+
+        prefix = 'node_modules/';
+    }
+    else{
+
+        prefix = '../';
+    }
+
     // == DEVELOPMENT SOURCES ==
 
     if(CONFIG.ENV === "development" || CONFIG.ENV === "test") {
 
-        MANIFEST.dependencies.css_xone = [
+        less = {
 
-            //MANIFEST.dependencies.xone + 'css/reset.css',
-            MANIFEST.dependencies.xone + 'css/xone.css',
-			MANIFEST.dependencies.xone + 'css/debug.css'
+            env: "development",
+            async: false,
+            fileAsync: false,
+            poll: 1000,
+            functions: {},
+            dumpLineNumbers: "comments",
+            relativeUrls: false,
+            rebase: true
+            //basepath: "/",
+           // rootpath: "/"
+        };
+
+        MANIFEST.dependencies.js_plugin = [
+
+            MANIFEST.dependencies.xone + prefix + 'less/dist/less.min.js',
+            //MANIFEST.dependencies.xone + prefix + 'fastclick/lib/fastclick.js',
+            MANIFEST.dependencies.xone + prefix + 'lz-string/libs/lz-string.min.js',
+            //MANIFEST.dependencies.xone + prefix + 'web-animations-js/web-animations.min.js',
+            MANIFEST.dependencies.xone + 'plugin/inferno.min.js',
+            MANIFEST.dependencies.xone + 'plugin/inferno-dom.min.js'
         ];
 
         MANIFEST.dependencies.js_xone = [
@@ -37,8 +65,8 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
             MANIFEST.dependencies.xone + 'interface/template.js',
             MANIFEST.dependencies.xone + 'interface/view.js',
             MANIFEST.dependencies.xone + 'core/interface.js',
-            MANIFEST.dependencies.xone + 'lib/graph.js',
             MANIFEST.dependencies.xone + 'core/core.js',
+            MANIFEST.dependencies.xone + 'core/exec.js',
             MANIFEST.dependencies.xone + 'core/app.js',
             MANIFEST.dependencies.xone + 'lib/debug.js',
             MANIFEST.dependencies.xone + 'lib/paint.js',
@@ -49,6 +77,10 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
             MANIFEST.dependencies.xone + 'lib/storage.js',
             MANIFEST.dependencies.xone + 'core/model.js',
             MANIFEST.dependencies.xone + 'core/controller.js',
+            MANIFEST.dependencies.xone + 'core/view.js',
+            MANIFEST.dependencies.xone + 'lib/swipe.js',
+            MANIFEST.dependencies.xone + 'lib/pull.js',
+            MANIFEST.dependencies.xone + 'lib/image.js',
             MANIFEST.dependencies.xone + 'lib/layout.js',
             MANIFEST.dependencies.xone + 'lib/viewport.js',
             MANIFEST.dependencies.xone + 'lib/worker.js',
@@ -64,10 +96,22 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
             MANIFEST.dependencies.xone + 'core/init.js'
         ];
 
+        MANIFEST.dependencies.css_xone = [
+
+            //MANIFEST.dependencies.xone + 'css/config.less',
+            //MANIFEST.dependencies.xone + 'css/reset.less',
+            //MANIFEST.dependencies.xone + 'css/xone.less',
+            //MANIFEST.dependencies.xone + 'css/animate.less',
+            //MANIFEST.dependencies.xone + 'css/debug.less'
+        ];
+
         html += load_deps(/* field: */ 'css_xone');
         html += load_deps(/* field: */ 'css');
 
         if(local_webserver) {
+
+            MANIFEST.dependencies.less.push("tmp/build.less");
+            MANIFEST.dependencies.less.push(MANIFEST.dependencies.xone + 'css/debug.less');
 
             html += load_deps(/* field: */ 'less');
         }
@@ -76,6 +120,7 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
             html += load_deps(/* field: */ 'less_fallback');
         }
 
+        html += load_deps(/* field: */ 'js_plugin');
         html += load_deps(/* field: */ 'js_extern');
 
         if(MANIFEST.dependencies.calculate && window.DEPS){
@@ -117,11 +162,11 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
 
         MANIFEST.dependencies.test_xone = [
 
-            MANIFEST.dependencies.xone + '../jasmine-core/lib/jasmine-core/jasmine.css',
-            MANIFEST.dependencies.xone + '../jasmine-core/lib/jasmine-core/jasmine.js',
-            MANIFEST.dependencies.xone + '../jasmine-core/lib/jasmine-core/jasmine-html.js',
-            MANIFEST.dependencies.xone + '../jasmine-core/lib/console/console.js',
-            MANIFEST.dependencies.xone + '../jasmine-core/lib/jasmine-core/boot.js'
+            MANIFEST.dependencies.xone + prefix + 'jasmine-core/lib/jasmine-core/jasmine.css',
+            MANIFEST.dependencies.xone + prefix + 'jasmine-core/lib/jasmine-core/jasmine.js',
+            MANIFEST.dependencies.xone + prefix + 'jasmine-core/lib/jasmine-core/jasmine-html.js',
+            MANIFEST.dependencies.xone + prefix + 'jasmine-core/lib/console/console.js',
+            MANIFEST.dependencies.xone + prefix + 'jasmine-core/lib/jasmine-core/boot.js'
         ];
 
         /* XONE TESTS */
@@ -143,7 +188,7 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
 
             /* IMPORT TEST CONTENT */
 
-            '<link type="image/png" rel="shortcut icon" href="' + MANIFEST.dependencies.xone + '../jasmine-core/images/jasmine_favicon.png">' +
+            '<link type="image/png" rel="shortcut icon" href="' + MANIFEST.dependencies.xone + prefix + 'jasmine-core/images/jasmine_favicon.png">' +
             '<style type="text/css" media="all">body{ visibility: visible !important; transform: none !important; top: 0 !important; right:0; bottom:0; left:0; padding: 0; margin: 0; height: 100% !important; width: 100% !important; transform: none !important; } .jasmine_html-reporter{ text-align: left; position: absolute; z-index: 9999; height: 100%; width: 100%; left: 0; top: 0; right: 0; bottom: 0; padding: 0 !important; margin: 0 !important; overflow: auto; }</style>' +
             '<style type="text/css" media="all">' +
                 '#test_wrapper{ position: absolute; top: 1px; height:100%; }' +
@@ -187,10 +232,10 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
 
         MANIFEST.dependencies.benchmark = [
 
-            MANIFEST.dependencies.xone + '../lodash/lodash.min.js',
-            MANIFEST.dependencies.xone + '../benchmark/benchmark.js',
+            MANIFEST.dependencies.xone + prefix + 'lodash/lodash.min.js',
+            MANIFEST.dependencies.xone + prefix + 'benchmark/benchmark.js',
             MANIFEST.dependencies.xone + 'page/lib/highlight/highlight.pack.js',
-            MANIFEST.dependencies.xone + '../chart.js/dist/Chart.min.js',
+            MANIFEST.dependencies.xone + prefix + 'chart.js/dist/Chart.min.js',
             MANIFEST.dependencies.xone + 'dist/xone.bundle.js',
             MANIFEST.dependencies.xone + 'local/benchmark.js'
         ];
@@ -209,11 +254,13 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
 
         MANIFEST.dependencies.css_xone = [
 
-            MANIFEST.dependencies.xone + 'css/reset.css',
-            MANIFEST.dependencies.xone + 'css/xone.css',
+            MANIFEST.dependencies.xone + 'css/config.less',
+            MANIFEST.dependencies.xone + 'css/reset.less',
+            MANIFEST.dependencies.xone + 'css/xone.less',
+            MANIFEST.dependencies.xone + 'css/animate.less',
             //'https://cdn.jsdelivr.net/font-hack/2.020/css/hack.min.css',
             MANIFEST.dependencies.xone + 'page/lib/highlight/styles/agate.css',
-            MANIFEST.dependencies.xone + 'css/benchmark.css'
+            MANIFEST.dependencies.xone + 'css/benchmark.less'
         ];
 
         html += load_deps(/* field: */ 'css_xone');

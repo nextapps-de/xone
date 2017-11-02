@@ -196,7 +196,7 @@ describe("Check Model Implementation", function(){
             name: 'name'
         });
 
-        CORE.stack(function(){
+        CORE.queue(function(){
 
             expect(test_record).toBeDefined();
             expect(test_record.version).toBe('version');
@@ -207,7 +207,7 @@ describe("Check Model Implementation", function(){
             test_record = APP.MODEL.TestRecord.new({id: test_record.id, version: 'version', name: 'name'});
             test_record = APP.MODEL.TestRecord.new(test_record);
 
-            CORE.stack(function(){
+            CORE.queue(function(){
 
                 expect(test_record).toBeDefined();
                 expect(test_record.version).toBe('version');
@@ -231,7 +231,7 @@ describe("Check Model Implementation", function(){
             name: 'name'
         });
 
-        CORE.stack(function(){
+        CORE.queue(function(){
 
             expect(test_record).toBeDefined();
             expect(test_record.version).toBe('version');
@@ -242,7 +242,7 @@ describe("Check Model Implementation", function(){
             test_record = APP.MODEL.new('TestRecord', {id: test_record.id, version: 'version', name: 'name'});
             test_record = APP.MODEL.new('TestRecord', test_record);
 
-            CORE.stack(function(){
+            CORE.queue(function(){
 
                 expect(test_record).toBeDefined();
                 expect(test_record.version).toBe('version');
@@ -265,7 +265,7 @@ describe("Check Model Implementation", function(){
             name: 'name'
         });
 
-        CORE.stack(function(){
+        CORE.queue(function(){
 
             expect(test_record).toBeDefined();
             expect(test_record.version).toBe('version');
@@ -276,7 +276,7 @@ describe("Check Model Implementation", function(){
             test_record = APP.MODEL.TestRecord.create({id: test_record.id, version: 'version', name: 'name'});
             test_record = APP.MODEL.TestRecord.create(test_record);
 
-            CORE.stack(function(){
+            CORE.queue(function(){
 
                 expect(test_record).toBeDefined();
                 expect(test_record.version).toBe('version');
@@ -302,7 +302,7 @@ describe("Check Model Implementation", function(){
             name: 'name'
         });
 
-        CORE.stack(function(){
+        CORE.queue(function(){
 
             expect(test_record).toBeDefined();
             expect(test_record.version).toBe('version');
@@ -313,7 +313,7 @@ describe("Check Model Implementation", function(){
             test_record = APP.MODEL.create('TestRecord', {id: test_record.id, version: 'version', name: 'name'});
             test_record = APP.MODEL.create('TestRecord', test_record);
 
-            CORE.stack(function(){
+            CORE.queue(function(){
 
                 expect(test_record).toBeDefined();
                 expect(test_record.version).toBe('version');
@@ -340,7 +340,7 @@ describe("Check Model Implementation", function(){
 
         }).save(true);
 
-        CORE.stack(function(){
+        CORE.queue(function(){
 
             expect(test_record).toBeDefined();
             expect(test_record.version).toBe('version');
@@ -366,7 +366,7 @@ describe("Check Model Implementation", function(){
 
         }, true);
 
-        CORE.stack(function(){
+        CORE.queue(function(){
 
             expect(test_record).toBeDefined();
             expect(test_record.version).toBe('version');
@@ -399,7 +399,7 @@ describe("Check Model Implementation", function(){
             name: 'name'
         }]);
 
-        CORE.stack(function(){
+        CORE.queue(function(){
 
             expect(test_records).toBeDefined();
             expect(test_records.length).toBe(3);
@@ -432,7 +432,7 @@ describe("Check Model Implementation", function(){
             name: 'name'
         }]);
 
-        CORE.stack(function(){
+        CORE.queue(function(){
 
             expect(test_records).toBeDefined();
             expect(test_records.length).toBe(3);
@@ -465,7 +465,7 @@ describe("Check Model Implementation", function(){
             name: 'name'
         }]);
 
-        CORE.stack(function(){
+        CORE.queue(function(){
 
             expect(test_records).toBeDefined();
             expect(test_records.length).toBe(3);
@@ -500,7 +500,7 @@ describe("Check Model Implementation", function(){
             name: 'name'
         });
 
-        CORE.stack(function(){
+        CORE.queue(function(){
 
             expect(test_record_sub).toBeDefined();
             expect(APP.MODEL.TestRecord.count()).toBe(0);
@@ -548,7 +548,7 @@ describe("Check Model Implementation", function(){
             name: 'name'
         });
 
-        CORE.stack(function(){
+        CORE.queue(function(){
 
             expect(test_record_sub).toBeDefined();
             expect(APP.MODEL.TestRecord.count()).toBe(1);
@@ -602,7 +602,7 @@ describe("Check Model Implementation", function(){
             name: 'name'
         });
 
-        CORE.stack(function(){
+        CORE.queue(function(){
 
             expect(test_records_sub).toBeDefined();
             expect(APP.MODEL.TestRecord.count()).toBe(3);
@@ -617,7 +617,7 @@ describe("Check Model Implementation", function(){
             APP.MODEL.TestRecord.deleteAll();
             APP.MODEL.TestRecordExtended.deleteAll();
 
-            CORE.stack(function(){
+            CORE.queue(function(){
 
                 expect(APP.MODEL.TestRecord.count()).toBe(0);
                 expect(APP.MODEL.TestRecord.all().length).toBe(0);
@@ -643,7 +643,7 @@ describe("Check Model Implementation", function(){
             name: 'name'
         });
 
-        CORE.stack(function(){
+        CORE.queue(function(){
 
             expect(test_record).toBeDefined();
             expect(APP.MODEL.TestRecord.count()).toBe(1);
@@ -658,7 +658,7 @@ describe("Check Model Implementation", function(){
             test_record.update('name', 'foobar1');
             expect(test_record.name).toBe('foobar1');
 
-            CORE.stack(function(){
+            CORE.queue(function(){
 
                 expect(APP.MODEL.TestRecord.find(test_record.id)).toEqual(test_record);
                 expect(APP.MODEL.TestRecord.findBy('name', 'foobar1')).toEqual(test_record);
@@ -668,7 +668,7 @@ describe("Check Model Implementation", function(){
                 APP.MODEL.TestRecord.deleteAll();
                 expect(APP.MODEL.TestRecord.count()).toBe(0);
 
-                CORE.stack(function(){
+                CORE.queue(function(){
 
                     CONFIG.ENABLE_MODEL_CACHE = false;
                     CONFIG.ENABLE_STORAGE_CACHE = false;
@@ -698,7 +698,7 @@ describe("Check Model Implementation", function(){
             name: 'name'
         });
 
-        CORE.stack(function(){
+        CORE.queue(function(){
 
             expect(test_record).toBeDefined();
             expect(APP.MODEL.TestRecord.count()).toBe(1);
@@ -708,7 +708,7 @@ describe("Check Model Implementation", function(){
             test_record.update('name', 'foobar1');
             expect(test_record.name).toBe('foobar1');
 
-            CORE.stack(function(){
+            CORE.queue(function(){
 
                 expect(APP.MODEL.TestRecord.find(test_record.id)).toEqual(test_record);
                 expect(APP.MODEL.TestRecord.findBy('name', 'foobar1')).toEqual(test_record);
@@ -734,7 +734,7 @@ describe("Check Model Implementation", function(){
             name: 'name'
         });
 
-        CORE.stack(function(){
+        CORE.queue(function(){
 
             expect(test_record).toBeDefined();
             expect(APP.MODEL.TestRecord.count()).toBe(1);
@@ -743,7 +743,7 @@ describe("Check Model Implementation", function(){
 
             APP.MODEL.TestRecord.update(test_record, 'name', 'foobar1');
 
-            CORE.stack(function(){
+            CORE.queue(function(){
 
                 expect(APP.MODEL.TestRecord.find(test_record.id).name).toBe('foobar1');
 
@@ -788,7 +788,7 @@ describe("Check Model Implementation", function(){
             name: 'name'
         }]);
 
-        CORE.stack(function(){
+        CORE.queue(function(){
 
             expect(test_records.length).toBe(4);
             expect(APP.MODEL.TestRecord.count()).toBe(0);
@@ -797,7 +797,7 @@ describe("Check Model Implementation", function(){
 
             APP.MODEL.TestRecord.saveAll(test_records);
 
-            CORE.stack(function(){
+            CORE.queue(function(){
 
                 expect(APP.MODEL.TestRecord.count()).toBe(4);
                 expect(APP.MODEL.TestRecord.where({version: 'version'}).length).toBe(0);
@@ -810,7 +810,7 @@ describe("Check Model Implementation", function(){
                 APP.MODEL.TestRecord.updateAll(test_records, 'version', 'version');
                 expect(APP.MODEL.TestRecord.where({version: 'version'}).length).toBe(4);
 
-                CORE.stack(function(){
+                CORE.queue(function(){
 
                     APP.MODEL.TestRecord.deleteAll('version', 'version');
                     expect(APP.MODEL.TestRecord.count()).toBe(0);

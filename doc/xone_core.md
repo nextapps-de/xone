@@ -89,15 +89,15 @@ CORE.async(function b(){
 ```
 Ordered:
 ```javascript
-CORE.stack(function a(){
+CORE.queue(function a(){
     alert("1st");
 }, 500);
 
-CORE.stack(function b(){
+CORE.queue(function b(){
     alert("2nd");
 });
 
-CORE.stack(function c(){
+CORE.queue(function c(){
     alert("3rd");
 });
 ```

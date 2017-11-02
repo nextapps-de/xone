@@ -3,7 +3,7 @@
 | Property  | Type | Default | Description |
 | ------------- | ------------- | ------------- | ------------- |
 | __CONFIG.`ENV`__ | _String_ | 'production' | Values: 'development', 'test' |
-| __CONFIG.`RACK`__ | _String_ | 'cordova' | Values: 'webapp', 'alpha', 'stage', 'local' |
+<!--| __CONFIG.`RACK`__ | _String_ | 'cordova' | Values: 'webapp', 'alpha', 'stage', 'local' |-->
 | __CONFIG.`NO_SCRIPT`__ | _Boolean_ | false | Enable no-script mode |
 | __CONFIG.`DEBUG`__ | _Boolean_ | false | Enable debug mode |
 | __CONFIG.`SHOW_DEBUG`__ | _Boolean_ | false | Show debug on start |

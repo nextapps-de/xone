@@ -1,6 +1,6 @@
 goog.provide("APP.SETUP");
 goog.provide("APP.MAIN");
-goog.provide("APP.VIEW");
+goog.provide("APP.TEMPLATE");
 goog.provide("APP.HTML");
 goog.provide("APP.INIT");
 goog.require('CONFIG');
@@ -10,7 +10,7 @@ goog.require("DIST.APP");
 goog.require("DIST.INTERFACE");
 goog.require("CORE.ANIMATE");
 
-APP.VIEW = {};
+APP.TEMPLATE = {};
 APP.HTML = {};
 
 APP.INIT = function(){};
@@ -96,11 +96,11 @@ APP.SETUP = APP.MAIN;
             "abs": CORE.Math.abs
         },
         "Browser": {
-            "isOpera": CORE.Browser.isOpera,
-            "isFirefox": CORE.Browser.isFirefox,
-            "isSafari": CORE.Browser.isSafari,
-            "isMSIE": CORE.Browser.isMSIE,
-            "isChrome": CORE.Browser.isChrome
+            "isOpera": CORE.System.isOpera,
+            "isFirefox": CORE.System.isFirefox,
+            "isSafari": CORE.System.isSafari,
+            "isMSIE": CORE.System.isMSIE,
+            "isChrome": CORE.System.isChrome
         },
         "System": {
             "isIphone": CORE.System.isIphone,
@@ -125,7 +125,7 @@ APP.SETUP = APP.MAIN;
         "paint": CORE.paint,
         "clear": CORE.clear,
         "animate": CORE.animate,
-        "transition": CORE.transition,
+        //"transition": CORE.transition,
         "scrollTo": CORE.scrollTo,
         "scrollToTop": CORE.scrollToTop,
         "preventEvent": CORE.preventEvent,

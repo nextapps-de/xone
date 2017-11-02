@@ -1,2 +1,2 @@
-goog.provide('APP.VIEW');
-APP.VIEW = {};
+goog.provide('APP.TEMPLATE');
+APP.TEMPLATE = {};

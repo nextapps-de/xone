@@ -22,9 +22,15 @@ var APP = {
     /**
      * @name APP.VIEW
      * @namespace APP
-     * @type {Object<string, Array<_model_helper>>}
      */
     VIEW: {},
+
+    /**
+     * @name APP.TEMPLATE
+     * @namespace APP
+     * @type {Object<string, Array<_model_helper>>}
+     */
+    TEMPLATE: {},
 
     /**
      * @name APP.HTML

@@ -1,32 +1,9 @@
 goog.provide('INIT');
 goog.require('CONFIG');
 goog.require('CORE');
-goog.require('DEBUGGER');
-goog.require('CORE.PAINT');
-goog.require('CORE.EVENT');
-goog.require('CORE.STORAGE');
 goog.require('APP');
-//goog.require('APP.INIT');
-//goog.require('APP.SETUP');
+goog.require('DEBUGGER');
 goog.require('APP.MAIN');
-goog.require('APP.VIEW');
-goog.require('APP.HTML');
-goog.require('APP.LAYOUT');
-
-//goog.require('APP.REQUIRE');
-/*goog.require('CORE.RETINA');*/
-/*goog.require('APP.VIEWPORT');*/
-/*goog.require('APP.EVENT');*/
-/*goog.require('APP.HANDLER');*/
-/*goog.require('APP.MAPPER');*/
-/*goog.require('APP.PAYLOAD');*/
-/*goog.require('APP.ROUTE');*/
-/*goog.require('APP.MODEL');*/
-/*goog.require('APP.LAYOUT');*/
-/*goog.require('APP.CONTROLLER');*/
-/*goog.require('APP.PLUGIN');*/
-/*goog.require('APP.INTERFACE');*/
-/*goog.require('APP.WORKER');*/
 
 (function(){
 
@@ -34,7 +11,7 @@ goog.require('APP.LAYOUT');
 
     var window_onload = function(){
 
-        /* FIX: Handle Multiple Calls */
+        /* Handle Multiple Startup Callbacks */
 
         if(onload_already_triggered) {
 
@@ -45,49 +22,130 @@ goog.require('APP.LAYOUT');
             onload_already_triggered = true;
         }
 
+        /* Initialize Migrations */
+
+        (function initialize_migration(){
+
+            var regExStrip0 = /(\.0+)+$/;
+            var versions = CORE.getKeys(APP.MIGRATE);
+
+            if(versions.length){
+
+                var migration_success = false;
+                var last_version = versions[versions.length - 1];
+                var current_version;
+
+                try{
+
+                    current_version = window.localStorage.getItem('app_version');
+
+                    if(current_version){
+
+                        if(current_version !== last_version){
+
+                            for(var i = 0; i < versions.length; i++){
+
+                                if(compareVersions( versions[i], current_version)){
+
+                                    APP.MIGRATE[versions[i]]();
+
+                                    if(DEBUG) CORE.console.log("Migration done: " + versions[i]);
+                                }
+                            }
+                        }
+
+                        migration_success = true;
+                    }
+                    else{
+
+                        if(DEBUG) CORE.console.log("Migration aborted: App version missing.");
+                    }
+
+                }
+                catch(e){
+
+                    if(DEBUG) CORE.console.log("Migration error.", e);
+
+                    current_version = false;
+                }
+
+                if(!current_version){
+
+                    if(DEBUG) CORE.console.log("Reset Local Storage.");
+
+                    window.localStorage.clear();
+                }
+
+                if(migration_success){
+
+                    if(DEBUG) CORE.console.log("Migration successfully.");
+                }
+
+                window.localStorage.setItem('app_version', last_version);
+
+                function compareVersions(a, b){
+
+                    var i, diff;
+                    var segmentsA = a.replace(regExStrip0, '').split('.');
+                    var segmentsB = b.replace(regExStrip0, '').split('.');
+                    var l = CORE.Math.min(segmentsA.length, segmentsB.length);
+
+                    for(i = 0; i < l; i++){
+
+                        diff = parseInt(segmentsA[i], 10) > parseInt(segmentsB[i], 10);
+
+                        if(diff){
+
+                            return diff;
+                        }
+                    }
+
+                    return segmentsA.length > segmentsB.length;
+                }
+            }
+        })();
+
         /* CALL CUSTOM INIT */
 
         APP.INIT();
 
         /* INIT APP AND DEPENDENCIES */
 
-        CORE.stack([
+        CORE.queue([
 
             initialize_settings,
-            initialize_storage,
+            //initialize_storage,
             initialize_app,
             initialize_config,
             initialize_debug,
             initialize_layout,
-            initialize_translations,
+            //initialize_translations,
             initialize_views,
             //initialize_domcache,
             initialize_events,
-            initialize_models,
+            //initialize_models,
+            //initialize_handler,
 
             /* START MAIN */
 
-            runApp,
-
-            /* CLEANUP */
-
-            function(){
-
-                runApp = null;
-            }
+            runApp
         ]);
     };
 
+    /* Reset Location Hash */
+
+    document.location.hash = '';
+
     /* Triggers main script execution */
 
-    if(CORE.System.isCordova){
+    if(PLATFORM === 'cordova'/*window['cordova']*/){
 
         document.addEventListener("deviceready", window_onload, false);
     }
     else{
 
         window.addEventListener("load", window_onload, false);
-        document.addEventListener("ready", window_onload, false);
+        document.addEventListener("DOMContentLoaded", window_onload, false);
     }
 
     /**
@@ -106,7 +164,17 @@ goog.require('APP.LAYOUT');
         if(DEBUG) CORE.console.log('App initialized successfully.');
 
         //APP.SETUP();
-        APP.MAIN();
+        //APP.VIEWPORT.update();
+        //CORE.async(APP.MAIN, CONFIG.START_DELAY || 0);
+
+        APP.SETUP();
+
+        CORE.async(function(){
+
+            APP.MAIN();
+            APP.MAIN = null;
+
+        }, CONFIG.START_DELAY || 0);
 
         // onHashChange({
         //
@@ -123,29 +191,31 @@ goog.require('APP.LAYOUT');
         }
         else{
 
-            document.removeEventListener("ready", window_onload);
+            document.removeEventListener("DOMContentLoaded", window_onload);
             window.removeEventListener("load", window_onload);
         }
 
         APP.INIT = null;
         APP.SETUP = null;
-        APP.MAIN = null;
+        APP.MIGRATE = null;
 
         /* CLEANUP */
 
         initialize_settings = null;
-        initialize_storage = null;
+        //initialize_storage = null;
         initialize_app = null;
         initialize_config = null;
         initialize_debug = null;
         initialize_layout = null;
-        initialize_translations = null;
+        //initialize_translations = null;
         initialize_views = null;
         //initialize_domcache = null;
         initialize_events = null;
-        initialize_models = null;
+        //initialize_models = null;
+        //initialize_handler = null;
         //determine_storage_size = null;
         window_onload = null;
+        runApp = null;
     };
 
     /** @type {Function|null} */
@@ -176,7 +246,7 @@ goog.require('APP.LAYOUT');
             }
         }
 
-        if(CONFIG.RACK === 'webapp') {
+        if(PLATFORM === 'webapp') {
 
             CORE.async(function(){
 
@@ -201,12 +271,12 @@ goog.require('APP.LAYOUT');
                             });
                             */
 
-                            APP.LAYOUT.show_confirmation('A new update of this app was installed successfully. Restart app to take effect changes?', function(){
+                            if(confirm('Updates has been installed successfully. Restart app to take effect changes?')){
 
                                 //window.localStorage.clear();
                                 if(APP.HANDLER['app_update']) APP.HANDLER['app_update']();
                                 window.location.reload();
-                            });
+                            }
                         }
 
                         else if(DEBUG) CORE.console.log("Status ApplicationCache: " + applicationCache['status']);
@@ -236,13 +306,20 @@ goog.require('APP.LAYOUT');
 
         if(DEBUG) {
 
-            if(DEBUG) CORE.console.log('Initialize Debug');
+            CORE.console.log('Initialize Debug');
+
+            if(ENV !== 'test'){
+
+                // Experimental: Register Call Statistics (may breaks some tests)
+                DEBUGGER.registerCallListener(CORE, 'CORE');
+                DEBUGGER.registerCallListener(APP, 'APP');
+            }
 
             if(window['applicationCache']) {
 
                 var logEvent = function (event) {
 
-                    if(DEBUG) CORE.console.log(event.type);
+                    CORE.console.log(event.type);
                 };
 
                 var applicationCacheEvents = [
@@ -290,15 +367,6 @@ goog.require('APP.LAYOUT');
 
                                 for(var x = 0; x < APP.HTML[include].length; x++) {
 
-                                    // var current_2 = APP.HTML[include][x];
-                                    // var include_2 = current_2.include;
-                                    // if(include_2) {
-                                    //     for(var y = 0; y < APP.HTML[include_2].length; y++) {
-                                    //         if(y === 0) APP.HTML[include][x] = current_2 = APP.HTML[include_2][y];
-                                    //         else APP.HTML[include].splice(x + 1 + y, 0, APP.HTML[include_2][y]);
-                                    //     }
-                                    // }
-
                                     if(x === 0) {
 
                                         APP.HTML[definitions[i]][a] = current = APP.HTML[include][x];
@@ -309,17 +377,17 @@ goog.require('APP.LAYOUT');
                                     }
                                 }
                             }
-                            else if(APP.VIEW[include]){
+                            else if(APP.TEMPLATE[include]){
 
-                                for(var x = 0; x < APP.VIEW[include].length; x++) {
+                                for(var x = 0; x < APP.TEMPLATE[include].length; x++) {
 
                                     if(x === 0) {
 
-                                        APP.HTML[definitions[i]][a] = current = APP.VIEW[include][x];
+                                        APP.HTML[definitions[i]][a] = current = APP.TEMPLATE[include][x];
                                     }
                                     else {
 
-                                        APP.HTML[definitions[i]].splice(a + x, 0, APP.VIEW[include][x]);
+                                        APP.HTML[definitions[i]].splice(a + x, 0, APP.TEMPLATE[include][x]);
                                     }
                                 }
                             }
@@ -330,7 +398,7 @@ goog.require('APP.LAYOUT');
                 }
                 else{
 
-                    if(DEBUG) CORE.console.warn("Warning: '" + definitions[i] + "' is not defined in 'app/layout/'.");
+                    if(DEBUG) CORE.console.warn("Warning: '" + definitions[i] + "' is not defined in 'view/app/'.");
                 }
 
                 /* Friendly Garbage Collection */
@@ -345,23 +413,107 @@ goog.require('APP.LAYOUT');
 
             var destination = document.createElement('div');
 
-            CORE.setHTML(destination, html, false);
+            destination.innerHTML = html;
 
             for(var i = destination.childNodes.length - 1; i >= 0; i--) {
 
-                document.body.insertBefore(destination.childNodes[i], document.body.childNodes[0]);
+                document.body.insertBefore(
+
+                    destination.childNodes[i],
+                    document.body.childNodes[0]
+                );
             }
+
+            /*
+            if(CORE.queryOne('body ~ footer')){
+
+                document.body.insertBefore(
+
+                    CORE.queryOne('body ~ footer'),
+                    CORE.queryOne('script')
+                );
+            }
+            */
+
+            var main = CORE.queryAll('xone-main');
+
+            for(var i = 0; i < main.length; i++) {
+
+                if(main[i].id) {
+
+                    APP.VIEW[main[i].id] = new ViewModel(main[i]);
+                }
+                else{
+
+                    if(DEBUG) CORE.console.warn("View container has no id: ", main[i]);
+                }
+            }
+
+            CORE.setStyle([
+
+                main, 'xone-tabbar'
+
+            ], 'visibility', 'hidden');
 
             definitions = null;
             html = null;
-
-            // TODO:
-            //if(DEBUG) window['inobounce']();
-
-            /* Register to Garbage Collector */
-
-            //delete window['inobounce'];
         }
+    };
+
+    /**
+     * @param node
+     * @constructor
+     */
+
+    function ViewModel(node){
+
+        this.onreload = null;
+        this.onupdate = null;
+        this.onshow = null;
+        this.onhide = null;
+        this.onreset = null;
+        this.onclear = null;
+        this.ondestroy = null;
+
+        this.main = node;
+        this.header = CORE.getByTag('xone-header', node);
+        this.tabbar = CORE.getByTag('xone-tabbar', node);
+        this.section = CORE.getByTag('xone-section', node);
+        this.effect = node.dataset.effect || 'slide';
+    }
+
+    ViewModel.prototype.reload = function(){
+        // todo
+    };
+    ViewModel.prototype.update = function(){
+        // todo
+    };
+    ViewModel.prototype.show = function(){
+        // todo
+    };
+    ViewModel.prototype.hide = function(){
+        // todo
+    };
+    ViewModel.prototype.reset = function(){
+        // todo
+    };
+    ViewModel.prototype.clear = function(){
+        // todo
+    };
+    ViewModel.prototype.destroy = function(){
+        // todo
+    };
+    ViewModel.prototype.getIndex = function(){
+        // todo
+    };
+    ViewModel.prototype.setIndex = function(){
+        // todo
+    };
+    ViewModel.prototype.isVisible = function(){
+        // todo
+    };
+    ViewModel.prototype.animate = function(){
+        // todo
     };
 
     /** @type {Function|null} */
@@ -369,7 +521,7 @@ goog.require('APP.LAYOUT');
 
         if(DEBUG) CORE.console.log('Initialize Views');
 
-        var views = APP.VIEW;
+        var views = APP.TEMPLATE;
 
         for(var view in views) {
 
@@ -386,14 +538,6 @@ goog.require('APP.LAYOUT');
                     if(block.include) {
 
                         for(var x = 0; x < views[block.include].length; x++) {
-
-                            // var block_2 = views[block.include][x];
-                            // if(block_2.include) {
-                            //     for(var y = 0; y < APP.HTML[block_2.include].length; y++) {
-                            //         if(y === 0) views[block.include][x] = APP.HTML[block_2.include][y];
-                            //         else views[block.include].splice(x + 1 + y, 0, APP.HTML[block_2.include][y]);
-                            //     }
-                            // }
 
                             if(x === 0){
 
@@ -495,6 +639,24 @@ goog.require('APP.LAYOUT');
     */
 
     /** @type {Function|null} */
+    var initialize_handler = function(){
+
+        // var nodes = CORE.getByClass('xone-swipe');
+        //
+        // for(var i = 0; i < nodes.length; i++){
+        //
+        //     APP.VIEW.addSwipe(nodes[i]);
+        // }
+        //
+        // nodes = CORE.getByClass('xone-pull');
+        //
+        // for(var i = 0; i < nodes.length; i++){
+        //
+        //     APP.VIEW.initPullToRefresh(nodes[i], nodes[i].dataset['route']);
+        // }
+    };
+
+    /** @type {Function|null} */
     var initialize_events = function(){
 
         if(DEBUG) CORE.console.log('Initialize Events');
@@ -518,78 +680,34 @@ goog.require('APP.LAYOUT');
 
         } catch (e) {}
 
-		// (APP.EVENT['_document'] || (APP.EVENT['_document'] = [])).push({
-		//
-		// 	on: 'clickmove',
-		// 	if: 'a',
-		// 	do: function(event){
-		//
-		// 		if(this.hasAttribute('href')){
-		//
-		// 			var href = this.getAttribute('href');
-		//
-		// 			if(href.substring(0, 2) === "#/"){
-		//
-		// 				//APP.CONTROLLER.request(href);
-		//
-		// 				if(APP.ROUTE[href]) {
-		//
-		// 					if(typeof APP.ROUTE[href] === 'function'){
-		//
-		// 						APP.ROUTE[href].call(this);
-		// 					}
-		// 					else if(APP.ROUTE[href].do){
-		//
-		// 						APP.ROUTE[href].do.call(this, APP.ROUTE[href].params);
-		// 					}
-		// 				}
-		// 			}
-		// 		}
-		// 	},
-		// 	stopBubble: true,
-		// 	preventDefault: true
-		// });
+		(APP.EVENT['_body'] || (APP.EVENT['_body'] = [])).push({
+
+			on: 'clickmove',
+			if: 'a',
+			do: function(event){
+
+			    var href = this.getAttribute('href');
+
+				if(href.indexOf('#/') === 0 || href.indexOf('!/') === 0){
+
+				    CORE.preventEvent(event, true, true);
+
+                    handle_routes(href);
+				}
+			},
+			stopBubble: false,
+			preventDefault: false
+		});
 
 		window.addEventListener('hashchange', function(event) {
 
-            var href;
+            if(event['newURL'].lastIndexOf('#') > -1){
 
-            if(event.newURL.lastIndexOf('#') > -1){
-
-                href = event.newURL.substring(event.newURL.lastIndexOf('#'));
+                handle_routes(event['newURL'].substring(event['newURL'].lastIndexOf('#')));
             }
             else{
 
-                href = "#/";
-            }
-
-            if(href.substring(0, 2) === "#/" || href.substring(0, 2) === "#!"){
-
-                if(APP.ROUTE[href]) {
-
-                    var fn, params;
-
-                    if(typeof APP.ROUTE[href] === 'function'){
-
-                        fn = APP.ROUTE[href];
-                        params = null;
-                    }
-                    else if(APP.ROUTE[href].to){
-
-                        fn = APP.ROUTE[href].to;
-                        params = APP.ROUTE[href].params;
-                    }
-                    else if(APP.ROUTE[href].do){
-
-                        fn = APP.ROUTE[href].do;
-                        params = APP.ROUTE[href].params;
-                    }
-
-                    if(fn) {
-
-                        fn(params, CORE.query('a[href="' + href + '"]')[0]);
-                    }
-                }
+                handle_routes("#/");
             }
         });
 
@@ -603,15 +721,19 @@ goog.require('APP.LAYOUT');
 
                 var node = (
 
-                    key === 'document' || key === '_document' ?
+                    key === 'window' || key === '_window' ?
 
-                        document
+                        window
                     :
-                        key === 'body' ?
+                        key === 'document' || key === '_document' ?
 
-                            document.body
+                            document
                         :
-                            CORE.getById(key)
+                            key === 'body' || key === '_body' ?
+
+                                document.body
+                            :
+                                CORE.queryOne(key)
                 );
 
                 if(!node){
@@ -660,7 +782,7 @@ goog.require('APP.LAYOUT');
 
                                     APP.HANDLER[event.do]
                                 :
-                                    event.do || (
+                                    event.do /*|| (
 
                                         event.go ?
 
@@ -674,7 +796,7 @@ goog.require('APP.LAYOUT');
                                             })(event)
                                         :
                                             void 0
-                                    )
+                                    )*/
                         );
 
                         if(event.if) {
@@ -765,6 +887,13 @@ goog.require('APP.LAYOUT');
             // TODO: Unload Events
             //delete APP.EVENT[key];
         }
+
+        var pull_elements = CORE.getByClass('pull');
+
+        for(var i = 0; i < pull_elements.length; i++){
+
+            APP.VIEW.PULL.register(pull_elements[i]);
+        }
     };
 
     /** @type {Function|null} */
@@ -813,133 +942,43 @@ goog.require('APP.LAYOUT');
         // }
     };
 
-    /**
-     * @type {function(number=)|null}
-     */
+    function handle_routes(href){
 
-    var determine_storage_size = function(error){
+        if(href.substring(0, 2) === "#/" || href.substring(0, 2) === "#!"){
 
-        // var requestedBytes = 1024*1024*280;
-        //
-        // navigator.webkitPersistentStorage.requestQuota (
-        //     requestedBytes,
-        //     function(){},
-        //     function(){});
+            var pos_params = href.indexOf('?');
+            var part_route = pos_params !== -1 ? href.substring(0, pos_params) : href;
+            var part_view = part_route.substring(2);
 
-        var localStorage = window.localStorage;
+            if(APP.ROUTE[part_route]) {
 
-        if(localStorage) {
+                var fn,
+                    params = CORE.parseParams(href);
 
-            var minimalFound = APP.SETTINGS.get('localStorageMaxSize');
+                if(typeof APP.ROUTE[part_route] === 'function'){
 
-            if(minimalFound ){
+                    fn = APP.ROUTE[part_route];
+                }
+                else if(APP.ROUTE[part_route].to){
 
-                APP.VARS.MAX_STORAGE = parseInt(minimalFound, 10);
+                    fn = APP.ROUTE[part_route].to;
+                    params = APP.ROUTE[part_route].params || params;
+                }
+                else if(APP.ROUTE[part_route].do){
 
-                var t = 0, len;
-
-                for(var x in localStorage) {
-
-                    if(localStorage.hasOwnProperty(x)){
-
-                        len = localStorage[x].length;
-
-                        if(len) t += (x.length + len) * 2;
-                    }
+                    fn = APP.ROUTE[part_route].do;
+                    params = APP.ROUTE[part_route].params || params;
                 }
 
-                APP.VARS.USED_STORAGE = t;
+                params['href'] = part_view;
 
-                if(DEBUG) CORE.console.log("Current Storage Usage: " +
+                if(fn) {
 
-                    (((APP.VARS.USED_STORAGE / 1024 / 1024 * 100) | 0) / 100) + ' / ' +
-                    (((APP.VARS.MAX_STORAGE / 1024 / 1024 * 100) | 0) / 100) + ' Mb (' +
-                    (((100 / APP.VARS.MAX_STORAGE * APP.VARS.USED_STORAGE * 100) | 0) / 100) + '%)'
-                );
-
-                if(APP.VARS.USED_STORAGE >= APP.VARS.MAX_STORAGE) {
-
-                    if(DEBUG) CORE.console.warn('WARNING: Max storage limit was reached!');
-                    localStorage.clear();
+                    fn(params, CORE.query('a[href="' + part_route + '"]')[0]);
                 }
-
-                return;
             }
-            else{
-
-                minimalFound = 0;
-                //progress_mult++;
-            }
-
-            //APP.CONFIG.PROC ? APP.CONFIG.PROC++ : APP.CONFIG.PROC = 1;
-
-            var max = 10 * 1024 * 1024,
-                i = 64,
-                string1024 = '',
-                string = '',
-                // generate a random key
-                testKey = 'size-test-' + Math.random().toString();
-
-            error || (error = 25e4);
-
-            // fill a string with 1024 symbols / bytes
-            while(i--) string1024 += 1e16;
-
-            i = max / 1024;
-
-            // fill a string with 'max' amount of symbols / bytes
-            while(i--) string += string1024;
-
-            i = max;
-
-            // binary search implementation
-
-            (function procLocalStorageMaxSize(localStorage, testKey, string, minimalFound, i, error){
-
-                if(i > 1 && (minimalFound < i - error)) {
-
-                    try {
-
-                        localStorage.setItem(testKey, string.substr(0, i));
-                        localStorage.removeItem(testKey);
-
-                        if(minimalFound < i - error) {
-
-                            minimalFound = i;
-                            i = i * 1.5;
-                        }
-                        //else break;
-
-                    } catch (e) {
-
-                        localStorage.removeItem(testKey);
-                        i = minimalFound + (i - minimalFound) / 2;
-                    }
-
-                    CORE.async(function(){
-
-                        procLocalStorageMaxSize(localStorage, testKey, string, minimalFound, i, error);
-
-                    }, 1);
-                }
-
-                else {
-
-                    //APP.CONFIG.PROC--;
-                    APP.VARS.MAX_STORAGE = minimalFound;
-                    APP.SETTINGS.set('localStorageMaxSize', '' + minimalFound);
-                    if(DEBUG) CORE.console.log("Determine LocalStorage Capacity: " + (((APP.VARS.MAX_STORAGE / 1024 / 1024 * 100) | 0) / 100) + ' Mb');
-                }
-
-                if(APP.VARS.USED_STORAGE >= APP.VARS.MAX_STORAGE) {
-
-                    if(DEBUG) CORE.console.warn('WARNING: Max storage limit was reached!');
-                    //localStorage.clear();
-                }
-
-            })(localStorage, testKey, string, minimalFound, i, error);
         }
-    };
+    }
 
 })();
 

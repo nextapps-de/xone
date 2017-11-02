@@ -12,7 +12,7 @@ Uppercase identifiers helps you to determine:
 ## Global Constants
 
 * __`ENV`__
-* __`RACK`__
+<!--* __`RACK`__-->
 * __`PLATFORM`__
 * __`DEBUG`__
 
@@ -38,7 +38,7 @@ Uppercase identifiers helps you to determine:
 _Constants: (read-only)_
 
 * CONFIG.__`ENV`__
-* CONFIG.__`RACK`__
+<!--* CONFIG.__`RACK`__-->
 * CONFIG.__`PLATFORM`__
 * CONFIG.__`DEBUG`__
 
@@ -235,12 +235,12 @@ _get more details [here](app_config.md)_
 
 * CORE.__`Browser`__
     * _Constants: (read-only)_
-        * CORE.Browser.__`isOpera`__: Boolean
-        * CORE.Browser.__`isFirefox`__: Boolean
-        * CORE.Browser.__`isSafari`__: Boolean
-        * CORE.Browser.__`isMSIE`__: Boolean
-        * CORE.Browser.__`isChrome`__: Boolean
-        * CORE.Browser.__`is`__: function(type)
+        * CORE.System.__`isOpera`__: Boolean
+        * CORE.System.__`isFirefox`__: Boolean
+        * CORE.System.__`isSafari`__: Boolean
+        * CORE.System.__`isMSIE`__: Boolean
+        * CORE.System.__`isChrome`__: Boolean
+        * CORE.System.__`is`__: function(type)
 * CORE.__`System`__
     * _Constants: (read-only)_
         * CORE.System.__`isIphone`__: Boolean
@@ -254,12 +254,12 @@ _get more details [here](app_config.md)_
         * CORE.System.__`is`__: function(type)
 * CORE.__`Device`__
     * _Constants: (read-only)_
-        * CORE.Device.__`isMobile`__: Boolean
-        * CORE.Device.__`isRetina`__: Boolean
-        * CORE.Device.__`isTouch`__: Boolean
-        * CORE.Device.__`isOnline`__: Boolean
-        * CORE.Device.__`isOffline`__: Boolean
-        * CORE.Device.__`is`__: function(type)
+        * CORE.System.__`isMobile`__: Boolean
+        * CORE.System.__`isRetina`__: Boolean
+        * CORE.System.__`isTouch`__: Boolean
+        * CORE.System.__`isOnline`__: Boolean
+        * CORE.System.__`isOffline`__: Boolean
+        * CORE.System.__`is`__: function(type)
   
 #### Array
 

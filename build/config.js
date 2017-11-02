@@ -1,6 +1,6 @@
 goog.provide('CONFIG');
 //goog.require('INTERFACE');
-goog.require('AMD');
+//goog.require('AMD');
 
 /** @const */
 var CONFIG = {};
@@ -9,7 +9,7 @@ var CONFIG = {};
 CONFIG.DEBUG = false;
 
 /** @define {string} */
-CONFIG.RACK = 'default';
+//CONFIG.RACK = 'default';
 
 /** @define {boolean} */
 CONFIG.NO_SCRIPT = false;
@@ -63,16 +63,16 @@ CONFIG.STORE_VIEWS_OFFLINE = true;
 // Optimizations
 
 /** @define {boolean} */
-CONFIG.ENABLE_DOM_CACHE = false;
+CONFIG.ENABLE_DOM_CACHE = true;
 
 /** @define {boolean} */
-CONFIG.ENABLE_STYLE_CACHE = false;
+CONFIG.ENABLE_STYLE_CACHE = true;
 
 /** @define {boolean} */
-CONFIG.ENABLE_CLASS_CACHE = false;
+CONFIG.ENABLE_CLASS_CACHE = true;
 
 /** @define {boolean} */
-CONFIG.ENABLE_HTML_CACHE = false;
+CONFIG.ENABLE_HTML_CACHE = true;
 
 /** @define {boolean} */
 CONFIG.ENABLE_EVENT_CACHE = true;

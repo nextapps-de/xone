@@ -47,6 +47,7 @@ lib.exec('node "' + path.resolve(__dirname, 'install.js') + '" remove_me_dummy '
 if(demo) lib.copyFolderRecursiveSync(path_to_folder + '/demo/./', parameter.toLowerCase(), true);
 
 var xone_config = lib.loadJSON(path.resolve(path_to_folder, 'project/xone.json'));
+var xone_manifest = lib.loadJSON('app/manifest.js', 'MANIFEST');
 
 if(fs.existsSync(path_to_folder + '/node_modules/')){
 

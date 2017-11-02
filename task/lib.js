@@ -242,7 +242,12 @@ function getModule(name){
     }
 
     // lookup in default node_modules:
-    else if(fs.existsSync(resolved_path = path.resolve(xone_config.node_modules_path, name))){
+    else if(fs.existsSync(resolved_path = path.resolve(xone_manifest.dependencies.xone, name))){
+
+        return resolved_path;
+    }
+    // lookup in default node_modules:
+    else if(fs.existsSync(resolved_path = path.resolve(xone_manifest.dependencies.xone, '/node_modules/', name))){
 
         return resolved_path;
     }

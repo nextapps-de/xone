@@ -39,14 +39,14 @@ Some breaking changes could possibly be introduced in upcoming versions. Do not 
 
 ---
 
-### Announcement Xone v1.0.0
+### Announcement Xone v0.7.0
 
 Xone will get some major changes. This was required to open capabilities for upcoming features we are working now like __Xone Native__.
 
 ##### v0.7.0
 
 - Support for Web Components
-- Support for HTML5 Templates
+- Support for Web Templates
 - Support for Native Filesystem
 - Implements Web Animation API
 - Virtual DOM Integration (Inferno)
@@ -70,23 +70,27 @@ Xone will get some major changes. This was required to open capabilities for upc
 - Xone Development User Interface (Browser replacement for any console commands)
 - Improved persistent storing of models
 - Improved Auto Resizing Layout 
+- Improved Dependency Management
 - Lazy image loader (with offline filesystem cache)
 - User Interface Components
     - Navigation Bar
     - Toolbar
-    - Scrollpane (vertical, horizontal)
+    - Scrollpane (vertical, horizontal, split)
     - Lists
     - Tables
     - Grid Layout
     - Pull to refresh
     - Swipe-back views
 - View Manager controls components
+- Render Payloads
 
 Those features will become deprecated for now (unsupported):
 
 - Using the _CONFIG.RACK_
 - Layout Controller (any calls to _APP.LAYOUT_)
-- View Helpers (slides, pulls, popups, alerts, ...)
+- Old View Helpers (slides, pulls, popups, alerts, ...)
+- Build _xone.bundle.js_
+- Custom location of xone installation
 
 ---
 

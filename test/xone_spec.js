@@ -11,7 +11,7 @@ describe("Check Core Initialize Status", function() {
 
         expect(MANIFEST).toBeDefined();
         expect(ENV).toBeDefined();
-        expect(RACK).toBeDefined();
+        //expect(RACK).toBeDefined();
         expect(PLATFORM).toBeDefined();
         expect(DEBUG).toBeDefined();
         expect(CORE).toBeDefined();
@@ -35,6 +35,7 @@ describe("Check Core Initialize Status", function() {
         expect(APP).toHaveObject("STORAGE");
         expect(APP).toHaveObject("VARS");
         expect(APP).toHaveObject("VIEW");
+        expect(APP).toHaveObject("TEMPLATE");
         expect(APP).toHaveObject("LANG");
         expect(APP).toHaveObject("PAYLOAD");
         expect(APP).toHaveObject("PLUGIN");

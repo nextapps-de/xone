@@ -29,6 +29,7 @@ goog.require('AMD');
 
         "MODEL": APP.MODEL,
         "VIEW": APP.VIEW,
+        "TEMPLATE": APP.TEMPLATE,
         "CONTROLLER": {
             "build": APP.CONTROLLER.build,
             "render": APP.CONTROLLER.render,

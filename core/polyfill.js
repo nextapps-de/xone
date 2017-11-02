@@ -1,6 +1,7 @@
 goog.provide('POLYFILL');
 
 //window['storageInfo'] || (window['storageInfo'] = window['webkitStorageInfo']);
+window['resolveLocalFileSystemURL'] || (window['resolveLocalFileSystemURL'] = window['webkitResolveLocalFileSystemURL']);
 window['requestFileSystem'] || (window['requestFileSystem'] = window['webkitRequestFileSystem']);
 navigator['persistentStorage'] || (navigator['persistentStorage'] = navigator['webkitPersistentStorage']);
 navigator['temporaryStorage'] || (navigator['temporaryStorage'] = navigator['webkitTemporaryStorage']);

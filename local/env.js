@@ -9,4 +9,4 @@ var ENV = CONFIG.ENV = MANIFEST.env;
 /** @define {boolean} */
 var DEBUG = CONFIG.DEBUG;
 /** @define {string} */
-var RACK = CONFIG.RACK;
+//var RACK = CONFIG.RACK;

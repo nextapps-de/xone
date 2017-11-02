@@ -5,10 +5,10 @@ goog.provide('INTERFACE.Filesystem');
  * @interface
  * @template Filesystem
  * @this {_filesystem_struct}
- * @param {string=} consistent
+ * @param {boolean=} is_consistent
  */
 
-function _filesystem_struct(consistent){}
+function _filesystem_struct(is_consistent){}
 
 /** @type {Function} */
 _filesystem_struct.prototype.init;
@@ -20,7 +20,19 @@ _filesystem_struct.prototype.load;
 _filesystem_struct.prototype.save;
 
 /** @type {Function} */
+_filesystem_struct.prototype.saveAsBlob;
+
+/** @type {Function} */
 _filesystem_struct.prototype.delete;
 
 /** @type {Function} */
 _filesystem_struct.prototype.exist;
+
+/** @type {Function} */
+_filesystem_struct.prototype.resolve;
+
+/** @type {Function} */
+_filesystem_struct.prototype.getPath;
+
+/** @type {Function} */
+_filesystem_struct.prototype.getFile;

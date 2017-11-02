@@ -85,6 +85,8 @@ goog.require('APP');
 
             APP.LAYOUT.lastAction = route_action || APP.LAYOUT.lastAction || '';
 
+            // TODO
+            /*
             if(!update_cache && route_action){
 
                 APP.LAYOUT.handleCache(route_action, function(update_cache){
@@ -98,6 +100,7 @@ goog.require('APP');
 
                 return;
             }
+            */
 
             if(route[0] === '#'){
 
@@ -335,7 +338,7 @@ goog.require('APP');
         if(data.constructor !== Array) data = [data];
 
         /** @type {Array<_template_struct>} */
-        var template = APP.VIEW[_view];
+        var template = APP.TEMPLATE[_view];
         var html = '';
         var item;
 
@@ -671,8 +674,15 @@ goog.require('APP');
         return buildTemplate(view, data);
     };
 
+    var inferno_template = null;
+
+    function hook(node){
+
+        node.innerHTML = inferno_template;
+    }
+
     /**
-     * @param {_view_model|string} _target
+     * @param {_view_params|string} _target
      * @param {Array<_pattern_struct>=} _data
      * @const
      */
@@ -682,8 +692,6 @@ goog.require('APP');
         var target = _target;
         var data = _data;
         var dest;
-
-        APP.LAYOUT.remove_preloader(target);
 
         if(data){
 
@@ -705,11 +713,15 @@ goog.require('APP');
 
             dest = (
 
-                typeof target.target === 'string' ?
+                typeof target.view === 'string' ?
 
-                    CORE.queryOne(target.target)
+                    CORE.queryOne('#' + target.view + ' xone-section')
                 :
-                    target.target
+                    typeof target.target === 'string' ?
+
+                        CORE.queryOne(target.target)
+                    :
+                        target.target
             );
 
             if(!dest){
@@ -725,13 +737,13 @@ goog.require('APP');
 
                 (is_array_data && target.data.length) || (!is_array_data && target.data) ?
 
-                    buildTemplate(target.view, target.data)
+                    buildTemplate(target.template, target.data)
                 :
                     target.default ? (
 
-                        target.default.view ?
+                        target.default.template ?
 
-                            buildTemplate(target.default.view, target.default.data)
+                            buildTemplate(target.default.template, target.default.data)
                         :
                             buildTemplate(/** @type {string} */ (target.default))
                     ):
@@ -743,7 +755,7 @@ goog.require('APP');
                 if(dest['_html'] === template){
 
                     APP.STATS.count_render_cache++;
-                    CORE.console.log("HTML Content Cached: " + dest.id);
+                    CORE.console.log("HTML Content Load from Cache: " + dest.id);
                 }
                 else{
 
@@ -751,6 +763,105 @@ goog.require('APP');
                     CORE.console.log("HTML Content Updated: " + dest.id);
                 }
             }
+
+/*
+            // diffDOM
+
+            (function(dest, target, template, callback){
+
+                var dd = new diffDOM();
+                var newElement = document.createElement('div');
+                newElement.innerHTML = template;
+
+                var t0 = performance.now();
+                for(var i = 0; i < 5000; i++){
+
+                    var diff = dd.diff(dest, newElement);
+                    if(diff.length) dd.apply(dest, diff);
+                }
+
+                var t1 = performance.now();
+                console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.");
+
+                callback();
+
+            })(dest, target, template, function render_callback(){
+
+                if(target.callback){
+
+                    if(CORE.isType(target.callback, 'string')){
+
+                        APP.HANDLER[target.callback].call(dest, target.data);
+                    }
+                    else{
+
+                        target.callback.call(dest, target.data);
+                    }
+                }
+            });
+*/
+
+/*
+            // Inferno
+
+            (function(dest, target, template, callback){
+
+                var innerHTML = window['Inferno']['createTemplate'](function(onCreated){
+
+                    return {
+
+                        'tag': "self",
+                        'attrs': {
+                            'onCreated': onCreated
+                        }
+                    };
+                });
+
+                function hook(domNode){
+
+                    domNode['innerHTML'] = template;
+                }
+
+                var t0 = performance.now();
+                for(var i = 0; i < 5000; i++){
+
+                    window['InfernoDOM']['render'](innerHTML(hook), dest);
+                }
+
+                var t1 = performance.now();
+                console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.");
+
+                callback();
+
+            })(dest, target, template, function render_callback(){
+
+                if(target.callback){
+
+                    if(CORE.isType(target.callback, 'string')){
+
+                        APP.HANDLER[target.callback].call(dest, target.data);
+                    }
+                    else{
+
+                        target.callback.call(dest, target.data);
+                    }
+                }
+            });
+*/
+
+
+/*
+            // Xone
+
+            var t0 = performance.now();
+
+            for(var i = 0; i < 5000; i++){
+
+                CORE.setHTML(dest, template);
+            }
+
+            var t1 = performance.now();
+            console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.");
 
             CORE.setHTML(dest, template, function render_callback(){
 
@@ -766,8 +877,161 @@ goog.require('APP');
                     }
                 }
             });
+*/
+
+
+/*
+            // html2idom (IncrementalDOM)
+
+            (function(dest, target, template, callback){
+
+                var t0 = performance.now();
+                for(var i = 0; i < 5000; i++){
+
+                    html2idom.patchHTML(dest, template);
+                }
+
+                var t1 = performance.now();
+                console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.");
+
+                callback();
+
+            })(dest, target, template, function render_callback(){
+
+                if(target.callback){
+
+                    if(CORE.isType(target.callback, 'string')){
+
+                        APP.HANDLER[target.callback].call(dest, target.data);
+                    }
+                    else{
+
+                        target.callback.call(dest, target.data);
+                    }
+                }
+            });
+
+*/
+
+/*
+            // diffHTML
+
+            (function(dest, target, template, callback){
+
+                var t0 = performance.now();
+                for(var i = 0; i < 5000; i++){
+
+                    diff.innerHTML(dest, template);
+                }
+
+                var t1 = performance.now();
+                console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.");
+
+                callback();
+
+            })(dest, target, template, function render_callback(){
+
+                if(target.callback){
+
+                    if(CORE.isType(target.callback, 'string')){
+
+                        APP.HANDLER[target.callback].call(dest, target.data);
+                    }
+                    else{
+
+                        target.callback.call(dest, target.data);
+                    }
+                }
+            });
+*/
+
+
+            // var template = null;
+            // var templates = {};
+            //
+            // function hook(domNode){
+            //
+            //     domNode['innerHTML'] = template;
+            // }
+            //
+            // if(window['InfernoDOM']){
+            //
+            //     template = html;
+            //
+            //     var innerHTML = window['Inferno']['createTemplate'](function(onCreated){
+            //
+            //         return {
+            //
+            //             'tag': "this",
+            //             'attrs': {
+            //                 'onCreated': onCreated
+            //             }
+            //         };
+            //     });
+            //
+            //     window['InfernoDOM']['render'](innerHTML(hook), node);
+            // }
+
+            if(dest['_html'] !== template){
+
+                if(window['Inferno'] && window['InfernoDOM']){
+
+                    inferno_template = template;
+
+                    var render = window['Inferno']['createTemplate'](function(onCreated){
+
+                        return {
+
+                            'tag': "vdom",
+                            'attrs': {
+                                'onCreated': onCreated
+                            }
+                        };
+                    });
+
+                    window['InfernoDOM']['render'](render(hook), dest);
+
+                    dest['_html'] = template;
+
+                    CORE.paint(function(){
+
+                        renderCallback(dest, target);
+                    });
+                }
+                else{
+
+                    CORE.setHTML(dest, template, function(){
+
+                        renderCallback(dest, target);
+                    });
+                }
+            }
         }
     };
+
+    function renderCallback(dest, target){
+
+        //APP.PLUGIN.Image.loadImages(CORE.getByClass('lazy'));
+
+        var pull_elements = CORE.getByClass('pull', dest);
+
+        for(var i = 0; i < pull_elements.length; i++){
+
+            APP.VIEW.PULL.register(pull_elements[i]);
+        }
+
+        if(target.callback){
+
+            if(CORE.isType(target.callback, 'string')){
+
+                APP.HANDLER[target.callback].call(dest, target.data);
+            }
+            else{
+
+                target.callback.call(dest, target.data);
+            }
+        }
+    }
 
     /**
      * @param {string=} lang

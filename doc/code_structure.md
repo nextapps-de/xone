@@ -30,11 +30,11 @@
 | /app/`font/`             | Fonts |
 | /app/`img/`               | Images |
 | /app/`js/`                | Javascript Codebase |
-| /app/`layout/`            | Layout Templates (Static Views, HTML/CSS/LESS/JSON) |
 | /app/`lib/`               | External Dependencies (they are __also__ a part of production build!) |
 | /app/`platform/`          | Platform Overrides & Appendix |
 | /app/`test/`              | Unit Tests |
 | /app/`view/`              | View Templates (Dynamic Views, HTML/CSS/LESS/JSON) |
+| /app/view/`app/`          | App Layout Templates (Static Views, HTML/CSS/LESS/JSON) |
 | /app/`index.html`         | App Start Page |
 | /app/`.htaccess`          | Apache WebServer Configuration File (Provides Webapp Manifest Support, optional) |
 | /app/`xone.appcache`      | Provides Webapp Manifest Support (optional) |

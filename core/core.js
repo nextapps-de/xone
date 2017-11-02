@@ -2,7 +2,6 @@ goog.provide('CORE');
 goog.require('INTERFACE');
 goog.require("ENV");
 goog.require('CONFIG');
-goog.require('GRAPH');
 
 /**
  * This is an exclusive extraction of the JS Pro Tools library "UTILS.js" as an
@@ -14,9 +13,7 @@ goog.require('GRAPH');
  * @const
  */
 
-var CORE = {};
-
-(function(){
+var CORE = (function(CORE){
 
     /**
      * @private
@@ -27,8 +24,6 @@ var CORE = {};
 
     var capitalize = function(text){
 
-        if(DEBUG) GRAPH.register('CORE.capitalize');
-
         return text[0].toUpperCase() + text.slice(1);
     };
 
@@ -38,6 +33,7 @@ var CORE = {};
      * https://davidwalsh.name/vendor-prefix
      */
 
+    /*
     var prefix = (function(){
 
         var styles = window.getComputedStyle(document.documentElement, '');
@@ -49,13 +45,38 @@ var CORE = {};
         )[1];
 
     })();
+    */
 
     /**
-     * @type {string}
+     * @type {Object<string, string>}
+     * @const
      * https://davidwalsh.name/vendor-prefix
      */
 
-    //var prefix_css = capitalize(prefix);
+    var prefix = (function () {
+
+        var styles = window.getComputedStyle(document.documentElement, '');
+
+        var pre = (
+
+            Array.prototype
+                 .slice
+                 .call(styles)
+                 .join('')
+                 .match(/-(moz|webkit|ms)-/) || (styles['OLink'] === '' && ['', 'o'])
+        )[1];
+
+        var dom = ('WebKit|Moz|MS|O').match(new RegExp('(' + pre + ')', 'i'))[1];
+
+        return {
+
+            dom: dom,
+            lowercase: pre,
+            css: '-' + pre + '-',
+            js: pre[0].toUpperCase() + pre.substr(1)
+        };
+
+    })();
 
     /**
      * @param {!*} value
@@ -65,8 +86,6 @@ var CORE = {};
      */
 
     CORE.isType = function(value, type){
-
-        if(DEBUG) GRAPH.register('CORE.isType');
 
         return (
 
@@ -86,8 +105,6 @@ var CORE = {};
 
     CORE.isString = function(value){
 
-        if(DEBUG) GRAPH.register('CORE.isString');
-
         return typeof value === 'string';
     };
 
@@ -98,8 +115,6 @@ var CORE = {};
      */
 
     CORE.isNumber = function(value){
-
-        if(DEBUG) GRAPH.register('CORE.isNumber');
 
         return typeof value === 'number';
     };
@@ -112,8 +127,6 @@ var CORE = {};
 
     CORE.isBoolean = function(value){
 
-        if(DEBUG) GRAPH.register('CORE.isBoolean');
-
         return typeof value === 'boolean';
     };
 
@@ -124,8 +137,6 @@ var CORE = {};
      */
 
     CORE.isDefined = function(value){
-
-        if(DEBUG) GRAPH.register('CORE.isDefined');
 
         return typeof value !== 'undefined';
     };
@@ -138,8 +149,6 @@ var CORE = {};
 
     CORE.hasValue = function(value){
 
-        if(DEBUG) GRAPH.register('CORE.hasValue');
-
         return (value || value === 0 || value === false || value === '') ? true : false;
     };
 
@@ -150,8 +159,6 @@ var CORE = {};
      */
 
     CORE.isArray = function(value){
-
-        if(DEBUG) GRAPH.register('CORE.isArray');
 
         return value && (value.constructor === Array) ? true : false;
     };
@@ -164,8 +171,6 @@ var CORE = {};
 
     CORE.isObject = function(value){
 
-        if(DEBUG) GRAPH.register('CORE.isObject');
-
         return value && (value.constructor === Object) ? true : false;
     };
 
@@ -176,8 +181,6 @@ var CORE = {};
      */
 
     CORE.isCollection = function(value){
-
-        if(DEBUG) GRAPH.register('CORE.isCollection');
 
         return HTMLCollection.prototype.isPrototypeOf(value) || NodeList.prototype.isPrototypeOf(value);
     };
@@ -190,8 +193,6 @@ var CORE = {};
 
     CORE.isNode = function(value){
 
-        if(DEBUG) GRAPH.register('CORE.isCollection');
-
         return value && value.nodeType && value.nodeName ? true : false;
     };
 
@@ -202,8 +203,6 @@ var CORE = {};
      */
 
     CORE.hasValues = function(value){
-
-        if(DEBUG) GRAPH.register('CORE.hasValues');
 
         if(value && value.length){
 
@@ -224,8 +223,6 @@ var CORE = {};
 
     CORE.hasKeys = function(value){
 
-        if(DEBUG) GRAPH.register('CORE.hasKeys');
-
         return Object.keys(value).length ? true : false;
     };
 
@@ -237,8 +234,6 @@ var CORE = {};
 
     CORE.isEmpty = function(value){
 
-        if(DEBUG) GRAPH.register('CORE.isEmpty');
-
         return value && (value.length === 0) ? true : false;
     };
 
@@ -249,8 +244,6 @@ var CORE = {};
      */
 
     CORE.isBlank = function(value){
-
-        if(DEBUG) GRAPH.register('CORE.isBlank');
 
         return value === "";
     };
@@ -376,8 +369,6 @@ var CORE = {};
 
         if(DEBUG){
 
-            GRAPH.register('CORE.getNode');
-
             if(CORE.isType(element, 'string')){
 
                 if(CORE.DOM[/** @type {string} */ (element)]) APP.STATS.count_dom_cache++;
@@ -397,11 +388,6 @@ var CORE = {};
 
     //var hasClassList = CORE.isType(document.body.classList);
 
-    /** @type {?Node} */
-    var dom_console;
-    /** @type {string} */
-    var log = "";
-
     /**
      * @const
      * @final
@@ -415,64 +401,28 @@ var CORE = {};
          * @param {string=} color
          */
 
-        log: function(text, obj, color){
-
-            if(DEBUG){
-
-                GRAPH.register('CORE.console.log');
-
-                if(color){
-
-                    if(CORE.isType(obj)) window.console.log('%c' + text, 'color: ' + color, obj);
-                    else window.console.log('%c' + text, 'color: ' + color);
-                }
-                else{
-
-                    if(CORE.isType(obj)) window.console.log(text, obj);
-                    else window.console.log(text);
-                }
-
-                if(text) log += text + '<br>';
-
-                if((dom_console || (dom_console = CORE.getById('debug-log')) && CORE.getStyle(dom_console, 'display') !== 'none') || CONFIG.SHOW_DEBUG || APP.CONFIG.SHOW_DEBUG){
-
-                    CORE.setHTML(dom_console, log, function(){
-
-                        dom_console.scrollTop = dom_console.scrollHeight;
-                    });
-                }
-            }
-        },
+        log: function(text, obj, color){},
 
         /**
          * @param {string|number=} param
          * @param {*=} obj
          */
 
-        warn: function(param, obj){
-
-            if(DEBUG) CORE.console.log(param, obj, 'orange');
-        },
+        warn: function(param, obj){},
 
         /**
          * @param {string|number=} param
          * @param {*=} obj
          */
 
-        err: function(param, obj){
-
-            if(DEBUG) CORE.console.log(param, obj, 'red');
-        },
+        err: function(param, obj){},
 
         /**
          * @param {string|number=} param
          * @param {*=} obj
          */
 
-        info: function(param, obj){
-
-            if(DEBUG) CORE.console.log(param, obj, 'green');
-        }
+        info: function(param, obj){}
     };
 
     /**
@@ -481,8 +431,6 @@ var CORE = {};
      */
 
     var createXHR = function createXHR(){
-
-        if(DEBUG) GRAPH.register('CORE.createXHR');
 
         // IE7, Firefox, all modern browsers:
 
@@ -523,8 +471,6 @@ var CORE = {};
 
     var getDefaultRequestHeader = function getDefaultRequestHeader(type){
 
-        if(DEBUG) GRAPH.register('CORE.getDefaultRequestHeader');
-
         /** @dict */
 
         return {
@@ -548,8 +494,6 @@ var CORE = {};
      */
 
     var ajaxHandler = function ajaxHandler(type, url, params, success, error, header, async, clear, cache){
-
-        if(DEBUG) GRAPH.register('CORE.ajaxHandler');
 
         type = type.toUpperCase();
 
@@ -627,11 +571,11 @@ var CORE = {};
 
             xhr.onreadystatechange = function(e){
 
-                if(xhr.readyState == 4){
+                if(xhr.readyState === 4){
 
                     var json = null;
 
-                    if(xhr.status == 200 || xhr.status == 201){
+                    if((xhr.status === 200) || (xhr.status === 201)){
 
                         //if(DEBUG) CORE.console.log(xhr.responseText);
 
@@ -641,7 +585,7 @@ var CORE = {};
                         }
                         catch(e){}
 
-                        if(cache && type === "GET" /*|| (type === "GET" && typeof cache === 'undefined')*/){
+                        if(cache && (type === "GET") /*|| (type === "GET" && typeof cache === 'undefined')*/){
 
                             /** @lends CORE.CACHE */
                             CORE.CACHE.set(url + cache_params, json);
@@ -671,7 +615,14 @@ var CORE = {};
 
                         if(json && json['error']){
 
-                            APP.LAYOUT.show_message(json['error'].constructor === Object ? JSON.stringify(json['error']) : json['error']);
+                            if(DEBUG) CORE.console.warn(
+
+                                json['error'].constructor === Object ?
+
+                                    JSON.stringify(json['error'])
+                                :
+                                    json['error']
+                            );
                         }
 
                         return error(xhr.status, json);
@@ -715,7 +666,6 @@ var CORE = {};
 
             if(DEBUG) {
 
-                GRAPH.register('CORE.CACHE.set');
                 CORE.console.log("Set Cache to: " + key, val);
             }
 
@@ -733,7 +683,6 @@ var CORE = {};
 
             if(DEBUG) {
 
-                GRAPH.register('CORE.CACHE.get');
                 CORE.console.log("Get Cache from: " + key);
             }
 
@@ -759,7 +708,6 @@ var CORE = {};
 
             if(DEBUG) {
 
-                GRAPH.register('CORE.CACHE.all');
                 CORE.console.log("Get All from Cache");
             }
 
@@ -775,7 +723,6 @@ var CORE = {};
 
             if(DEBUG) {
 
-                GRAPH.register('CORE.CACHE.remove');
                 CORE.console.log("Remove from Cache: " + key);
             }
 
@@ -795,7 +742,6 @@ var CORE = {};
 
             if(DEBUG) {
 
-                GRAPH.register('CORE.CACHE.clear');
                 CORE.console.log("Clear Cache");
             }
 
@@ -825,38 +771,6 @@ var CORE = {};
 
     })();
 
-    /**
-     * @type {Array<Function>|Array<Array<Function, number|null>>}
-     */
-
-    var EXEC_STACK = [];
-
-    /**
-     * @type {boolean}
-     */
-
-    var EXEC = false;
-
-    /**
-     * Task Processor
-     */
-
-    function runStack(){
-
-        if(DEBUG) GRAPH.register('CORE.runStack');
-
-        EXEC_STACK.splice(0, 1)[0]();
-
-        if(EXEC_STACK.length) {
-
-            CORE.async(runStack);
-        }
-        else {
-
-            EXEC = false;
-        }
-    }
-
     var regex_query = /[[:=+>*,~(]/;
 
     /**
@@ -868,11 +782,6 @@ var CORE = {};
      */
 
     CORE.query = CORE.queryAll = function(query, _flag_query_one){
-
-        if(DEBUG) {
-
-            GRAPH.register('CORE.query');
-        }
 
         if(!regex_query.test(query)){
 
@@ -1006,19 +915,30 @@ var CORE = {};
         return document[_flag_query_one ? 'querySelector' : 'querySelectorAll'](query);
     };
 
+    /**
+     * @param {!string} query
+     * @return {Node|HTMLElement}
+     */
+
     CORE.queryOne =  CORE.queryFirst = function(query){
 
         var result = CORE.query(query, /* query one: */ true);
 
         if(CORE.isCollection(result) || CORE.isArray(result)){
 
-            return result[0];
+            return /** @type {Node|HTMLElement} */ (result[0]);
         }
         else{
 
-            return result;
+            return /** @type {Node|HTMLElement} */ (result);
         }
     };
+
+    /**
+     * @param node
+     * @param selector
+     * @returns {*}
+     */
 
     CORE.getClosest = function(node, selector){
 
@@ -1057,6 +977,54 @@ var CORE = {};
     };
 
     /**
+     * @param node
+     * @param selector
+     * @returns {*}
+     */
+
+    CORE.getPrevious = function(node, selector){
+
+        var result = CORE.query(selector),
+            length = result.length,
+            i;
+
+        var previous = node;
+        var first = node.parentNode.firstChild;
+
+        while((previous = previous.previousElementSibling) !== first){
+
+            for(i = 0; i < length; i++){
+
+                if(result[i] === previous) return previous;
+            }
+        }
+    };
+
+    /**
+     * @param node
+     * @param selector
+     * @returns {*}
+     */
+
+    CORE.getNext = function(node, selector){
+
+        var result = CORE.query(selector),
+            length = result.length,
+            i;
+
+        var next = node;
+        var last = node.parentNode.lastChild;
+
+        while((next = next.nextElementSibling) !== last){
+
+            for(i = 0; i < length; i++){
+
+                if(result[i] === next) return next;
+            }
+        }
+    };
+
+    /**
      * @param {string} id
      * @return {Node|Element|HTMLElement|HTMLInputElement|null}
      * @const
@@ -1065,8 +1033,6 @@ var CORE = {};
     CORE.getById = function getById(id){
 
         if(DEBUG){
-
-            GRAPH.register('CORE.getById');
 
             if(CORE.DOM[id]) {
 
@@ -1099,8 +1065,6 @@ var CORE = {};
 
         if(DEBUG) {
 
-            GRAPH.register('CORE.getByClass');
-
             APP.STATS.count_dom++;
         }
 
@@ -1126,8 +1090,6 @@ var CORE = {};
 
         if(DEBUG) {
 
-            GRAPH.register('CORE.getByTag');
-
             APP.STATS.count_dom++;
         }
 
@@ -1150,8 +1112,6 @@ var CORE = {};
 
     CORE.getValue = function getValue(node){
 
-        if(DEBUG) GRAPH.register('CORE.getValue');
-
         if(typeof node === 'string') node = CORE.query(node);
         if(node.length >= 0) node = node[0];
 
@@ -1165,8 +1125,6 @@ var CORE = {};
      */
 
     CORE.setValue = function setValue(node, value){
-
-        if(DEBUG) GRAPH.register('CORE.setValue');
 
         if(typeof node === 'string') node = CORE.query(node);
 
@@ -1191,8 +1149,6 @@ var CORE = {};
      */
 
     CORE.parseNode = function parseNode(pattern, data){
-
-        if(DEBUG) GRAPH.register('CORE.parseNode');
 
         /* CREATE NODE */
 
@@ -1283,8 +1239,6 @@ var CORE = {};
 
     CORE.buildPattern = function buildPattern(pattern, parent, data, recursive){
 
-        if(DEBUG) GRAPH.register('CORE.buildPattern');
-
         parent || (parent = document.createDocumentFragment());
 
         if(pattern){
@@ -1322,8 +1276,6 @@ var CORE = {};
 
     CORE.buildData = function buildData(pattern, parent, data){
 
-        if(DEBUG) GRAPH.register('CORE.buildData');
-
         for(var i = 0; i < data.length; i++){
 
             CORE.buildPattern(pattern, parent, data[i]);
@@ -1331,8 +1283,6 @@ var CORE = {};
     };
 
     CORE.removeNodes = function(element){
-
-        if(DEBUG) GRAPH.register('CORE.removeNodes');
 
         var child;
 
@@ -1382,8 +1332,6 @@ var CORE = {};
 
     CORE.ajax = function ajax(params){
 
-        if(DEBUG) GRAPH.register('CORE.ajax');
-
         ajaxHandler(
             params.type || 'GET',
             params.url || '/',
@@ -1399,8 +1347,6 @@ var CORE = {};
 
     CORE.paramsToString = function(params){
 
-        if(DEBUG) GRAPH.register('CORE.paramsToString');
-
         var str = '';
 
         for(var property in params){
@@ -1412,6 +1358,27 @@ var CORE = {};
         }
 
         return str;
+    };
+
+    CORE.parseParams = function(str){
+
+        var params = {};
+        var pos= str.indexOf('?');
+
+        if(pos !== -1){
+
+            var keys = str.substring(pos + 1).split('&');
+            var pair;
+
+            for(var i = 0; i < keys.length; i++){
+
+                pair = keys[i].split('=');
+
+                params[pair[0]] = pair[1];
+            }
+        }
+
+        return params;
     };
 
     /**
@@ -1473,8 +1440,6 @@ var CORE = {};
 
     CORE.unique = function(array, field){
 
-        if(DEBUG) GRAPH.register('CORE.unique');
-
         var checkDuplicates = {};
         var unqiue_array = [];
 
@@ -1518,8 +1483,6 @@ var CORE = {};
      */
 
     CORE.reverse = function(array){
-
-        if(DEBUG) GRAPH.register('CORE.reverse');
 
         var length = array.length;
         var reversed_array = new Array(length);
@@ -1664,8 +1627,6 @@ var CORE = {};
 
     CORE.formatDate = function(date){
 
-        if(DEBUG) GRAPH.register('CORE.formatDate');
-
         var d = new Date(date),
             month = '' + (d.getMonth() + 1),
             day = '' + d.getDate(),
@@ -1678,8 +1639,6 @@ var CORE = {};
     };
 
     CORE.formatNumber = function(n, c, d, t){
-
-        if(DEBUG) GRAPH.register('CORE.formatNumber');
 
         c = typeof c === 'number' ? c : 2;
         d = d || ".";
@@ -1698,8 +1657,6 @@ var CORE = {};
      */
 
     CORE.preloadImages = function(images){
-
-        if(DEBUG) GRAPH.register('CORE.preloadImages');
 
         var container = CORE.getById('image-preload') || (function(){
 
@@ -1736,56 +1693,7 @@ var CORE = {};
         }
     };
 
-    /**
-     * @param {Function} fn
-     * @param {number=} delay
-     * @return {number|null}
-     */
 
-    CORE.async = function(fn, delay){
-
-        if(DEBUG) GRAPH.register('CORE.async');
-
-        return window.setTimeout(fn, delay);
-    };
-
-
-
-    /**
-     * @param {Array<Function>|Function} fn
-     * @param {number=} delay
-     */
-
-    CORE.stack = function(fn, delay){
-
-        if(DEBUG) GRAPH.register('CORE.stack');
-
-        var len = EXEC_STACK.length;
-
-        if(fn.constructor === Array){
-
-            for(var i = 0; i < fn.length; i++){
-
-                EXEC_STACK[len++] = fn[i];
-            }
-        }
-        else{
-
-            EXEC_STACK[len] = fn;
-        }
-
-        if(!EXEC){
-
-            EXEC = true;
-
-            CORE.async(runStack, delay);
-        }
-    };
-
-    CORE.getStackLength = function(){
-
-        return EXEC_STACK.length;
-    };
 
     CORE.loadScript = function loadScript(src, callback){
 
@@ -1833,16 +1741,14 @@ var CORE = {};
 
     CORE.time = (function(){
 
-        if(DEBUG) GRAPH.register('CORE.time');
-
-        var time = window['performance'] || window[prefix + 'Performance'] || {};
+        var time = window['performance'] || window[prefix.lowercase + 'Performance'] || {};
 
         time.now || (
 
             time.now = (
 
                 time['now']
-                || time[prefix + 'Now']
+                || time[prefix.lowercase + 'Now']
                 || Date['now']
                 || function(){
                     return (new Date()).getTime();
@@ -1864,8 +1770,6 @@ var CORE = {};
      */
 
     CORE.crc32 = function(str){
-
-        if(DEBUG) GRAPH.register('CORE.crc32');
 
         var crc = 0 ^ (-1);
 
@@ -1968,8 +1872,6 @@ var CORE = {};
 
     var parse_fn = function parse_fn(fn){
 
-        if(DEBUG) GRAPH.register('CORE.parse_fn');
-
         var fn_string = fn.toString();
         var fn_parameter = fn_string.substring(fn_string.indexOf('(') + 1, fn_string.indexOf(')'));
         // support multiple parameter:
@@ -1995,8 +1897,6 @@ var CORE = {};
      */
 
     CORE.registerEach = function registerEach(fn){
-
-        if(DEBUG) GRAPH.register('CORE.registerEach');
 
         var parsed_fn = parse_fn(fn);
         var parameter = parsed_fn[0];
@@ -2025,8 +1925,6 @@ var CORE = {};
 
     CORE.registerMap = function registerMap(fn){
 
-        if(DEBUG) GRAPH.register('CORE.registerMap');
-
         var parsed_fn = parse_fn(fn);
         var parameter = parsed_fn[0];
         var fn_content = (
@@ -2053,8 +1951,6 @@ var CORE = {};
      */
 
     CORE.registerFilter = function registerFilter(fn){
-
-        if(DEBUG) GRAPH.register('CORE.registerFilter');
 
         var parsed_fn = parse_fn(fn);
         var parameter = parsed_fn[0];
@@ -2085,8 +1981,6 @@ var CORE = {};
      */
 
     CORE.contains = function(array, item){
-
-        if(DEBUG) GRAPH.register('CORE.contains');
 
         var i = array.length;
 
@@ -2126,6 +2020,54 @@ var CORE = {};
     };
 
     /**
+     * @param {!string} html
+     * @returns {string}
+     */
+
+    CORE.strip = function(html){
+
+        var tmp = document.createElement("div");
+
+        tmp.innerHTML = html;
+
+        var txt = tmp.textContent || tmp.innerText || "";
+
+        while(txt.indexOf('  ') !== -1) {
+
+            txt = txt.replace(/  /g, ' ');
+        }
+
+        while(txt.indexOf('\n ') !== -1) {
+
+            txt = txt.replace(/\n /g, '\n');
+        }
+
+        return txt;
+    };
+
+    /**
+     * @param {!Array} array
+     * @param {!number} from
+     * @param {!number} to
+     * @returns {Array}
+     */
+
+    CORE.move = function(array, from, to) {
+
+        if(to >= array.length) {
+
+            var k = to - array.length;
+
+            while((k--) + 1){
+
+                array.push(void 0);
+            }
+        }
+
+        return array.splice(to, 0, array.splice(from, 1)[0]);
+    };
+
+    /**
      *
      * @param {Object<string, *>} data
      * @returns {Array<string>}
@@ -2133,8 +2075,6 @@ var CORE = {};
      */
 
     CORE.getKeys = function(data){
-
-        if(DEBUG) GRAPH.register('CORE.getKeys');
 
         if(data){
 
@@ -2235,8 +2175,6 @@ var CORE = {};
 
     CORE.imageToDataUrl = function(src, callback, format, quality){
 
-        if(DEBUG) GRAPH.register('CORE.imageToDataUrl');
-
         var img = new Image();
 
         /**
@@ -2323,8 +2261,6 @@ var CORE = {};
 
         min: function min(a, b, c){
 
-            if(DEBUG) GRAPH.register('CORE.Math.min');
-
             if(typeof c !== 'undefined'){
 
                 a = Array.prototype.slice.call(arguments);
@@ -2368,8 +2304,6 @@ var CORE = {};
          */
 
         max: function max(a, b, c){
-
-            if(DEBUG) GRAPH.register('CORE.Math.max');
 
             if(typeof c !== 'undefined'){
 
@@ -2419,8 +2353,6 @@ var CORE = {};
 
         med: function med(a, b, c){
 
-            if(DEBUG) GRAPH.register('CORE.Math.med');
-
             if(typeof c !== 'undefined'){
 
                 a = Array.prototype.slice.call(arguments);
@@ -2454,77 +2386,120 @@ var CORE = {};
         },
         rand: window.Math.random,
         abs: function abs(a){
-            if(DEBUG) GRAPH.register('CORE.Math.abs');
             return (a < 0 ? -a : a);
         }
     };
 
     /**
      * @const
-     * @struct
-     */
-
-    CORE.Browser = {
-
-        /** @type {boolean} */
-        isOpera: !!window['opera'] || navigator.userAgent.indexOf(' OPR/') >= 0, // Opera 8.0+ (UA detection to detect Blink/v8-powered Opera)
-        /** @type {boolean} */
-        isFirefox: (typeof window['InstallTrigger'] !== 'undefined'), // Firefox 1.0+
-        /** @type {boolean} */
-        isSafari: Object.prototype.toString.call(window['HTMLElement']).indexOf('Constructor') > 0, // At least Safari 3+: "[object HTMLElementConstructor]"
-        /** @type {boolean} */
-        isMSIE: /*@cc_on!@*/ false || !!document['documentMode'] // At least IE6
-    };
-
-    /** @type {boolean} */
-    CORE.Browser.isChrome = !!window['chrome'] && !CORE.Browser.isOpera; // Chrome 1+
-    /** @type {function(string):boolean} */
-    CORE.Browser.is = fn_is;
-
-    /**
-     * @const
-     * @struct
      */
 
     CORE.System = {
 
         /** @type {boolean} */
-        isIphone: !!navigator.userAgent.match(/iPhone/i),
+        isOpera: !!window['opera'] || navigator_match(' OPR/'), // Opera 8.0+ (UA detection to detect Blink/v8-powered Opera)
         /** @type {boolean} */
-        isIpod: !!navigator.userAgent.match(/iPod/i),
+        isFirefox: (typeof window['InstallTrigger'] !== 'undefined'), // Firefox 1.0+
         /** @type {boolean} */
-        isIpad: !!navigator.userAgent.match(/iPad/i),
+        isSafari: Object.prototype.toString.call(window['HTMLElement']).indexOf('Constructor') > 0, // At least Safari 3+: "[object HTMLElementConstructor]"
         /** @type {boolean} */
-        isAndroid: !!navigator.userAgent.match(/Android/i),
+        isMSIE: /*@cc_on!@*/ false || !!document['documentMode'], // At least IE6
         /** @type {boolean} */
-        isCordova: !!window['cordova']
+        isIphone: navigator_match('iPhone') && !window['MSStream'],
+        /** @type {boolean} */
+        isIpod: navigator_match('iPod'),
+        /** @type {boolean} */
+        isIpad: navigator_match('iPad'),
+        /** @type {boolean} */
+        isAndroid: navigator_match('Android'),
+        /** @type {boolean} */
+        isCordova: !!window['cordova'],
+        /** @type {boolean} */
+        isWkWebview: navigator_match('WkWebView'),
+        /** @type {boolean} */
+        isCrosswalk: navigator_match('XWalk'),
+        /** @type {boolean} */
+        isWebkit: 'WebkitAppearance' in document.documentElement.style,
+        /** @type {boolean} */
+        isRetina: window.devicePixelRatio > 1,
+        /** @type {boolean} */
+        isOnline: navigator['onLine'],
+        /** @type {boolean} */
+        isOffline: !this.isOnline,
+        /** @type {boolean} */
+        isTouch: (function(){
+
+            try {
+
+                return !!document.createEvent("TouchEvent");
+            }
+            catch(e) {
+
+                return false;
+            }
+
+        })(),
+        /** @type {function(string):boolean} */
+        is: function(type){
+
+            if(DEBUG){
+
+                if(typeof CORE.System['is' + type] === 'undefined'){
+
+                    CORE.console.warn("WARNING: The passed parameter '" + type + "' is not supported!");
+                }
+            }
+
+            return CORE.System['is' + type];
+        }
     };
 
     /** @type {boolean} */
+    CORE.System.isChrome = !!window['chrome'] && !CORE.System.isOpera; // Chrome 1+
+
+    /** @type {boolean} */
     CORE.System.isIOS = CORE.System.isIphone || CORE.System.isIpod || CORE.System.isIpad;
+
     /** @type {boolean} */
     CORE.System.isMobile = CORE.System.isIOS || CORE.System.isAndroid;
-    /** @type {function(string):boolean} */
-    CORE.System.is = fn_is;
 
     /**
-     * @param {!string} type
+     * @param {!string} text
      * @returns {boolean}
      */
 
-    function fn_is(type){
+    function navigator_match(text){
 
-        var fn_name = 'is' + type[0].toUpperCase() + type.substring(1);
-
-        if(DEBUG){
-
-            if(typeof this[fn_name] === 'undefined'){
-
-                CORE.console.warn("WARNING: The passed type '" + type + "' is not defined!");
-            }
-        }
-
-        return this[fn_name];
+        return !!navigator.userAgent.match(new RegExp(text, 'i'));
     }
 
-})();
+    if(CORE.System.isIOS){
+
+        // https://stackoverflow.com/questions/9038625/detect-if-device-is-ios
+
+        !!window['indexedDB'] ?
+
+            CORE.System.isIOS8 = true
+        :
+            !!window['SpeechSynthesisUtterance'] ?
+
+                CORE.System.isIOS7 = true
+            :
+                !!window['webkitAudioContext'] ?
+
+                    CORE.System.isIOS6 = true
+                :
+                    !!window['matchMedia'] ?
+
+                        CORE.System.isIOS5 = true
+                    :
+                        !!window.history && ('pushState' in window.history) ?
+
+                            CORE.System.isIOS4 = true
+                        :
+                            CORE.System.isIOS3 = true
+    }
+
+    return CORE;
+
+})({});

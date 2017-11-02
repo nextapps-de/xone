@@ -195,7 +195,7 @@ describe("Test Controller Implementation", function(){
 
         })(5);
 
-        APP.VIEW = {
+        APP.TEMPLATE = {
 
             "view/suite/test": [{data:["<div id=\"test_id1\"><div id=\"test_id2\"><div id=\"test_id3\"><span class=\"test_class3\">","","</span><span class=\"test_class1\">","","</span><span class=\"test_class2\">","","</span><span class=\"test_class3\">","","</span><span class=\"test_class2\">","","</span><span class=\"test_class2\">","","</span><span class=\"test_class1\">","","</span><span class=\"test_class3\">","","</span><span class=\"test_class1\">","","</span><span class=\"test_class2\">","","</span><span class=\"test_class2\">","","</span><span class=\"test_class3\">","","</span><span class=\"test_class2\">","","</span><span class=\"test_class3\">","","</span><span class=\"test_class1\">","","</span><span class=\"test_class2\">","","</span><div id=\"user\"></div></div></div></div> "],map:[0,"id",2,"title",4,"startDate",6,"endDate",8,"createdAt",10,"updatedAt",12,"commentsCounter",14,"likes",16,"reslotsCounter",18,"creator",20,"location",22,"media",24,"notes",26,"settings",28,"slotter",30,"visibility",32],if:false,else:false}]
         };

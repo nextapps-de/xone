@@ -300,7 +300,7 @@ function compile_view_to_array(html, array, exp, not, loop){
 }
 
 // sync version
-function walkSync(dir, callback) {
+function walkSync(dir, filetype, callback) {
 
     if(fs.existsSync(dir)) fs.readdirSync(dir).forEach(function(name) {
 
@@ -309,20 +309,20 @@ function walkSync(dir, callback) {
 
         if(stat.isFile()) {
 
-            if(filePath.indexOf('.shtml') === filePath.length - 6) {
+            if(filePath.indexOf(filetype) === filePath.length - filetype.length) {
 
                 callback(filePath, stat);
             }
         }
         else if(stat.isDirectory()) {
 
-            walkSync(filePath, callback);
+            walkSync(filePath, filetype, callback);
         }
     });
 }
 
 // async version with basic error handling
-function walkAsync(currentDirPath, callback) {
+function walkAsync(currentDirPath, filetype, callback) {
 
     fs.readdir(currentDirPath, function(err, files) {
 
@@ -335,14 +335,14 @@ function walkAsync(currentDirPath, callback) {
 
             if(stat.isFile()) {
 
-                if(filePath.indexOf('.shtml') === filePath.length - 6) {
+                if(filePath.indexOf(filetype) === filePath.length - filetype.length) {
 
                     callback(filePath, stat);
                 }
             }
             else if(stat.isDirectory()) {
 
-                walkAsync(filePath, callback);
+                walkAsync(filePath, filetype, callback);
             }
         });
     });
@@ -351,7 +351,9 @@ function walkAsync(currentDirPath, callback) {
 var status = true;
 var views = {};
 
-walkSync('./app/view/', function(filePath){
+walkSync('./app/view/', '.shtml', function(filePath){
+
+    if((filePath.indexOf('app/view/app/') === 0) || (filePath.indexOf('app\\view\\app\\') === 0)) return;
 
     var html = fs.readFileSync(filePath, 'utf8');
 
@@ -373,7 +375,7 @@ if(status){
     var output = JSON.stringify(views).replace(/"data":/g, 'data:').replace(/"map":/g, 'map:').replace(/"if":/g, 'if:').replace(/"else":/g, 'else:').replace(/"include":/g, 'include:');
 
     lib.buildFolders('app/tmp/');
-    fs.writeFileSync('app/tmp/view.js', "/* AUTO GENERATED SCRIPT (DO NOT MODIFY) */\ngoog.provide('APP.VIEW');\nAPP.VIEW = " + output + ";\n", 'utf8');
+    fs.writeFileSync('app/tmp/view.js', "/* AUTO GENERATED SCRIPT (DO NOT MODIFY) */\ngoog.provide('APP.TEMPLATE');\nAPP.TEMPLATE = " + output + ";\n", 'utf8');
 }
 
 console.log(
@@ -388,9 +390,29 @@ console.log(
 status = true;
 views = {};
 
-walkSync('./app/layout/', function(filePath){
+walkSync('./app/view/app/', '.shtml', function(filePath){
 
     var html = fs.readFileSync(filePath, 'utf8');
+
+    if((html.indexOf('<xone-main') !== -1) && (html.indexOf('<xone-main') === html.lastIndexOf('<xone-main'))){
+
+        var tmp = html.substring(
+
+            html.indexOf('<xone-main'),
+            html.indexOf('>', html.indexOf('<xone-main'))
+        );
+
+        if((tmp.indexOf(' id=') === -1) && (tmp.indexOf(' id =') === -1)){
+
+            var id = filePath.replace('app\\view\\app\\', '')
+                             .replace('app/view/app/', '')
+                             .replace('/', '-')
+                             .replace('\\', '-')
+                             .replace('.shtml', '');
+
+            html = html.replace('<xone-main', '<xone-main id="' + id + '"');
+        }
+    }
 
     var template = compile_view_to_array(html);
 
@@ -410,48 +432,69 @@ if(status){
     var output = JSON.stringify(views).replace(/"data":/g, 'data:').replace(/"map":/g, 'map:').replace(/"if":/g, 'if:').replace(/"else":/g, 'else:').replace(/"include":/g, 'include:');
 
     lib.buildFolders('app/tmp');
-    fs.writeFileSync('app/tmp/layout.js', "/* AUTO GENERATED SCRIPT (DO NOT MODIFY) */\ngoog.provide('APP.HTML');\nAPP.HTML = " + output + ";\n", 'utf8');
+    fs.writeFileSync('app/tmp/layout.js', "/* AUTO GENERATED SCRIPT (DO NOT MODIFY) */\ngoog.provide('APP.HTML');\nAPP.HTML = " + output + ";\nAPP.CONFIG.LAYOUT = " + JSON.stringify(Object.keys(views)) + ";\n", 'utf8');
 }
 
 console.log(
 
     status ?
 
-        "Layout Complete.\n"
+        "Layout Complete."
     :
         "Error on building layout!"
 );
 
-var xone_config = lib.loadJSON('xone.json');
+var xone_manifest = lib.loadJSON('app/manifest.js', 'MANIFEST');
 
-var path_to_lessc;
+var LessPluginAutoPrefix = require('less-plugin-autoprefix');
 
-if(fs.existsSync(path.resolve(xone_config.node_modules_path, 'less'))){
-
-    path_to_lessc = path.resolve(xone_config.node_modules_path, 'less');
-}
-else{
-
-    path_to_lessc = path.resolve(xone_config.node_modules_path, '..', '..', 'less');
-}
+var path_to_lessc = lib.getModule('less');
 
 if(fs.existsSync("app/css/build.less")) {
-
-    /*
-    if(!fs.existsSync('app/css/build.css')){
-
-        fs.writeFileSync('app/css/build.css', "", 'utf8');
-    }
-    */
 
     lib.exec((
 
         //'node "' + path.resolve(path_to_lessc, 'node_modules/clean-css/bin/cleancss') + '" app/css/build.less --clean-css="-s1 --advanced --rebase" app/css/build.css'
-        'node "' + path.resolve(path_to_lessc, 'bin/lessc') + '" --clean-css="--s1 --advanced --rebase" app/css/build.less app/css/build.css'
-    ));
-}
+        'node "' + path.resolve(path_to_lessc, 'bin/lessc') + '" --clean-css="--s1 --advanced --rebase" --autoprefix app/css/build.less app/css/build.css'
 
-var xone_manifest = lib.loadJSON('app/manifest.js', 'MANIFEST');
+    ), function(){
+
+        fs.writeFileSync('app/css/build.css', "/* AUTO GENERATED SCRIPT (DO NOT MODIFY) */\n" + fs.readFileSync('app/css/build.css', 'utf8'), 'utf8');
+    });
+}
+else{
+
+    var less = [];
+
+    less.push('@import "../' + xone_manifest.dependencies.xone + 'css/config.less";');
+    less.push('@import "../' + xone_manifest.dependencies.xone + 'css/reset.less";');
+    less.push('@import "../' + xone_manifest.dependencies.xone + 'css/xone.less";');
+    less.push('@import "../' + xone_manifest.dependencies.xone + 'css/animate.less";');
+
+    walkSync('./app/css/', '.less', function(filePath){
+
+        less.push('@import "' + filePath.replace(/\\/g, '/').replace('app/', '../') + '";');
+    });
+
+    walkSync('./app/view/', '.less', function(filePath){
+
+        less.push('@import "' + filePath.replace(/\\/g, '/').replace('app/', '../') + '";');
+    });
+
+    fs.writeFileSync('app/tmp/build.less', less.join('\n'), 'utf8');
+
+    lib.exec((
+
+        //'node "' + path.resolve(path_to_lessc, 'node_modules/clean-css/bin/cleancss') + '" app/css/build.less --clean-css="-s1 --advanced --rebase" app/css/build.css'
+        'node "' + path.resolve(path_to_lessc, 'bin/lessc') + '" --clean-css="--s1 --advanced --rebase" --autoprefix app/tmp/build.less app/css/build.css'
+
+    ), function(){
+
+        fs.writeFileSync('app/css/build.css', "/* AUTO GENERATED SCRIPT (DO NOT MODIFY) */\n" + fs.readFileSync('app/css/build.css', 'utf8'), 'utf8');
+    });
+
+    console.log("Styles Complete.\n");
+}
 
 if(xone_manifest.dependencies.calculate){
 

@@ -140,7 +140,6 @@ _mapping_struct.mapToPayload;
 _mapping_struct.mapToData;
 
 
-
 /** @export */
 _template_struct.data;
 /** @export */
@@ -155,17 +154,18 @@ _template_struct.include;
 _template_struct.else;
 
 
-
 /** @export */
-_view_model.data;
+_view_params.data;
 /** @export */
-_view_model.target;
+_view_params.target;
 /** @export */
-_view_model.view;
+_view_params.template;
 /** @export */
-_view_model.default;
+_view_params.view;
 /** @export */
-_view_model.callback;
+_view_params.default;
+/** @export */
+_view_params.callback;
 
 
 /** @export */
@@ -188,7 +188,6 @@ _pattern_struct.text;
 _pattern_struct.child;
 /** @export */
 _pattern_struct.length;
-
 
 
 /** @export */

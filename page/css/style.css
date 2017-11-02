@@ -22,9 +22,6 @@ video, #video-overlay {
     height: auto;
 
     z-index: 0;
-    -ms-transform: translateX(-50.5%) translateY(-50.5%) translateZ(-1px);
-    -moz-transform: translateX(-50.5%) translateY(-50.5%) translateZ(-1px);
-    -webkit-transform: translateX(-50.5%) translateY(-50.5%) translateZ(-1px);
     transform: translateX(-50.5%) translateY(-50.5%) translateZ(-1px);
     background-size: cover;
     display: block;
@@ -92,7 +89,7 @@ h2{
     background-color: rgba(22, 17, 12, 0) /*rgba(14, 14, 14, 0)*/;
     vertical-align: middle;
     z-index: 99;
-    transition: background-color 0.2s ease-out, height 0.2s ease-out;
+    transition: background-color 350ms ease-out, height 350ms ease-out;
     transform: translateZ(3px);
 }
 #header.small{
@@ -104,7 +101,7 @@ h2{
     position: relative;
     /*transform: scale(1) translateX(0);*/
     width: 100%;
-    transition: font-size 0.2s ease-out;
+    transition: font-size 350ms ease-out;
     z-index: 1;
 }
 #header.small #header_inner{
@@ -149,7 +146,7 @@ h2{
     padding: 1em 0 0.5em 0;
     margin-right: 1.8em;
     opacity:0.65;
-    transition: border-bottom 0.2s ease-out, color 0.2s ease-out;
+    transition: border-bottom 350ms ease-out, color 350ms ease-out;
     cursor:pointer;
 }
 #menu a.active{
@@ -182,7 +179,7 @@ h2{
     font-weight: 100;
     color: #fff;
     opacity:0.65;
-    transition: color 0.2s ease-out;
+    transition: color 350ms ease-out;
     cursor:pointer;
 }
 .footer a.active{
@@ -203,7 +200,7 @@ h2{
     z-index: 98;
     text-align: left;
     transform: translateY(-150%) translateZ(0px);
-    transition: transform 0.2s ease-out;
+    transition: transform 350ms ease-out;
 }
 #mobile_menu.show{
     transform: translateY(0) translateZ(0px);
@@ -580,7 +577,7 @@ input:focus, textarea:focus{
 
 
 .buttons-container *, .buttons-container *:before, .buttons-container *:after {
-    -webkit-transform: translate3d(0, 0, 0);
+    -webkit-transform: translateX(0);
 }
 
 #start-button-icon {

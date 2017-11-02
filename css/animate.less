@@ -1,0 +1,87 @@
+@import "config.less";
+
+/* Disable Transitions */
+/* -------------------------------- */
+body.no-transition xone-main,
+body.no-transition xone-header,
+body.no-transition .shadow,
+body.no-transition xone-tabbar{
+    transition: none !important;
+}
+
+/* Initial Slider Values */
+/* -------------------------------- */
+xone-main.slide{
+    transform: translate3d(100%, 0, 0);
+    backface-visibility: hidden;
+    transition: z-index 800ms @xone-animation-easing,
+                transform 800ms @xone-animation-easing;
+    will-change: transform;
+}
+xone-main.slide xone-header{
+    opacity: 0;
+    transform: translate3d(-33%, 0, 0);
+    backface-visibility: hidden;
+    transition: opacity 400ms @xone-animation-easing,
+                transform 800ms @xone-animation-easing;
+    will-change: transform, opacity;
+}
+xone-main.slide .shadow{
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    transition: transform 800ms @xone-animation-easing;
+    will-change: transform;
+}
+
+/* Show State */
+/* -------------------------------- */
+xone-main.slide.show{
+    transform: translate3d(0, 0, 0);
+}
+xone-main.slide.show xone-header{
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    transition: opacity 400ms ease-in,
+                transform 800ms @xone-animation-easing;
+}
+xone-main.slide.show .shadow{
+    transform: translate3d(-44px, 0, 0);
+}
+
+/* Initial Slider-Back Values */
+/* -------------------------------- */
+xone-main[role="main"],
+xone-main[role="main"] ~ xone-tabbar{
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    transition: transform 800ms @xone-animation-easing;
+    will-change: transform;
+}
+xone-main[role="main"] xone-header{
+    opacity: 1;
+    transition: opacity 400ms ease-in;
+    will-change: opacity;
+}
+
+/* Hide State */
+/* -------------------------------- */
+xone-main[role="main"].hide,
+xone-main[role="main"].hide ~ xone-tabbar{
+    transform: translate3d(-33%, 0, 0);
+}
+xone-main[role="main"].hide xone-header{
+    opacity: 0;
+    transition: opacity 800ms @xone-animation-easing;
+}
+
+/* Slide Bottom */
+/* -------------------------------- */
+xone-main.slideBottom{
+    transform: translate3d(0, 100%, 0);
+    backface-visibility: hidden;
+    transition: transform 800ms @xone-animation-easing;
+    will-change: transform;
+}
+xone-main.slideBottom.show{
+    transform: translate3d(0, 0, 0);
+}

@@ -294,7 +294,6 @@ if(fs.existsSync(__dirname + '/build.js')){
             xone_manifest.dependencies.xone +'interface/view.js',
             xone_manifest.dependencies.xone +'core/interface.js',
             xone_manifest.dependencies.xone +'build/env.js',
-            xone_manifest.dependencies.xone +'lib/graph.js',
             xone_manifest.dependencies.xone +'core/core.js',
             xone_manifest.dependencies.xone +'core/app.js',
             xone_manifest.dependencies.xone +'lib/debug.js',
@@ -306,6 +305,10 @@ if(fs.existsSync(__dirname + '/build.js')){
             xone_manifest.dependencies.xone +'lib/storage.js',
             xone_manifest.dependencies.xone +'core/model.js',
             xone_manifest.dependencies.xone +'core/controller.js',
+            xone_manifest.dependencies.xone +'core/view.js',
+            xone_manifest.dependencies.xone +'lib/swipe.js',
+            xone_manifest.dependencies.xone +'lib/pull.js',
+            xone_manifest.dependencies.xone +'lib/image.js',
             xone_manifest.dependencies.xone +'lib/layout.js',
             xone_manifest.dependencies.xone +'lib/viewport.js',
             xone_manifest.dependencies.xone +'lib/worker.js',
@@ -313,6 +316,17 @@ if(fs.existsSync(__dirname + '/build.js')){
             'app/tmp/layout.js',
             'app/tmp/view.js'
         ];
+
+        var extern_dependencies = [
+
+            lib.getModule('lz-string') + '/libs/lz-string.min.js',
+            //lib.getModule('fastclick') + '/lib/fastclick.js',
+            "../" + xone_manifest.dependencies.xone + 'plugin/inferno.min.js',
+            "../" + xone_manifest.dependencies.xone + 'plugin/inferno-dom.min.js'
+            //xone_manifest.dependencies.xone + 'node_modules/web-animations-js/web-animations.min.js'
+        ];
+
+        xone_manifest.dependencies.js_extern = extern_dependencies.concat(xone_manifest.dependencies.js_extern);
 
         xone_config.closure_compiler_jar.options.js = xone_config.closure_compiler_jar.options.js.concat(
 
@@ -432,18 +446,18 @@ if(fs.existsSync(__dirname + '/build.js')){
 
             compiled_code = (
 
-                    "/**!\n" +
-                    " * " + (parameter === 'bundle' ? '@preserve ' : '') + "Xone Javascript Framework (" + (parameter || 'Build') + ")\n" +
-                    " * @version " + (node_config.version) +  "\n" +
-                    " * @build " + lib.crc32(compiled_code) + "/" + ((new Date()).getTime() + "").substring(1, 10) + "\n" +
-                    " * @author Thomas Wilkerling\n" +
-                    " * @license Apache-2.0\n" +
-                    " * @link https://www.npmjs.com/package/xone\n" +
-                    " * @link https://github.com/nextapps-de/xone\n" +
-                    " * @tutorial https://nextapps-de.github.io/xone/\n" +
-                    " */\n"
+                "/**!\n" +
+                " * " + (parameter === 'bundle' ? '@preserve ' : '') + "Xone Build " + (parameter || xone_config.name || 'Release') + "\n" +
+                " * @version " + (node_config.version) +  "\n" +
+                " * @build " + lib.crc32(compiled_code) + "/" + ((new Date()).getTime() + "").substring(1, 10) + "\n" +
+                " * @author Thomas Wilkerling\n" +
+                " * @license Apache-2.0\n" +
+                " * @link https://www.npmjs.com/package/xone\n" +
+                " * @link https://github.com/nextapps-de/xone\n" +
+                " * @tutorial https://nextapps-de.github.io/xone/\n" +
+                " */\n"
 
-                ) + compiled_code;
+            ) + compiled_code;
 
             var pos;
 
@@ -484,7 +498,7 @@ if(fs.existsSync(__dirname + '/build.js')){
                 if(fs.existsSync(path.normalize(compiler_options.jsCode[a].path))) tmp_code += (compiler_options.jsCode[a].src = fs.readFileSync(path.normalize(compiler_options.jsCode[a].path), 'utf8'));
             }
 
-            var path_to_closure_compiler = fs.existsSync(xone_config.closure_compiler_js.path) ? xone_config.closure_compiler_js.path : lib.getModule('google-closure-compiler-js');
+            var path_to_closure_compiler = lib.getModule('google-closure-compiler-js');
 
             var compile = require(path_to_closure_compiler).compile;
             var out = compile(compiler_options);
@@ -543,26 +557,25 @@ if(fs.existsSync(__dirname + '/build.js')){
                 }
             }
 
-            var path_to_closure_compiler = fs.existsSync(xone_config.closure_compiler_jar.path) ? xone_config.closure_compiler_jar.path : lib.getModule('google-closure-compiler');
+            var path_to_closure_compiler = lib.getModule('google-closure-compiler');
 
             lib.exec('java -jar ' + /*-Xms128m -Xmx4096m*/ '"' + path_to_closure_compiler + '/compiler.jar' + '"' + config_parameters + "", build_callback_success);
         }
 
         if(parameter !== 'bundle' && parameter !== 'lib'){
 
-            var css = [
-
-                //'app/lib/xone/css/reset.css',
-                //'app/lib/xone/css/xone.css',
-                //'app/css/build.css'
-            ];
-
             xone_manifest.dependencies.css || (xone_manifest.dependencies.css = []);
-            xone_manifest.dependencies.css.push("." + xone_manifest.dependencies.xone + 'css/xone.css');
-            xone_manifest.dependencies.css.push('css/style.css');
-            xone_manifest.dependencies.css.push('css/build.css');
 
-            css = xone_manifest.dependencies.css;
+            /*
+            xone_manifest.dependencies.css.push("." + xone_manifest.dependencies.xone + 'css/reset.css');
+            xone_manifest.dependencies.css.push("." + xone_manifest.dependencies.xone + 'css/xone.css');
+            xone_manifest.dependencies.css.push("." + xone_manifest.dependencies.xone + 'css/animate.css');
+            */
+
+            xone_manifest.dependencies.css.push('css/build.css');
+            xone_manifest.dependencies.css.push('css/style.css');
+
+            var css = xone_manifest.dependencies.css;
 
             css = css.map(function(value){
 
