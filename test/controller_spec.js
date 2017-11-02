@@ -207,7 +207,7 @@ describe("Test Controller Implementation", function(){
         var node = document.createElement('div');
 
         APP.CONTROLLER.render({
-            view: "view/suite/test",
+            template: "view/suite/test",
             target: node,
             data: custom_data
         });

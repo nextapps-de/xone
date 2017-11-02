@@ -17,7 +17,8 @@ describe("Check Async Implementation", function() {
 
             expect(value).toBe('foobar');
             done();
-        });
+
+        }, 50);
     });
 
     it("CORE.async(fn, delay)", function(done) {
@@ -43,7 +44,7 @@ describe("Check Async Implementation", function() {
                 expect(value).toBe('foobar');
                 done();
 
-            }, 50);
+            }, 100);
         });
     });
 
@@ -64,7 +65,8 @@ describe("Check Async Implementation", function() {
 
             expect(value).toBe('foobar');
             done();
-        });
+
+        }, 50);
     });
 
     it("CORE.queue(fn, delay)", function(done) {
