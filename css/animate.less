@@ -65,11 +65,11 @@ xone-main[role="main"] xone-header{
 
 /* Hide State */
 /* -------------------------------- */
-xone-main[role="main"].hide,
-xone-main[role="main"].hide ~ xone-tabbar{
+xone-main[role="main"].reveal,
+xone-main[role="main"].reveal ~ xone-tabbar{
     transform: translate3d(-33%, 0, 0);
 }
-xone-main[role="main"].hide xone-header{
+xone-main[role="main"].reveal xone-header{
     opacity: 0;
     transition: opacity 800ms @xone-animation-easing;
 }

@@ -175,9 +175,9 @@ goog.require('APP');
                     // perform sort
                     if(route_obj.sort) data = data.sort(route_obj.sort);
                     // limit result
-                    if(route_obj.limit && (data.length > route_obj.limit)) data.splice(0, data.length - route_obj.limit);
+                    if(route_obj.limit && (data.length > route_obj.limit)) data.splice(route_obj.limit, data.length - route_obj.limit);
                     // limit result
-                    if(route_obj.last && (data.length > route_obj.last)) data.splice(0, route_obj.last);
+                    if(route_obj.last && (data.length > route_obj.last)) data.splice(0, data.length - route_obj.last);
                     // map array values
                     if(route_obj.map) data.map(route_obj.map);
                     // arraymap array values

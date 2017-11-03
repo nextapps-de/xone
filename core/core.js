@@ -519,7 +519,7 @@ var CORE = (function(CORE){
 
             if(last_cache){
 
-                if(DEBUG) CORE.console.log("Fetched from Cache: " + url + cache_params, last_cache);
+                if(DEBUG) CORE.console.log("Fetched from Cache: " + url + cache_params);
 
                 return success(last_cache);
             }
@@ -666,7 +666,7 @@ var CORE = (function(CORE){
 
             if(DEBUG) {
 
-                CORE.console.log("Set Cache to: " + key, val);
+                CORE.console.log("Set Cache to: " + key);
             }
 
             data[key] = val;
@@ -2415,13 +2415,13 @@ var CORE = (function(CORE){
         /** @type {boolean} */
         isCordova: !!window['cordova'],
         /** @type {boolean} */
-        isWkWebview: navigator_match('WkWebView'),
+        isWkWebview: window['webkit'] && window['webkit']['messageHandlers'],
         /** @type {boolean} */
         isCrosswalk: navigator_match('XWalk'),
         /** @type {boolean} */
         isWebkit: 'WebkitAppearance' in document.documentElement.style,
         /** @type {boolean} */
-        isRetina: window.devicePixelRatio > 1,
+        isRetina: window['devicePixelRatio'] > 1,
         /** @type {boolean} */
         isOnline: navigator['onLine'],
         /** @type {boolean} */
