@@ -39,9 +39,40 @@ Some breaking changes could possibly be introduced in upcoming versions. Do not 
 
 ---
 
-### Announcement Xone v0.7.0
+### Announcement Xone v1.0.0
 
-Xone will get some major changes. This was required to open capabilities for upcoming features we are working now like __Xone Native__.
+Xone will get some major changes. This was required to open capabilities for upcoming features we are working now like __Xone Native__. The plan is to release a final architecture until v.1.0.0 and then also to be done with most of the breaking changes.
+
+##### v0.8.0
+
+- Xone Development User Interface (Browser replacement for any console commands)
+- Fully transfer to Asynchronous Module Definition (replaces the poorly Closure Compiler dependency system)
+- Replace most of global namespaces of the framework to constructors and also changing capitalized style for the new AMD namespacing:
+    - ___Note:___ By using AMD you can internally customize naming of all references of Xone (conflicts with global namespace is not possible in AMD)
+    - `APP.CONTROLLER[name]` --> `Controller.new(name)`
+    - `APP.VIEW[name]` --> `View.new(name)`
+    - `APP.EVENT[query]` --> `Event.new(query)`
+    - `APP.ROUTE[route]` --> `Route.new(route)`
+    - `APP.MAPPER[name]` --> Is now a part of View, Model and/or Route (e.g. _View Mappings_, _Model Mappings_, _Payload Mappings_)
+    - `APP.MODEL[name]` --> `Model.new(name)`
+    - `APP.WORKER[name]` --> `Worker.new(name)`
+    - `APP.HANDLER` --> you are free to use any style (like before)
+    - `APP.HELPER` --> you are free to use any style (like before)
+    - `APP.SETTING.get(key)` --> `Setting.get(key)`
+    - `APP.PLUGIN.Filesystem` --> `Filesystem`
+    - `CORE.*` --> `Util.{Package}.*` (e.g. `Util.Array.merge`)
+    - Singular naming coding convention is still valid
+    - new constructors can either be instantiated via the builtin method .new() or via the classical new keyword
+    - the new concept of using constructors opens a lot of nice features, they will coming soon, and also adds some missing OOP styles
+- Provides package definitions (packages can group or import html-templates, javascript, css styles and assets)
+- Provide dependency management of whole modules/packages through the keyword import("package") and export("package", ...)
+- Model supports now virtual properties everywhere (not only in views)
+- Model can now define a structural schema to save in storage (this also improves extraction of nested models)
+- New Templating Implementation and Compiler
+    - allows inserting Javascript
+    - allows nesting of for-loops and if-conditionals
+    - better handling of virtual and mapped properties
+    - ultra fast through new pre-compilation strategy and usage of model-bind-caching (instead of view-bind cache)
 
 ##### v0.7.0
 
@@ -67,7 +98,6 @@ Xone will get some major changes. This was required to open capabilities for upc
     - CSS Auto-Prefixer
     - Manage Hooks
     - Manage Optional Dependencies
-- Xone Development User Interface (Browser replacement for any console commands)
 - Improved persistent storing of models
 - Improved Auto Resizing Layout 
 - Improved Dependency Management

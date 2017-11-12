@@ -1,6 +1,6 @@
 {
   "name": "xone",
-  "version": "0.7.001",
+  "version": "0.7.401",
   "description": "Open source Javascript framework for building modern web applications.",
   "keywords": [
     "Javascript Framework",
@@ -37,6 +37,7 @@
     "google-closure-compiler": "^20171023.0.1",
     "google-closure-compiler-js": "^20170910.0.1",
     "highlight.js": "^9.12.0",
+    "ink-docstrap": "^1.3.1",
     "jasmine": "^2.8.0",
     "jsdoc": "^3.5.5",
     "less": "^2.7.3",
