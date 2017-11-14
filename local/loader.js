@@ -28,7 +28,7 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
 
     if(CONFIG.ENV === "development" || CONFIG.ENV === "test") {
 
-        less = {
+        window.less = {
 
             env: "development",
             async: false,
@@ -46,7 +46,7 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
 
             MANIFEST.dependencies.xone + prefix + 'less/dist/less.min.js',
             //MANIFEST.dependencies.xone + prefix + 'fastclick/lib/fastclick.js',
-            MANIFEST.dependencies.xone + prefix + 'lz-string/libs/lz-string.min.js',
+            //MANIFEST.dependencies.xone + prefix + 'lz-string/libs/lz-string.min.js',
             //MANIFEST.dependencies.xone + prefix + 'web-animations-js/web-animations.min.js',
             MANIFEST.dependencies.xone + 'plugin/inferno.min.js',
             MANIFEST.dependencies.xone + 'plugin/inferno-dom.min.js'
@@ -66,7 +66,7 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
             MANIFEST.dependencies.xone + 'interface/view.js',
             MANIFEST.dependencies.xone + 'core/interface.js',
             MANIFEST.dependencies.xone + 'core/core.js',
-            MANIFEST.dependencies.xone + 'core/exec.js',
+            MANIFEST.dependencies.xone + 'core/async.js',
             MANIFEST.dependencies.xone + 'core/app.js',
             MANIFEST.dependencies.xone + 'lib/debug.js',
             MANIFEST.dependencies.xone + 'lib/paint.js',

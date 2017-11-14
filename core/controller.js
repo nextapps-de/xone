@@ -674,13 +674,6 @@ goog.require('APP');
         return buildTemplate(view, data);
     };
 
-    var inferno_template = null;
-
-    function hook(node){
-
-        node.innerHTML = inferno_template;
-    }
-
     /**
      * @param {_view_params|string} _target
      * @param {Array<_pattern_struct>=} _data
@@ -764,20 +757,23 @@ goog.require('APP');
                 }
             }
 
-/*
-            // diffDOM
 
+            // diffDOM
+/*
             (function(dest, target, template, callback){
 
-                var dd = new diffDOM();
                 var newElement = document.createElement('div');
-                newElement.innerHTML = template;
+                newElement.innerHTML = '<vdom>' + template + '</vdom>';
 
                 var t0 = performance.now();
-                for(var i = 0; i < 5000; i++){
+                for(var i = 0; i < 1; i++){
 
-                    var diff = dd.diff(dest, newElement);
-                    if(diff.length) dd.apply(dest, diff);
+                    //(function(template){
+                    var dd = new diffDOM();
+
+                    dd.apply(dest, dd.diff(dest, newElement));
+
+                    //})(template += '<div>test</div>');
                 }
 
                 var t1 = performance.now();
@@ -801,21 +797,10 @@ goog.require('APP');
             });
 */
 
-/*
+
             // Inferno
-
+/*
             (function(dest, target, template, callback){
-
-                var innerHTML = window['Inferno']['createTemplate'](function(onCreated){
-
-                    return {
-
-                        'tag': "self",
-                        'attrs': {
-                            'onCreated': onCreated
-                        }
-                    };
-                });
 
                 function hook(domNode){
 
@@ -823,9 +808,28 @@ goog.require('APP');
                 }
 
                 var t0 = performance.now();
-                for(var i = 0; i < 5000; i++){
+                for(var i = 0; i < 500; i++){
 
-                    window['InfernoDOM']['render'](innerHTML(hook), dest);
+                    (function(template){
+
+                        var innerHTML = window['Inferno']['createTemplate'](function(onCreated){
+
+                            return {
+
+                                'tag': "self",
+                                'attrs': {
+                                    'onCreated': onCreated
+                                }
+                            };
+                        });
+
+                        window['InfernoDOM']['render'](innerHTML(function hook(domNode){
+
+                            domNode['innerHTML'] = template;
+
+                        }), dest);
+
+                    })(template += '<div>test</div>');
                 }
 
                 var t1 = performance.now();
@@ -850,14 +854,18 @@ goog.require('APP');
 */
 
 
-/*
-            // Xone
 
+            // Xone
+/*
             var t0 = performance.now();
 
-            for(var i = 0; i < 5000; i++){
+            for(var i = 0; i < 500; i++){
 
-                CORE.setHTML(dest, template);
+                (function(template){
+
+                    CORE.setHTML(dest, template);
+
+                })(template += '<div>test</div>');
             }
 
             var t1 = performance.now();
@@ -880,15 +888,19 @@ goog.require('APP');
 */
 
 
-/*
-            // html2idom (IncrementalDOM)
 
+            // html2idom (IncrementalDOM)
+/*
             (function(dest, target, template, callback){
 
                 var t0 = performance.now();
-                for(var i = 0; i < 5000; i++){
+                for(var i = 0; i < 500; i++){
 
-                    html2idom.patchHTML(dest, template);
+                    (function(template){
+
+                        html2idom.patchHTML(dest, template);
+
+                    })(template += '<div>test</div>');
                 }
 
                 var t1 = performance.now();
@@ -910,18 +922,22 @@ goog.require('APP');
                     }
                 }
             });
-
 */
 
-/*
-            // diffHTML
 
+
+            // diffHTML
+/*
             (function(dest, target, template, callback){
 
                 var t0 = performance.now();
-                for(var i = 0; i < 5000; i++){
+                for(var i = 0; i < 500; i++){
 
-                    diff.innerHTML(dest, template);
+                    (function(template){
+
+                        diff.innerHTML(dest, template);
+
+                    })(template += '<div>test</div>');
                 }
 
                 var t1 = performance.now();
@@ -976,31 +992,44 @@ goog.require('APP');
 
                 if(window['Inferno'] && window['InfernoDOM']){
 
-                    inferno_template = template;
+                    var render = window['Inferno']['createTemplate'](
 
-                    var render = window['Inferno']['createTemplate'](function(onCreated){
+                        function(onCreated){
 
-                        return {
+                            return {
 
-                            'tag': "vdom",
-                            'attrs': {
-                                'onCreated': onCreated
-                            }
-                        };
-                    });
+                                'tag': "vdom",
+                                'attrs': {
+                                    'onCreated': onCreated
+                                }
+                            };
+                        }
+                    );
 
-                    window['InfernoDOM']['render'](render(hook), dest);
-
-                    dest['_html'] = template;
-
+                    // NOTE: may seems too much work for one single render tick through CORE.paint
                     CORE.paint(function(){
+
+                        window['InfernoDOM']['render'](render(function(node){
+
+                            node.innerHTML = template;
+
+                        }), dest);
+
+                        dest['_html'] = template;
 
                         renderCallback(dest, target);
                     });
                 }
                 else{
 
-                    CORE.setHTML(dest, template, function(){
+                    // var range = document.createRange();
+                    //
+                    // range.selectNodeContents(dest);
+                    // //range.selectNode(dest);
+                    // range.createContextualFragment('<vdom>' + template + '</vdom>');
+                    // range.detach();
+
+                    CORE.setHTML(dest, '<vdom>' + template + '</vdom>', function(){
 
                         renderCallback(dest, target);
                     });
@@ -1018,6 +1047,13 @@ goog.require('APP');
         for(var i = 0; i < pull_elements.length; i++){
 
             APP.VIEW.PULL.register(pull_elements[i]);
+        }
+
+        pull_elements = CORE.getByClass('zoom', dest);
+
+        for(var i = 0; i < pull_elements.length; i++){
+
+            APP.VIEW.ZOOM.register(pull_elements[i]);
         }
 
         if(target.callback){

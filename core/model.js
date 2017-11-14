@@ -354,7 +354,6 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
         var data, model = null;
 
-        //TODO this line should be not needed
         index = String(index);
 
         if(!CONFIG.ENABLE_MODEL_CACHE || force || !this.cache[index]){

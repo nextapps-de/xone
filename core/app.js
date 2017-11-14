@@ -109,20 +109,34 @@ var APP = {
 
         /**
          * @param {string} val
-         * @returns {string}
+         * @param {Function=} callback
          */
-        compress: function(val){
+        compress: function(val, callback){
 
-            return val;
+            if(callback){
+
+                callback(val);
+            }
+            else{
+
+                return val;
+            }
         },
 
         /**
          * @param {string} val
-         * @returns {string}
+         * @param {Function=} callback
          */
-        decompress: function(val){
+        decompress: function(val, callback){
 
-            return val;
+            if(callback){
+
+                callback(val);
+            }
+            else{
+
+                return val;
+            }
         }
     },
 
@@ -272,7 +286,7 @@ var APP = {
      * @name APP.INIT
      * @namespace APP
      */
-    INIT: function(){},
+    INIT: [],
 
     /**
      * @name APP.SETUP

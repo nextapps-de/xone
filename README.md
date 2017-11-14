@@ -11,10 +11,9 @@
 </p>
 
 <h1></h1>
+<h3>Mobile Application Development Kit / MVC Framework</h3>
 
-<h3>WebApp Development Kit / MVC Framework</h3>
-
-__Xone__ provides you a lightweight full stack environment to develop beautiful web-based applications for every use and enables the optimal integration of an universal codebase into a wide range of systems (e.g. mobile devices, tablets, desktops, browser environments).
+__Xone__ provides you a lightweight full stack environment on top of Node.js to develop beautiful applications for every use (based on HTML5 and JavaScript) and enables the optimal integration of an universal codebase into a wide range of systems (e.g. mobile devices, tablets, desktops, browser environments).
 
 <!--
 > __Notice:__ Actually this is a beta state of this repository.
@@ -39,33 +38,72 @@ Some breaking changes could possibly be introduced in upcoming versions. Do not 
 
 ---
 
-### Announcement Xone v1.0.0
+### Announcement Xone v1.0.0 stable
 
 Xone will get some major changes. This was required to open capabilities for upcoming features we are working now like __Xone Native__. The plan is to release a final architecture until v.1.0.0 and then also to be done with most of the breaking changes.
 
-##### v0.8.0
+##### v0.9.0 beta (coming in Q1/2018)
 
-- Xone Development User Interface (Browser replacement for any console commands)
+- Xone Native (Cordova-based wrapper)
+    - Enables native features without changing anything on your codebase, like:
+        - Native Transitions
+        - Native Filesystem/Storage
+        - Native Image Library
+        - Native Media Player
+        - Native Device Access (Camera, Photo Library, Statusbar, etc)
+        - Native Map
+    - Provides default Cordova-based project build configurations (which already including all required plugins as well as platform configurations)
+- Available Source Code of Demo Apps
+- Native Demo App (through App Stores), including:
+    - technical demos
+    - components demo
+    - demo apps
+    - xone developer tools
+    - documentation
+- \> 90% test coverage
+
+<img src="doc/xone_processing_model.png" alt="" width="50%;" align="right" style="float:right; padding: 0 0 20px 20px">
+
+##### v0.8.0 beta (in progress)
+
+- Xone Non-Blocking UI Processing Model, controllable via: 
+    - Util.Process.`async`
+    - Util.Process.`paint`
+    - Util.Process.`promise`
+    - Util.Process.`queue`
+    - Util.Process.`stack`
+    - Util.Process.`asap`
+    - Util.Process.`run` (Pseudo Thread Runner Instance)
 - Fully transfer to Asynchronous Module Definition (replaces the poorly Closure Compiler dependency system)
 - Replace most of global namespaces of the framework to constructors and also changing capitalized style for the new AMD namespacing:
     - ___Note:___ By using AMD you can internally customize naming of all references of Xone (conflicts with global namespace is not possible in AMD)
-    - `APP.CONTROLLER[name]` --> `Controller.new(name)`
-    - `APP.VIEW[name]` --> `View.new(name)`
-    - `APP.EVENT[query]` --> `Event.new(query)`
-    - `APP.ROUTE[route]` --> `Route.new(route)`
-    - `APP.MAPPER[name]` --> Is now a part of View, Model and/or Route (e.g. _View Mappings_, _Model Mappings_, _Payload Mappings_)
-    - `APP.MODEL[name]` --> `Model.new(name)`
-    - `APP.WORKER[name]` --> `Worker.new(name)`
-    - `APP.HANDLER` --> you are free to use any style (like before)
-    - `APP.HELPER` --> you are free to use any style (like before)
-    - `APP.SETTING.get(key)` --> `Setting.get(key)`
-    - `APP.PLUGIN.Filesystem` --> `Filesystem`
-    - `CORE.*` --> `Util.{Package}.*` (e.g. `Util.Array.merge`)
+    - `APP.CONTROLLER[name]` → `new Controller(name)` or `Controller.new(name)`
+    - `APP.VIEW[name]` → `new View(name)` or `View.new(name)`
+    - `APP.EVENT[query]` → `new Event(query)` or `Event.new(query)`
+    - `APP.ROUTE[route]` → `new Route(route)` or `Route.new(route)`
+    - `APP.MAPPER[name]` → Is now a part of View, Model and/or Route (see: _View Mappings_, _Model Mappings_, _Payload Mappings_)
+    - `APP.MODEL[name]` → `new Model(name)` or `Model.new(name)`
+    - `APP.WORKER[name]` → `new Worker(name)` or `Worker.new(name)`
+    - `APP.HANDLER` → you are free to use any style (like before)
+    - `APP.HELPER` → you are free to use any style (like before)
+    - `APP.SETTING.get(key)` → `Setting.get(key)`
+    - `APP.PLUGIN.Filesystem` → `Filesystem`
+    - `CORE.*` → `Util.{Package}.*` (e.g. `Util.Array.merge`)
+    - alternatively of calling the method _.new()_ it is also possible to use _.create()_ as well as _.register()_
     - Singular naming coding convention is still valid
     - new constructors can either be instantiated via the builtin method .new() or via the classical new keyword
     - the new concept of using constructors opens a lot of nice features, they will coming soon, and also adds some missing OOP styles
+- User Interface Components
+    - Slider
+    - Side Drawer (Side Menu)
+    - Internal App Status Notification
+    - Adjustable Statusbar-Visibility and Webview-Overlays-Statusbar per Screen/View
 - Provides package definitions (packages can group or import html-templates, javascript, css styles and assets)
 - Provide dependency management of whole modules/packages through the keyword import("package") and export("package", ...)
+- Worker to de-/compress contents in background (lzip)
+<img src="doc/xone_gui.png" alt="" width="35%;" align="right" style="float:right; padding: 0 0 20px 20px">
+
+- Xone Development User Interface (Browser replacement for any console commands)
 - Model supports now virtual properties everywhere (not only in views)
 - Model can now define a structural schema to save in storage (this also improves extraction of nested models)
 - New Templating Implementation and Compiler
@@ -74,7 +112,7 @@ Xone will get some major changes. This was required to open capabilities for upc
     - better handling of virtual and mapped properties
     - ultra fast through new pre-compilation strategy and usage of model-bind-caching (instead of view-bind cache)
 
-##### v0.7.0
+##### v0.7.0 beta
 
 - Support for Web Components
 - Support for Web Templates

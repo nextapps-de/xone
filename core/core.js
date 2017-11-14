@@ -785,7 +785,7 @@ var CORE = (function(CORE){
 
         if(!regex_query.test(query)){
 
-            if(query.indexOf(' ') === -1){
+            if(!CORE.contains(query, ' ')){
 
                 var firstChar = query[0];
 
@@ -944,12 +944,16 @@ var CORE = (function(CORE){
 
         var direction = false;
 
-        if(((selector[0] === '<') && (direction = true)) || (selector[0] === '>')){
+        if(((selector[0] === '>') && (direction = true)) || (selector[0] === '<')){
 
             selector = CORE.trim(selector.substring(1));
         }
 
         if(direction){
+
+            return node.querySelector(selector);
+        }
+        else{
 
             if(node.closest){
 
@@ -969,10 +973,6 @@ var CORE = (function(CORE){
                     }
                 }
             }
-        }
-        else{
-
-            return node.querySelector(selector);
         }
     };
 
@@ -1194,7 +1194,7 @@ var CORE = (function(CORE){
 
                             // split property key into components accordingly to its model names
 
-                            if(data_attr.indexOf('.') !== -1){
+                            if(CORE.contains(data_attr, '.')){
 
                                 var split = data_attr.split('.');
                                 var model = split[0];
@@ -1975,18 +1975,63 @@ var CORE = (function(CORE){
     };
 
     /**
-     * @param {Array} array
+     * @param {!Array} array
      * @param {*} item
-     * @returns {boolean}
+     * @returns {number}
      */
 
-    CORE.contains = function(array, item){
+    CORE.indexOf = function(array, item){
+
+        var i = -1, len = array.length;
+
+        while(++i < len){
+
+            if(array[i] === item) return i;
+        }
+
+        return -1;
+    };
+
+    /**
+     * @param {Array} array
+     * @param {*} item
+     * @returns {number}
+     */
+
+    CORE.lastIndexOf = function(array, item){
 
         var i = array.length;
 
         while(i--){
 
-            if(array[i] === item) return true;
+            if(array[i] === item) return i;
+        }
+
+        return -1;
+    };
+
+    var regex_cache = {};
+
+    /**
+     * @param {Array|string} string_or_array
+     * @param {*} item
+     * @returns {boolean}
+     */
+
+    CORE.contains = function(string_or_array, item){
+
+        if(CORE.isArray(string_or_array)){
+
+            return CORE.indexOf(/** @type {!Array} */ (string_or_array), item) !== -1;
+        }
+        else if(item.length){
+
+            regex_cache[item] || (
+
+                regex_cache[item] = new RegExp(item)
+            );
+
+            return regex_cache[item].test(string_or_array);
         }
 
         return false;
@@ -2115,6 +2160,11 @@ var CORE = (function(CORE){
             prop = props[i];
             target[prop] = source[prop];
         }
+    };
+
+    CORE.insertAt = function(array, index, arrayToInsert) {
+
+        array.splice.apply(array, [index, 0].concat(arrayToInsert));
     };
 
     /**
@@ -2378,12 +2428,25 @@ var CORE = (function(CORE){
             return /** @type {number} */ (a);
         },
 
+        round: function(number, minimum_increment){
+
+            if(minimum_increment){
+
+                return this.round(number / minimum_increment) * minimum_increment;
+            }
+            else{
+
+                return number >= 0 ?
+
+                    (number + 0.5) | 0
+                :
+                    (number - 0.5) | 0;
+            }
+        },
+
         rad: window.Math.PI / 180,
         cos: window.Math.cos,
         sin: window.Math.sin,
-        round: function(number){
-            return number >= 0 ? (number + 0.5) | 0 : (number - 0.5) | 0;
-        },
         rand: window.Math.random,
         abs: function abs(a){
             return (a < 0 ? -a : a);
@@ -2423,9 +2486,9 @@ var CORE = (function(CORE){
         /** @type {boolean} */
         isRetina: window['devicePixelRatio'] > 1,
         /** @type {boolean} */
-        isOnline: navigator['onLine'],
+        //isOnline: function(){},
         /** @type {boolean} */
-        isOffline: !this.isOnline,
+        //isOffline: !this.isOnline,
         /** @type {boolean} */
         isTouch: (function(){
 
@@ -2453,6 +2516,25 @@ var CORE = (function(CORE){
             return CORE.System['is' + type];
         }
     };
+
+    Object.defineProperties(CORE.System, {
+
+        /** @lends {CORE.System} */ isOnline: {
+
+            get: function isOnline(){
+
+                return !!navigator['onLine'];
+            }
+        },
+
+        /** @lends {CORE.System} */ isOffline: {
+
+            get: function isOffline(){
+
+                return !navigator['onLine'];
+            }
+        }
+    });
 
     /** @type {boolean} */
     CORE.System.isChrome = !!window['chrome'] && !CORE.System.isOpera; // Chrome 1+

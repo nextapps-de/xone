@@ -82,14 +82,14 @@ APP.VIEW = (function(){
             if(!target_view){
 
                 target_view = source_view;
-                source_view = current_view;
+                source_view = APP.VIEW.current_view();
             }
 
             if(DEBUG) CORE.console.log('Show View: ' + source_view + ' > ' + target_view);
 
             if(target_view){
 
-                //if(target_view !== current_view){
+                if(target_view !== current_view){
 
                     CORE.addClass('#' + target_view, 'show');
 
@@ -130,7 +130,22 @@ APP.VIEW = (function(){
 
                     history.push(current_view = target_view);
 
+                    // iOS overflow scrolling z-index fix
+                    //if(PLATFORM === 'webapp' && CORE.System.isIOS){
+
+                    //CORE.setStyle(sections, '-webkit-overflow-scrolling', 'touch');
+                    //}
+
                     if(source_view){
+
+                        if(CORE.hasClass('#' + source_view, 'reveal')){
+
+                            // CORE.removeClass('#' + source_view, 'reveal');
+                        }
+                        else{
+
+                            CORE.removeClass('#' + source_view, 'show');
+                        }
 
                         is_popup = CORE.getById(source_view).getAttribute('role') !== 'main';
                         target_index = is_popup ? popup_index : view_index;
@@ -145,19 +160,23 @@ APP.VIEW = (function(){
                         // });
                     }
                 }
+            }
+
+            //console.log(view_index);
+            //console.log(popup_index);
         },
 
-        hide: function(view){
+        hide: function(from_view, to_view){
 
-            if(view === 'tabbar'){
+            if(from_view === 'tabbar'){
 
                 CORE.setStyle('xone-tabbar', 'visibility', 'hidden');
                 return;
             }
 
-            var is_popup = CORE.getById(view).getAttribute('role') !== 'main';
+            var is_popup = CORE.getById(from_view).getAttribute('role') !== 'main';
             var target_index = is_popup ? popup_index : view_index;
-            var index = target_index.indexOf(view);
+            var index = target_index.indexOf(from_view);
 
             if(index !== -1){
 
@@ -170,14 +189,22 @@ APP.VIEW = (function(){
             }
             else{
 
-                target_index.push(view);
+                target_index.push(from_view);
                 //updateViewIndex(target_index, is_popup ? 10 : 0);
                 index = target_index.length - 1;
             }
 
-            CORE.removeClass('#' + view, 'show');
 
-            CORE.setStyle('#' + view, {
+            if(CORE.hasClass('#' + from_view, 'reveal')){
+
+                // CORE.removeClass('#' + source_view, 'reveal');
+            }
+            else{
+
+                CORE.removeClass('#' + from_view, 'show');
+            }
+
+            CORE.setStyle('#' + from_view, {
 
                 //'visibility': 'hidden',
                 //'pointerEvents': 'none',
@@ -192,7 +219,20 @@ APP.VIEW = (function(){
 
             current_view = view_index[0];
 
-            if(DEBUG) CORE.console.log('Hide View: ' + view + ' > ' + current_view);
+            if(to_view){
+
+                CORE.addClass('#' + to_view, 'show');
+
+                //updateViewIndex(target_index, is_popup ? 10 : 0);
+
+                // CORE.setStyle('#' + source_view, {
+                //
+                //     //'pointerEvents': 'none',
+                //     //'zIndex': target_index.length - index + (is_popup ? 10 : 0)
+                // });
+            }
+
+            if(DEBUG) CORE.console.log('Hide View: ' + from_view + ' > ' + current_view);
         },
 
         slideIn: function(from_view, to_view){
@@ -203,7 +243,7 @@ APP.VIEW = (function(){
                 from_view = view_index[0];
             }
 
-            CORE.addClass('#' + from_view, 'hide');
+            CORE.addClass('#' + from_view, 'reveal');
 
             this.show(from_view, to_view);
         },
@@ -215,7 +255,7 @@ APP.VIEW = (function(){
                 to_view = view_index[0];
             }
 
-            CORE.removeClass('#' +  to_view, 'hide');
+            CORE.removeClass('#' +  to_view, 'reveal');
 
             this.hide(from_view, to_view);
         },

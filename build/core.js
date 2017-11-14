@@ -13,7 +13,7 @@ goog.require("CORE.ANIMATE");
 APP.TEMPLATE = {};
 APP.HTML = {};
 
-APP.INIT = function(){};
+APP.INIT = [];
 APP.MAIN = function(){};
 APP.SETUP = APP.MAIN;
 

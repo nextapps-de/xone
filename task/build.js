@@ -319,7 +319,7 @@ if(fs.existsSync(__dirname + '/build.js')){
 
         var extern_dependencies = [
 
-            lib.getModule('lz-string') + '/libs/lz-string.min.js',
+            //lib.getModule('lz-string') + '/libs/lz-string.min.js',
             //lib.getModule('fastclick') + '/lib/fastclick.js',
             "../" + xone_manifest.dependencies.xone + 'plugin/inferno.min.js',
             "../" + xone_manifest.dependencies.xone + 'plugin/inferno-dom.min.js'
