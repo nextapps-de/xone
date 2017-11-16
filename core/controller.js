@@ -386,7 +386,6 @@ goog.require('APP');
                     var loop_start = 0;
                     var loop_end = 0;
                     var loop_count = 1;
-
                     var view_loop = view.loop;
 
                     if(view_loop){

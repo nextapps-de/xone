@@ -101,6 +101,7 @@ Xone will get some major changes. This was required to open capabilities for upc
 - Provides package definitions (packages can group or import html-templates, javascript, css styles and assets)
 - Provide dependency management of whole modules/packages through the keyword import("package") and export("package", ...)
 - Worker to de-/compress contents in background (lzip)
+
 <img src="doc/xone_gui.png" alt="" width="35%;" align="right" style="float:right; padding: 0 0 20px 20px">
 
 - Xone Development User Interface (Browser replacement for any console commands)

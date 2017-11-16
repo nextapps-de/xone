@@ -11,7 +11,7 @@ var CONFIG_SUCCESSIVE_PAINT = true;
  * @define {boolean}
  */
 
-var CONFIG_PRIORITIZE_PAINT = false;
+var CONFIG_PRIORITIZE_PAINT = true;
 
 /**
  * @define {number}

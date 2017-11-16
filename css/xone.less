@@ -313,6 +313,10 @@ xone-main{
 }
 xone-section{
     background-color: #fff;
+    position: absolute;
+    bottom:0;
+    right:0;
+    left:0;
 }
 xone-main{
     visibility: hidden;
@@ -326,8 +330,12 @@ xone-header{
     /* NOTE: the border should be excluded from the opacity fade animation */
     /*border-bottom: 1px solid #dee3ed;*/
 }
+xone-main[statusbar] xone-header{
+    padding-top: @xone-statusbar-height;
+}
 xone-tabbar{
     bottom:0;
+    font-size: 11px;
     height: @xone-tabbar-height;
     border-top: 1px solid @xone-border-color;
     box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
@@ -347,6 +355,9 @@ xone-tabbar{
 }
 xone-main xone-header ~ xone-section{
     top: @xone-navbar-height - 1;
+}
+xone-main[statusbar] xone-header ~ xone-section{
+    top: @xone-navbar-height + @xone-statusbar-height - 1;
 }
 xone-main[role="main"]{
     bottom: @xone-tabbar-height;
@@ -382,6 +393,9 @@ xone-main:after{
     background: #fff;
     z-index: -1;
 }
+xone-main[statusbar]:after{
+    top: @xone-navbar-height + @xone-statusbar-height - 1;
+}
 xone-main:not([popup]):before{
     content: "";
     position: absolute;
@@ -392,6 +406,9 @@ xone-main:not([popup]):before{
     height:1px;
     border-top: 1px solid @xone-border-color;
     z-index: 10;
+}
+xone-main[statusbar]:not([popup]):before{
+    top: @xone-navbar-height + @xone-statusbar-height - 1;
 }
 hr{
     border: none;
@@ -413,6 +430,9 @@ xone-header h1{
     z-index: -1;
     display: inline-block;
     vertical-align: middle;
+}
+xone-main[statusbar] xone-header h1{
+    top: @xone-statusbar-height;
 }
 xone-header h1 img {
     height: 17px;
@@ -488,10 +508,6 @@ xone-section,
 .scrollpane,
 .scrollpane-y,
 .scrollpane-x{
-    position: absolute;
-    bottom:0;
-    right:0;
-    left:0;
     width:auto;
     height:auto;
     overflow-x: hidden;
@@ -505,9 +521,9 @@ xone-section,
     overflow-y: hidden;
     touch-action: pan-x;
 }
-xone-section:before,
-.scrollpane:before,
-.scrollpane-y:before{
+xone-section[bounce]:before,
+.scrollpane[bounce]:before,
+.scrollpane-y[bounce]:before{
     content: "";
     position: absolute;
     top:0;
@@ -515,10 +531,11 @@ xone-section:before,
     right:0;
     left:0;
     width: 100%;
+    height:100.1%;
     min-height:100.1%;
     pointer-events: none;
 }
-.scrollpane-x:before{
+.scrollpane-x[bounce]:before{
     content: "";
     position: absolute;
     top:0;
@@ -526,6 +543,7 @@ xone-section:before,
     right:0;
     left:0;
     height: 100%;
+    width: 100.1%;
     min-width: 100.1%;
     pointer-events: none;
 }
@@ -541,6 +559,9 @@ xone-section:before,
     background-repeat: repeat-y;
     background-position: left center;
     z-index: 0;
+}
+xone-main[statusbar] .shadow {
+    top: @xone-navbar-height + @xone-statusbar-height - 1;
 }
 
 /* Slide Wrapper */

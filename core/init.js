@@ -1137,6 +1137,36 @@ goog.require('APP.MAIN');
         //APP.VIEWPORT.update();
         //CORE.async(APP.MAIN, CONFIG.START_DELAY || 0);
 
+
+        /*
+        if(CONFIG.ENV !== 'production'){
+
+            CORE.ajax({
+
+                type: 'GET',
+                url: 'lib/xone/gui/node.js',
+                params: {
+                    'fn': "get",
+                    'payload': JSON.stringify({
+                        'shtml': "overlay"
+                    })
+                },
+                //dataType: type
+                async: true,
+                success: function(data){
+
+                    if(data.json && data.json.shtml) {
+
+                        var div = document.createElement('div');
+                        div.innerHTML = data.json.shtml;
+                        document.body.appendChild(div);
+                    }
+                }
+            });
+        }
+        */
+
+
         APP.SETUP();
 
         CORE.async(function(){
@@ -1200,15 +1230,35 @@ goog.require('APP.MAIN');
 
                 // Apply Z-Index Workaround (iOS)
 
-                CORE.addCssRule('xone-main[role="main"]', {
-
-                    'left': '300%'
-                });
-
-                CORE.addCssRule('xone-main[role="main"].show', {
-
-                    'left': 0
-                });
+                // CORE.addCssRule('xone-main[role="main"]', {
+                //
+                //     /* unload gpu */
+                //     //'display': 'none'
+                //
+                //     /* does not unload gpu, repaint */
+                //     //'visibility': 'hidden'
+                //
+                //     /* does not unload gpu, reflow */
+                //    // 'left': '-300%'
+                //
+                //     /* does not unload gpu, maybe z-index conflict */
+                //     'opacity': 0
+                // });
+                //
+                // CORE.addCssRule('xone-main[role="main"].show', {
+                //
+                //     /* unload gpu */
+                //     //'display': 'block'
+                //
+                //     /* does not unload gpu, repaint */
+                //     //'visibility': 'visible',
+                //
+                //     /* does not unload gpu, reflow */
+                //     //'left': '0'
+                //
+                //     /* does not unload gpu, maybe z-index conflict */
+                //     'opacity': 1
+                // });
            // }
 
             if(PLATFORM !== 'cordova'){
@@ -1228,7 +1278,8 @@ goog.require('APP.MAIN');
 
                         if(top === 0){
 
-                            if((!this.previousElementSibling || !CORE.hasClass(this.previousElementSibling, 'pull')) &&
+                            if(/*!this.hasAttribute('bounce') &&*/
+                               (!this.previousElementSibling || !CORE.hasClass(this.previousElementSibling, 'pull')) &&
                                (!this.firstElementChild.firstElementChild || !CORE.hasClass(this.firstElementChild.firstElementChild, 'zoom'))){
 
                                 this.scrollTop = 1;
@@ -1245,9 +1296,9 @@ goog.require('APP.MAIN');
 
                 function touchmove(evt){
 
-                    var touchobj = evt['changedTouches'][0];
-
                     if(scrollX){
+
+                        var touchobj = evt['changedTouches'][0];
 
                         var distY = touchobj['pageY'] - startY;
                         var distX = touchobj['pageX'] - startX;
@@ -1257,7 +1308,7 @@ goog.require('APP.MAIN');
                             evt['_isScroller'] = true;
                         }
                     }
-                    else{
+                    else if(this.hasAttribute('bounce') || (this.offsetHeight < this.scrollHeight)){
 
                         evt['_isScroller'] = true;
                     }
@@ -1269,19 +1320,29 @@ goog.require('APP.MAIN');
 
                 for(var i = 0; i < sections.length; i++){
 
-                    sections[i].addEventListener('touchstart', touchstart, APP.CONFIG.EVENT_OPTIONS);
-                    sections[i].addEventListener('touchmove', touchmove, APP.CONFIG.EVENT_OPTIONS);
+                    sections[i].addEventListener('touchstart', touchstart, false);
+                    sections[i].addEventListener('touchmove', touchmove, false);
                 }
 
-                window.addEventListener('touchstart', function(evt){
+                // sections = CORE.getByClass('scrollpane-x');
+                //
+                // for(var i = 0; i < sections.length; i++){
+                //
+                //     sections[i].addEventListener('touchstart', touchstart, false);
+                //     sections[i].addEventListener('touchmove', touchmove, false);
+                // }
+
+                // document.body.addEventListener('touchstart', function(evt){
+                //
+                //     evt['_isScroller'] || evt.preventDefault();
+                //
+                // }, false);
+
+                document.body.addEventListener('touchmove', function(evt){
 
                     evt['_isScroller'] || evt.preventDefault();
-                });
 
-                window.addEventListener('touchmove', function(evt){
-
-                    evt['_isScroller'] || evt.preventDefault();
-                });
+                }, false);
             }
         }
     };
@@ -1964,6 +2025,18 @@ goog.require('APP.MAIN');
 
             APP.VIEW.PULL.register(pull_elements[i]);
         }
+
+        /*
+        if(PLATFORM === 'webapp'){
+
+            var bounce_elements = CORE.queryAll('xone-section[bounce]');
+
+            for(var i = 0; i < bounce_elements.length; i++){
+
+                APP.VIEW.BOUNCE.register(bounce_elements[i]);
+            }
+        }
+        */
     };
 
     /** @type {Function|null} */
@@ -2051,29 +2124,3 @@ goog.require('APP.MAIN');
     }
 
 })();
-
-// if(CONFIG.ENV !== 'production'){
-//
-//     CORE.ajax({
-//
-//         type: 'GET',
-//         url: 'lib/xone/gui/node.js',
-//         params: {
-//             fn: "get",
-//             payload: JSON.stringify({
-//                 shtml: "overlay"
-//             })
-//         },
-//         //dataType: type
-//         async: true,
-//         success: function(data){
-//
-//             if(data.json && data.json.shtml) {
-//
-//                 var div = document.createElement('div');
-//                 div.innerHTML = data.json.shtml;
-//                 document.body.appendChild(div);
-//             }
-//         }
-//     });
-// }
