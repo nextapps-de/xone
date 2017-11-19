@@ -4,6 +4,7 @@
 /* -------------------------------- */
 body.no-transition xone-main,
 body.no-transition xone-header,
+body.no-transition xone-header h1,
 body.no-transition .shadow,
 body.no-transition xone-tabbar{
     transition: none !important;
@@ -20,7 +21,7 @@ xone-main.slide{
 }
 xone-main.slide xone-header{
     opacity: 0;
-    transform: translate3d(-33%, 0, 0);
+    transform: translate3d(-50%, 0, 0);
     backface-visibility: hidden;
     transition: opacity 400ms @xone-animation-easing,
                 transform 800ms @xone-animation-easing;
@@ -57,11 +58,13 @@ xone-main[role="main"] ~ xone-tabbar{
     transition: transform 800ms @xone-animation-easing;
     will-change: transform;
 }
-xone-main[role="main"] xone-header{
+
+xone-main[role="main"] xone-header h1{
     opacity: 1;
-    transition: opacity 400ms ease-in;
+    transition: opacity 300ms ease-in;
     will-change: opacity;
 }
+
 
 /* Hide State */
 /* -------------------------------- */
@@ -69,10 +72,12 @@ xone-main[role="main"].reveal,
 xone-main[role="main"].reveal ~ xone-tabbar{
     transform: translate3d(-33%, 0, 0);
 }
-xone-main[role="main"].reveal xone-header{
+
+xone-main[role="main"].reveal xone-header h1{
     opacity: 0;
     transition: opacity 800ms @xone-animation-easing;
 }
+
 
 /* Slide Bottom */
 /* -------------------------------- */

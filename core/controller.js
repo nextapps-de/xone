@@ -756,6 +756,19 @@ goog.require('APP');
                 }
             }
 
+            var old_style_value = CORE.getStyle(dest, 'willChange');
+
+            if(!old_style_value || !CORE.contains(old_style_value, 'contents')){
+
+                CORE.setStyle(dest, 'willChange',
+
+                    old_style_value && (old_style_value !== 'auto') ?
+
+                        old_style_value + ', '
+                    :
+                        'contents'
+                );
+            }
 
             // diffDOM
 /*

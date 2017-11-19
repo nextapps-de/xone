@@ -999,6 +999,15 @@ goog.require('APP.MAIN');
                                     if(DEBUG) CORE.console.log("Migration done: " + versions[i]);
                                 }
                             }
+
+                            // APP.PLUGIN.Notification.alert({
+                            //
+                            //     'message': 'Updates has been installed successfully.',
+                            //     'title': 'v' + versions[0],
+                            //     'button': 'Close'
+                            // });
+
+                            alert('Updates v' + versions[0] + ' has been installed successfully.');
                         }
 
                         migration_success = true;

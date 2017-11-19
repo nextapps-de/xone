@@ -515,6 +515,7 @@ xone-section,
     touch-action: pan-y;
     -webkit-overflow-scrolling: touch;
     overflow-scrolling: touch;
+    will-change: scroll-position;
 }
 .scrollpane-x{
     overflow-x: scroll;
@@ -695,10 +696,21 @@ xone-main[statusbar] .shadow {
     left:0;
     right:0;
     pointer-events: none;
+    will-change: transform;
 }
 .pull.pause .spinner div{
     animation: none !important;
 }
+.pull > div{
+    will-change: transform;
+}
+.slider{
+    will-change: transform;
+}
+.zoom > div{
+    will-change: transform;
+}
+
 /* Demo Screen */
 
 #demo{
