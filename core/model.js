@@ -176,7 +176,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
         /* Get existing record */
 
-        var record = data['id'] || (data['id'] === 0) ? this.parse('' + data['id']) : null;
+        var record = data['id'] || (data['id'] === 0) ? this.parse(data['id']) : null;
 
         if(record) {
 
@@ -196,7 +196,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
             //     }
             // }
 
-            record.update(tmp_record, persistent, _batch); // update calls its own save method
+            record.update(tmp_record, persistent, null, _batch); // update calls its own save method
         }
         else{
 
@@ -215,14 +215,11 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
                 /* Saves a new created instance */
 
-                if(persistent) {
+                record.save(persistent, _batch);
 
-                    record.save(persistent, _batch);
+                /* Update model keys */
 
-                    /* Update model keys */
-
-                    this.keys = this.data.keys();
-                }
+                if(!_batch) this.keys = this.data.keys();
 
                 if(record.onCreate) record.onCreate();
                 if(!_batch) {
@@ -306,7 +303,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
         if(data['_id']){
 
-            data = APP.MODEL[data['_type']].parse('' + data['_id'], force);
+            data = APP.MODEL[data['_type']].parse(data['_id'], force);
         }
 
         for(var key in data) {
@@ -343,7 +340,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
     }
 
     /**
-     * @param {number|string} index
+     * @param {!string} index
      * @param {boolean=} force
      * @param {boolean=} recursive
      * @this {_model_class|_model_helper}
@@ -354,7 +351,10 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
         var data, model = null;
 
-        index = String(index);
+        if(typeof index === 'number') {
+
+            index = String(index);
+        }
 
         if(!CONFIG.ENABLE_MODEL_CACHE || force || !this.cache[index]){
 
@@ -364,7 +364,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
             }
         }
 
-        if(CONFIG.ENABLE_MODEL_CACHE){
+        if(CONFIG.ENABLE_MODEL_CACHE || !data){
 
             if(model){
 
@@ -394,7 +394,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
             }
         }
 
-        return this.parse(/** @type {string} */ (id));
+        return this.parse(id);
     };
 
     /**
@@ -407,7 +407,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
             if(id instanceof ModelClass){
 
-                this.parse(id['id']).delete();
+                id.delete();
             }
 
             else if(id.dataset){
@@ -417,7 +417,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
             else {
 
-                this.parse(/** @type {string} */ (id)).delete();
+                this.parse(id).delete();
             }
         }
     };
@@ -436,7 +436,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
             if(id instanceof ModelClass){
 
-                return this.parse(id['id']).update(params, persistent, _persistent);
+                return id.update(params, persistent, _persistent);
             }
 
             else if(id.dataset){
@@ -472,7 +472,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
         while(start < end) {
 
-            array[len++] = this.parse('' + keys[start++]);
+            array[len++] = this.parse(keys[start++]);
         }
 
         return array;
@@ -520,7 +520,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
         for(var i = 0; i < keys.length; i++) {
 
-            var data = this.parse('' + keys[i]);
+            var data = this.parse(keys[i]);
 
             if(data[field] === value) {
 
@@ -547,7 +547,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
         for(var i = 0; i < keys.length; i++) {
 
-            var data = this.parse('' + keys[i]);
+            var data = this.parse(keys[i]);
             var key;
 
             found = true;
@@ -670,7 +670,10 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
 			for(var i = 0; i < length; i++){
 
-				items[i].delete(/* batch: */ i < length - 1);
+				if(items[i]) {
+
+				    items[i].delete(/* batch: */ i < length - 1);
+                }
 			}
 		}
     };
@@ -850,7 +853,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
     ModelClass.prototype.save = function(persistent, _batch){
 
     	//TODO:
-		persistent = true;
+		//persistent = true;
 
         var id = String(this['id']);
 
@@ -861,38 +864,45 @@ APP.MODEL = (function(MAPPER, STORAGE){
             return this;
         }
 
-		if(this.beforeSave) this.beforeSave();
-		if(!_batch){
-			if(APP.MODEL[this.modelName].beforeSave) APP.MODEL[this.modelName].beforeSave();
-		}
+        if(persistent) {
 
-        if(persistent || !CONFIG.ENABLE_MODEL_CACHE) {
+            if(this.beforeSave) this.beforeSave();
+            if(!_batch){
+                if(APP.MODEL[this.modelName].beforeSave) APP.MODEL[this.modelName].beforeSave();
+            }
 
             var copy = compact_model_data(this, persistent);
 
             try {
 
                 this.data.set(id, copy);
-
-                // TODO: maybe this line failes?
-                if(!_batch) APP.MODEL[this.modelName].keys = this.data.keys();
             }
             catch(e){
 
                 if(DEBUG) CORE.console.err('ERROR: Cannot save model data (ID: ' + id + ')', this);
             }
+
+            // TODO: maybe this line failes?
+            if(!_batch) APP.MODEL[this.modelName].keys = this.data.keys();
+
+            if(this.onSave) this.onSave();
+            if(!_batch){
+                if(APP.MODEL[this.modelName].onSave) APP.MODEL[this.modelName].onSave();
+            }
+        }
+        else{
+
+            this.cache['' + id] = this;
         }
 
-		if(this.onSave) this.onSave();
-		if(!_batch){
-			if(APP.MODEL[this.modelName].onSave) APP.MODEL[this.modelName].onSave();
-		}
+        return (
 
-        return CONFIG.ENABLE_MODEL_CACHE ?
+            CONFIG.ENABLE_MODEL_CACHE ?
 
-            this.cache[id] = this
-        :
-            this;
+                this.cache['' + id] = this
+            :
+                this
+        );
     };
 
     /**
@@ -978,8 +988,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
             /* Delete View Mapper Cache */
 
-            if(persistent || !CONFIG.ENABLE_MODEL_CACHE) this.save(persistent, _batch);
-            else if(CONFIG.ENABLE_MODEL_CACHE) this.cache['' + this['id']] = this;
+            this.save(persistent, _batch);
 
 			if(this.onUpdate) this.onUpdate();
 			if(!_batch){

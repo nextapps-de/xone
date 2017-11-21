@@ -75,9 +75,36 @@ describe("Check Async Implementation", function() {
 
         CORE.queue(function(){
 
-            value = 'foobar';
+            CORE.queue(function(){
 
-        }, 25);
+                value = 'foobar';
+            });
+        });
+
+        value = 'bar';
+
+        expect(value).toBe('bar');
+
+        window.setTimeout(function(){
+
+            expect(value).toBe('foobar');
+            done();
+        });
+    });
+
+    it("CORE.queue(fn, delay)", function(done) {
+
+        CONFIG_TICK_PROCESS_TIME = 0;
+
+        var value = 'foo';
+
+        CORE.queue(function(){
+
+            CORE.queue(function(){
+
+                value = 'foobar';
+            });
+        });
 
         value = 'bar';
 
@@ -91,12 +118,13 @@ describe("Check Async Implementation", function() {
 
                 expect(value).toBe('foobar');
                 done();
-
-            }, 50);
+            });
         });
     });
 
     it("CORE.queue([fn])", function(done) {
+
+        CONFIG_TICK_PROCESS_TIME = 0;
 
         var value = 'foo';
 
@@ -141,6 +169,8 @@ describe("Check Async Implementation", function() {
 
     it("CORE.queue([fn], delay)", function(done) {
 
+        CONFIG_TICK_PROCESS_TIME = 0;
+
         var value = 'foo';
 
         CORE.queue([
@@ -180,19 +210,23 @@ describe("Check Async Implementation", function() {
                 expect(value).toBe('foobar 3');
                 done();
             }
-
-        ], 10);
+        ]);
 
         value = 'bar';
     });
 
     it("CORE.stack(fn)", function(done) {
 
+        CONFIG_TICK_PROCESS_TIME = 3;
+
         var value = 'foo';
 
         CORE.stack(function(){
 
-            value = 'foobar';
+            CORE.stack(function(){
+
+                value = 'foobar';
+            });
         });
 
         value = 'bar';
@@ -201,26 +235,24 @@ describe("Check Async Implementation", function() {
 
         window.setTimeout(function(){
 
-            expect(value).toBe('bar');
-
-            window.setTimeout(function(){
-
-                expect(value).toBe('foobar');
-                done();
-
-            }, 25);
+            expect(value).toBe('foobar');
+            done();
         });
     });
 
     it("CORE.stack(fn, delay)", function(done) {
 
+        CONFIG_TICK_PROCESS_TIME = 0;
+
         var value = 'foo';
 
         CORE.stack(function(){
 
-            value = 'foobar';
+            CORE.stack(function(){
 
-        }, 25);
+                value = 'foobar';
+            });
+        });
 
         value = 'bar';
 
@@ -234,12 +266,13 @@ describe("Check Async Implementation", function() {
 
                 expect(value).toBe('foobar');
                 done();
-
-            }, 50);
+            });
         });
     });
 
     it("CORE.queue vs CORE.stack vs CORE.async", function(done) {
+
+        CONFIG_TICK_PROCESS_TIME = 0;
 
         var value = 0;
 
@@ -255,16 +288,16 @@ describe("Check Async Implementation", function() {
             expect(++value).toBe(6);
         });
 
-        // 4.
+        // 2.
         CORE.async(function(){
 
-            expect(++value).toBe(5);
+            expect(++value).toBe(3);
         });
 
-        // 3.
+        // 4.
         CORE.stack(function(){
 
-            expect(++value).toBe(4);
+            expect(++value).toBe(5);
         });
 
         // 7.
@@ -273,10 +306,10 @@ describe("Check Async Implementation", function() {
             expect(++value).toBe(8);
         });
 
-        // 2.
+        // 1.
         CORE.stack(function(){
 
-            expect(++value).toBe(3);
+            expect(++value).toBe(2);
         });
 
         // 8.
@@ -284,13 +317,15 @@ describe("Check Async Implementation", function() {
 
             expect(++value).toBe(9);
 
+            CONFIG_TICK_PROCESS_TIME = 3;
+
             done();
         });
 
-        // 1.
+        // 3.
         CORE.async(function(){
 
-            expect(++value).toBe(2);
+            expect(++value).toBe(4);
         });
 
         value++;

@@ -43,7 +43,7 @@ describe("Check Core Initialize Status", function() {
 
         if(CONFIG.ENV !== 'test_lib'){
 
-            expect(APP).toHaveMethod("INIT");
+            expect(APP).toHaveArray("INIT");
             expect(APP).toHaveMethod("SETUP");
             expect(APP).toHaveMethod("MAIN");
             expect(APP).toHaveObject("HTML");

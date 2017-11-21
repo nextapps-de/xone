@@ -212,7 +212,7 @@ describe("Test Controller Implementation", function(){
             data: custom_data
         });
 
-        expect(node.innerHTML.replace(/> /g, '>')).toBe(check_html);
+        expect(node.innerHTML.replace(/> /g, '>')).toBe('<vdom>' + check_html + '</vdom>');
 
         node.innerHTML = '';
 

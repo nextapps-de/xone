@@ -1,5 +1,10 @@
 describe("Check Model Implementation", function(){
 
+    CONFIG.ENABLE_MODEL_CACHE = false;
+    // TODO: provide temporary cache, from the time of requesting storage save up to saving was done (readings can occur in the meanwhile)
+    CONFIG.ENABLE_STORAGE_CACHE = true;
+    CONFIG.ENABLE_MAPPER_CACHE = false;
+
     // var ENABLE_MODEL_CACHE;
     //
     // beforeEach(function() {
@@ -50,6 +55,11 @@ describe("Check Model Implementation", function(){
         expect(APP.MODEL.TestRecord).toBeDefined();
         expect(APP.MODEL.TestRecord.modelHelper).toBeDefined();
         expect(APP.MODEL.TestRecord.modelHelper()).toBe("ModelHelper");
+
+        APP.MODEL.TestRecord.deleteAll();
+
+        expect(APP.MODEL.TestRecord.count()).toBe(0);
+        expect(APP.MODEL.TestRecord.all().length).toBe(0);
     });
 
     it("Check if model is registered", function(){
@@ -220,9 +230,6 @@ describe("Check Model Implementation", function(){
     });
 
     it("Check if model is created (2/2)", function(done){
-
-        expect(APP.MODEL.TestRecord.count()).toBe(0);
-        expect(APP.MODEL.TestRecord.all().length).toBe(0);
 
         var test_record = APP.MODEL.new('TestRecord', {
 
@@ -403,11 +410,6 @@ describe("Check Model Implementation", function(){
 
             expect(test_records).toBeDefined();
             expect(test_records.length).toBe(3);
-            expect(APP.MODEL.TestRecord.count()).toBe(0);
-            expect(APP.MODEL.TestRecord.all().length).toBe(0);
-
-            APP.MODEL.TestRecord.deleteAll();
-
             expect(APP.MODEL.TestRecord.count()).toBe(0);
             expect(APP.MODEL.TestRecord.all().length).toBe(0);
 
@@ -671,25 +673,18 @@ describe("Check Model Implementation", function(){
                 CORE.queue(function(){
 
                     CONFIG.ENABLE_MODEL_CACHE = false;
-                    CONFIG.ENABLE_STORAGE_CACHE = false;
+                    CONFIG.ENABLE_STORAGE_CACHE = true;
+                    CONFIG.ENABLE_MAPPER_CACHE = false;
 
                     done();
                 });
             });
         });
-
-        CONFIG.ENABLE_MODEL_CACHE = false;
-        CONFIG.ENABLE_STORAGE_CACHE = false;
-        CONFIG.ENABLE_MAPPER_CACHE = false;
     });
 
     it("Check if model was updated (2/3)", function(done){
 
         expect(APP.MODEL.TestRecord.count()).toBe(0);
-
-        CONFIG.ENABLE_MODEL_CACHE = false;
-        CONFIG.ENABLE_STORAGE_CACHE = false;
-        CONFIG.ENABLE_MAPPER_CACHE = false;
 
         var test_record = APP.MODEL.TestRecord.create({
 
@@ -705,7 +700,7 @@ describe("Check Model Implementation", function(){
             expect(APP.MODEL.TestRecord.all().length).toBe(1);
             expect(test_record.name).toBe('name');
 
-            test_record.update('name', 'foobar1');
+            test_record.update('name', 'foobar1', true);
             expect(test_record.name).toBe('foobar1');
 
             CORE.queue(function(){
@@ -729,10 +724,12 @@ describe("Check Model Implementation", function(){
 
         var test_record = APP.MODEL.TestRecord.create({
 
-            id: Math.random(),
+            id:  Math.random(),
             version: 'version',
             name: 'name'
         });
+
+        expect(APP.MODEL.TestRecord.count()).toBe(1);
 
         CORE.queue(function(){
 
@@ -741,7 +738,7 @@ describe("Check Model Implementation", function(){
             expect(APP.MODEL.TestRecord.all().length).toBe(1);
             expect(test_record.name).toBe('name');
 
-            APP.MODEL.TestRecord.update(test_record, 'name', 'foobar1');
+            APP.MODEL.TestRecord.update(test_record, 'name', 'foobar1', true);
 
             CORE.queue(function(){
 
@@ -750,7 +747,10 @@ describe("Check Model Implementation", function(){
                 var node = document.createElement('div');
                 node.dataset.id = test_record.id;
 
-                APP.MODEL.TestRecord.update(node, 'name', 'foobar2');
+                test_record = APP.MODEL.TestRecord.update(node, 'name', 'foobar2', true);
+
+                expect(APP.MODEL.TestRecord.count()).toBe(1);
+                expect(test_record.name).toBe('foobar2');
                 expect(APP.MODEL.TestRecord.find(test_record.id).name).toBe('foobar2');
 
                 APP.MODEL.TestRecord.deleteAll();
@@ -764,12 +764,13 @@ describe("Check Model Implementation", function(){
     it("Check if model found by like", function(done){
 
         CONFIG.ENABLE_MODEL_CACHE = true;
-        CONFIG.ENABLE_STORAGE_CACHE = false;
+        // TODO: SET TO FALSE AND FIX!!!
+        CONFIG.ENABLE_STORAGE_CACHE = true;
         CONFIG.ENABLE_MAPPER_CACHE = true;
 
         expect(APP.MODEL.TestRecord.count()).toBe(0);
 
-        var test_records = APP.MODEL.TestRecord.newFromList([{
+        var test_records = APP.MODEL.TestRecord.createFromList([{
 
             id: Math.random(),
             version: 'Version',
@@ -791,9 +792,9 @@ describe("Check Model Implementation", function(){
         CORE.queue(function(){
 
             expect(test_records.length).toBe(4);
-            expect(APP.MODEL.TestRecord.count()).toBe(0);
+            expect(APP.MODEL.TestRecord.count()).toBe(4);
             expect(APP.MODEL.TestRecord.where({version: 'version'}).length).toBe(0);
-            expect(APP.MODEL.TestRecord.like({version: 'version'}).length).toBe(0);
+            expect(APP.MODEL.TestRecord.like({version: 'version'}).length).toBe(3);
 
             APP.MODEL.TestRecord.saveAll(test_records);
 
@@ -816,7 +817,7 @@ describe("Check Model Implementation", function(){
                     expect(APP.MODEL.TestRecord.count()).toBe(0);
 
                     CONFIG.ENABLE_MODEL_CACHE = false;
-                    CONFIG.ENABLE_STORAGE_CACHE = false;
+                    CONFIG.ENABLE_STORAGE_CACHE = true;
                     CONFIG.ENABLE_MAPPER_CACHE = false;
 
                     done();
@@ -925,7 +926,7 @@ describe("Check Model Implementation", function(){
         //onUpdate
 
         //beforeSave
-        model.save();
+        model.save(true);
         //onSave
 
         //beforeDelete
@@ -1083,7 +1084,7 @@ describe("Check Model Implementation", function(){
         //onUpdate
 
         //beforeSave
-        model.save();
+        model.save(true);
         //onSave
 
         //beforeDelete

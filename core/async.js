@@ -20,6 +20,12 @@ var CONFIG_PRIORITIZE_PAINT = true;
 var CONFIG_MAX_RECURSION = CONFIG_PRIORITIZE_PAINT ? 200 : 1000;
 
 /**
+ * @define {number}
+ */
+
+var CONFIG_TICK_PROCESS_TIME = 3;
+
+/**
  * Xone Non-blocking Processing Module
  */
 
@@ -27,7 +33,7 @@ var CONFIG_MAX_RECURSION = CONFIG_PRIORITIZE_PAINT ? 200 : 1000;
 
     /**
      * Async Model Timer IDs
-     * @type {Object<string|undefined, number>}
+     * @type {Object<string|undefined, TimeoutId>}
      * @private
      */
 
@@ -182,9 +188,9 @@ var CONFIG_MAX_RECURSION = CONFIG_PRIORITIZE_PAINT ? 200 : 1000;
 
         CALLBACK[key] = fn;
 
-        if(delay || !ASYNC_TIMER[key]){
+        if(delay || !CORE.isDefined(ASYNC_TIMER[key])){
 
-            if(delay && ASYNC_TIMER[key]){
+            if(delay && CORE.isDefined(ASYNC_TIMER[key])){
 
                 clearTimeout(ASYNC_TIMER[key]);
             }
@@ -435,7 +441,7 @@ var CONFIG_MAX_RECURSION = CONFIG_PRIORITIZE_PAINT ? 200 : 1000;
         var time = CORE.time.now();
         var end = time;
 
-        while(((end - time) < 4) && QUEUE_INDEX.length){
+        while(((end - time) <= CONFIG_TICK_PROCESS_TIME) && QUEUE_INDEX.length){
 
             var key = QUEUE_INDEX.shift();
             var fn = CALLBACK[key];
@@ -549,7 +555,8 @@ var CONFIG_MAX_RECURSION = CONFIG_PRIORITIZE_PAINT ? 200 : 1000;
             start: function(){
 
                 pause_state = false;
-                timer || (
+
+                if(timer === null){
 
                     timer = window.setInterval(function(){
 
@@ -559,14 +566,16 @@ var CONFIG_MAX_RECURSION = CONFIG_PRIORITIZE_PAINT ? 200 : 1000;
                         }
 
                     }, delay || 0)
-                );
+                }
             },
 
             stop: function(){
 
-                if(timer) {
+                if(timer !== null) {
 
-                    timer = window.clearInterval(timer);
+                    window.clearInterval(timer);
+
+                    timer = null;
                 }
             },
 

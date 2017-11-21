@@ -1447,13 +1447,13 @@ goog.require('APP.MAIN');
 
             CORE.console.log('Initialize Debug');
 
-            if(ENV === 'development'){
-
-                // Experimental: Register Call Statistics (may breaks some tests)
-
-                DEBUGGER.registerCallListener(CORE, 'CORE');
-                DEBUGGER.registerCallListener(APP, 'APP');
-            }
+            // if(ENV === 'development'){
+            //
+            //     // Experimental: Register Call Statistics (may breaks some tests)
+            //
+            //     DEBUGGER.registerCallListener(CORE, 'CORE');
+            //     DEBUGGER.registerCallListener(APP, 'APP');
+            // }
 
             if(window['applicationCache']) {
 
