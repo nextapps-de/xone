@@ -1,4 +1,5 @@
 goog.provide('INTERFACE');
+goog.provide('Util');
 goog.require('INTERFACE.MODEL');
 goog.require('INTERFACE.ROUTE');
 goog.require('INTERFACE.EVENT');
@@ -7,6 +8,8 @@ goog.require('INTERFACE.AJAX');
 goog.require('INTERFACE.STORAGE');
 goog.require('INTERFACE.TEMPLATE');
 goog.require('INTERFACE.VIEW');
+
+Util = {};
 
 /**
  * Controller Interface
@@ -47,14 +50,39 @@ var _mapping_struct = {
 };
 
 /**
+ * CacheItemInterface
+ * @name CacheItemInterface
+ * @namespace FlexiCache
+ * @interface
+ */
+
+function CacheItemInterface(){}
+
+/** @type {!string} */
+//CacheItemInterface.prototype.key;
+
+/** @type {*} */
+CacheItemInterface.prototype.data;
+
+/** @type {!boolean|number} */
+CacheItemInterface.prototype.expire;
+
+/** @type {number} */
+CacheItemInterface.prototype.count;
+
+/** @type {function():CacheItemInterface} */
+CacheItemInterface.prototype.clone;
+
+/**
  * Cache Interface
  * @interface
  * @template CACHE
  * @this {_cache_struct}
+ * @param {number=} expiration
  * @const
  */
 
-function _cache_struct() {}
+function _cache_struct(expiration) {}
 /** @type {function(string, *, boolean=)} */
 _cache_struct.prototype.set;
 /** @type {function(string, boolean=):*} */

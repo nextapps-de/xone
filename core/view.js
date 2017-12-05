@@ -11,6 +11,8 @@ goog.require('CORE');
 
 APP.VIEW = (function(){
 
+    "use strict";
+
     var current_animation = null;
     var current_view = "";
     var view_index = [];
@@ -18,6 +20,10 @@ APP.VIEW = (function(){
     var history = [];
 
     return {
+
+        register: register,
+        create: register,
+        new: register,
 
         current_view: function(){
 
@@ -71,7 +77,7 @@ APP.VIEW = (function(){
 
         show: function(source_view, target_view){
 
-            if(DEBUG) CORE.console.log('Current View: ' + current_view);
+            if(DEBUG) Console.log('Current View: ' + current_view);
 
             if(source_view === 'tabbar'){
 
@@ -85,13 +91,26 @@ APP.VIEW = (function(){
                 source_view = APP.VIEW.current_view();
             }
 
-            if(DEBUG) CORE.console.log('Show View: ' + source_view + ' > ' + target_view);
+            if(DEBUG) Console.log('Show View: ' + source_view + ' > ' + target_view);
 
             if(target_view){
 
                 if(target_view !== current_view){
 
+                    // CORE.setStyle('#' + target_view + ' xone-section', {
+                    //
+                    //     'overflow': 'hidden'
+                    // });
+
                     CORE.addClass('#' + target_view, 'show');
+
+                    // CORE.queue(function(){
+                    //
+                    //     CORE.setStyle('#' + target_view + ' xone-section', {
+                    //
+                    //         'overflow': ''
+                    //     });
+                    // });
 
                     var is_popup = CORE.getById(target_view).getAttribute('role') !== 'main';
                     var target_index = is_popup ? popup_index : view_index;
@@ -113,12 +132,12 @@ APP.VIEW = (function(){
 
                     //updateViewIndex(target_index, is_popup ? 10 : 0);
 
-                    CORE.setStyle('#' + target_view, {
-
-                        'visibility': 'visible'
-                        //'pointerEvents': 'auto',
-                        //'zIndex': target_index.length - index + (is_popup ? 10 : 0)
-                    });
+                    // CORE.setStyle('#' + target_view, {
+                    //
+                    //     'visibility': 'visible'
+                    //     //'pointerEvents': 'auto',
+                    //     //'zIndex': target_index.length - index + (is_popup ? 10 : 0)
+                    // });
 
                     var sections = CORE.queryAll('#' + target_view + ' xone-section');
 
@@ -232,7 +251,7 @@ APP.VIEW = (function(){
                 // });
             }
 
-            if(DEBUG) CORE.console.log('Hide View: ' + from_view + ' > ' + current_view);
+            if(DEBUG) Console.log('Hide View: ' + from_view + ' > ' + current_view);
         },
 
         slideIn: function(from_view, to_view){
@@ -375,6 +394,11 @@ APP.VIEW = (function(){
             "androiddelay"     :    0,
             "winphonedelay"    :    0
         });
+    }
+
+    function register(){
+
+
     }
 
 })();

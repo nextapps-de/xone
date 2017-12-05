@@ -557,6 +557,8 @@ if(fs.existsSync(__dirname + '/build.js')){
                 }
             }
 
+            //config_parameters += " --js='!**base.js' --js='!**webkit_dom.js'";
+
             var path_to_closure_compiler = lib.getModule('google-closure-compiler');
 
             lib.exec('java -jar ' + /*-Xms128m -Xmx4096m*/ '"' + path_to_closure_compiler + '/compiler.jar' + '"' + config_parameters + "", build_callback_success);

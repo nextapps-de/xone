@@ -115,16 +115,16 @@ CONFIG.debug = true;
 ```
 Logger:
 ```javascript
-CORE.console.log("Message");
-CORE.console.log("Object loaded:", obj);
-CORE.console.warn("Warning Message");
-CORE.console.err("Error Message");
+Console.log("Message");
+Console.log("Object loaded:", obj);
+Console.warn("Warning Message");
+Console.err("Error Message");
 ```
 Manage Console:
 ```javascript
-CORE.console.show();
-CORE.console.hide();
-CORE.console.clear();
+Console.show();
+Console.hide();
+Console.clear();
 ```
 #### Basic Helpers
 ```javascript

@@ -25,13 +25,13 @@ describe("Test Controller Implementation", function(){
 
     it("Test if controller was routed properly", function(){
 
-        spyOn(CORE.console, "warn");
+        spyOn(Console, "warn");
 
         DEBUG = true;
         APP.CONTROLLER.request('');
         DEBUG = false;
 
-        expect(CORE.console.warn).toHaveBeenCalled();
+        expect(Console.warn).toHaveBeenCalled();
     });
 
     it("Test if controller was routed properly", function(){
@@ -41,14 +41,14 @@ describe("Test Controller Implementation", function(){
             do: function(){}
         };
 
-        spyOn(CORE.console, "warn");
+        spyOn(Console, "warn");
         spyOn(APP.ROUTE['#/'], "do");
 
         DEBUG = true;
         APP.CONTROLLER.request();
         DEBUG = false;
 
-        expect(CORE.console.warn).not.toHaveBeenCalled();
+        expect(Console.warn).not.toHaveBeenCalled();
         expect(APP.ROUTE['#/'].do).toHaveBeenCalled();
 
         delete APP.ROUTE['#/'];
@@ -61,14 +61,14 @@ describe("Test Controller Implementation", function(){
             do: function(){}
         };
 
-        spyOn(CORE.console, "warn");
+        spyOn(Console, "warn");
         spyOn(APP.ROUTE['#!/'], "do");
 
         DEBUG = true;
         APP.CONTROLLER.request();
         DEBUG = false;
 
-        expect(CORE.console.warn).not.toHaveBeenCalled();
+        expect(Console.warn).not.toHaveBeenCalled();
         expect(APP.ROUTE['#!/'].do).toHaveBeenCalled();
 
         delete APP.ROUTE['#!/'];
@@ -76,13 +76,13 @@ describe("Test Controller Implementation", function(){
 
     it("Test if controller was routed properly", function(){
 
-        spyOn(CORE.console, "warn");
+        spyOn(Console, "warn");
 
         DEBUG = true;
         APP.CONTROLLER.request('#/unknown');
         DEBUG = false;
 
-        expect(CORE.console.warn).toHaveBeenCalled();
+        expect(Console.warn).toHaveBeenCalled();
     });
 
     it("Test if controller was routed properly", function(){

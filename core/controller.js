@@ -4,6 +4,8 @@ goog.require('APP');
 
 (function(CONTROLLER, ROUTE){
 
+    "use strict";
+
     /**
      * @param {Array<string>|string} route
      * @param {Function|Object<string, *>=} params
@@ -52,7 +54,7 @@ goog.require('APP');
             }
             else{
 
-                if(DEBUG) CORE.console.warn('WARNING: No route specified for "' + route + '"!');
+                if(DEBUG) Console.warn('WARNING: No route specified for "' + route + '"!');
 
                 return;
             }
@@ -64,7 +66,7 @@ goog.require('APP');
 
             ROUTE[route] = {};
 
-            if(DEBUG) CORE.console.warn('WARNING: No route specified for "' + route + '"!');
+            if(DEBUG) Console.warn('WARNING: No route specified for "' + route + '"!');
         }
 
         params || (params = APP.PAYLOAD[route] ? APP.PAYLOAD[route]() : ROUTE[route].params || null);
@@ -673,6 +675,104 @@ goog.require('APP');
         return buildTemplate(view, data);
     };
 
+    var render_items_ids = {};
+
+    /**
+     * @param {_view_params} config
+     * @param {boolean=} update_mode
+     * @param {number=} _index
+     * @const
+     */
+
+    CONTROLLER.renderItems = function(config, update_mode, _index){
+
+        var data = config.data;
+        var target = config.target;
+
+        if(typeof target === 'string'){
+
+            target = CORE.queryOne(target);
+        }
+
+        var key = target.id || 'render-items';
+
+        if(!_index){
+
+            if(!render_items_ids[key]){
+
+                render_items_ids[key] = 1;
+            }
+            else{
+
+                render_items_ids[key]++;
+            }
+
+            if(!update_mode){
+
+                target.innerHTML = ""; //CORE.removeNodes(target);
+                target['_crc'] = -1;
+                target['_html'] = "";
+            }
+        }
+
+        var length;
+
+        if(data && (length = data.length)){
+
+            var i = _index || 0;
+
+            if(i < length){
+
+                var element = target.childNodes[i] || document.createElement('div');
+
+                CONTROLLER.render({
+
+                    target: element,
+                    data: data[i],
+                    template: config.template,
+                    callback: i === length - 1 ? config.callback : void 0
+                });
+
+                if(i > target.childElementCount - 1) {
+
+                    target.appendChild(element);
+                }
+
+                i++;
+            }
+
+            if(i === length){
+
+                while(target.childElementCount > i){
+
+                    target.removeChild(target.childNodes[i]);
+                }
+
+                config = void 0;
+            }
+            else{
+
+                var local_render_id = render_items_ids[key];
+
+                CORE.queue(function(){
+
+                    if(local_render_id === render_items_ids[key]){
+
+                        CONTROLLER.renderItems(config, update_mode, i);
+                    }
+
+                    config =
+                    local_render_id = void 0;
+
+                }, 1, key);
+            }
+        }
+        else{
+
+            CONTROLLER.render(config);
+        }
+    };
+
     /**
      * @param {_view_params|string} _target
      * @param {Array<_pattern_struct>=} _data
@@ -701,7 +801,9 @@ goog.require('APP');
 
             if(DEBUG) APP.STATS.count_render++;
         }
-        else if(target.data){
+        else if(target.template){
+
+            target.data || (target.data = [{}]);
 
             dest = (
 
@@ -718,7 +820,7 @@ goog.require('APP');
 
             if(!dest){
 
-                if(DEBUG) CORE.console.warn("Controller Error: Element not found: " + target.target);
+                if(DEBUG) Console.warn("Controller Error: Element not found: " + target.target);
 
                 return;
             }
@@ -742,29 +844,29 @@ goog.require('APP');
                         ''
             );
 
-            if(DEBUG){
+            if(DEBUG && CONFIG.ENABLE_HTML_CACHE){
 
                 if(dest['_html'] === template){
 
                     APP.STATS.count_render_cache++;
-                    CORE.console.log("HTML Content Load from Cache: " + dest.id);
+                    Console.log("HTML Content Load from Cache: " + dest.id);
                 }
                 else{
 
                     APP.STATS.count_render++;
-                    CORE.console.log("HTML Content Updated: " + dest.id);
+                    Console.log("HTML Content Updated: " + dest.id);
                 }
             }
 
-            var old_style_value = CORE.getStyle(dest, 'willChange');
+            var old_style_value = CORE.getStyle(dest, 'will-change');
 
             if(!old_style_value || !CORE.contains(old_style_value, 'contents')){
 
-                CORE.setStyle(dest, 'willChange',
+                CORE.setStyle(dest, 'will-change',
 
                     old_style_value && (old_style_value !== 'auto') ?
 
-                        old_style_value + ', '
+                        old_style_value + ', contents'
                     :
                         'contents'
                 );
@@ -973,7 +1075,6 @@ goog.require('APP');
             });
 */
 
-
             // var template = null;
             // var templates = {};
             //
@@ -1000,26 +1101,29 @@ goog.require('APP');
             //     window['InfernoDOM']['render'](innerHTML(hook), node);
             // }
 
-            if(dest['_html'] !== template){
+
+            var crc_template;
+
+            if((!CONFIG.ENABLE_HTML_CACHE && ((crc_template = CORE.crc32(template)) !== dest['_crc']))
+             || (CONFIG.ENABLE_HTML_CACHE && (dest['_html'] !== template))){
 
                 if(window['Inferno'] && window['InfernoDOM']){
 
-                    var render = window['Inferno']['createTemplate'](
-
-                        function(onCreated){
-
-                            return {
-
-                                'tag': "vdom",
-                                'attrs': {
-                                    'onCreated': onCreated
-                                }
-                            };
-                        }
-                    );
-
-                    // NOTE: may seems too much work for one single render tick through CORE.paint
                     CORE.paint(function(){
+
+                        var render = window['Inferno']['createTemplate'](
+
+                            function(onCreated){
+
+                                return {
+
+                                    'tag': 'vdom',
+                                    'attrs': {
+                                        'onCreated': onCreated
+                                    }
+                                };
+                            }
+                        );
 
                         window['InfernoDOM']['render'](render(function(node){
 
@@ -1027,10 +1131,22 @@ goog.require('APP');
 
                         }), dest);
 
-                        dest['_html'] = template;
+                        if(CONFIG.ENABLE_HTML_CACHE) {
+
+                            dest['_html'] = template;
+                        }
+                        else{
+
+                            dest['_crc'] = crc_template;
+                        }
 
                         renderCallback(dest, target);
-                    });
+
+                        template =
+                        target =
+                        dest = void 0;
+
+                    }, dest.id);
                 }
                 else{
 
@@ -1044,7 +1160,24 @@ goog.require('APP');
                     CORE.setHTML(dest, '<vdom>' + template + '</vdom>', function(){
 
                         renderCallback(dest, target);
+
+                        target =
+                        dest = null;
                     });
+                }
+            }
+            else{
+
+                if(target.callback){
+
+                    if(CORE.isType(target.callback, 'string')){
+
+                        APP.HANDLER[target.callback].call(dest, target.data);
+                    }
+                    else{
+
+                        target.callback.call(dest, target.data);
+                    }
                 }
             }
         }

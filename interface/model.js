@@ -109,7 +109,7 @@ function _model_class(data){}
 _model_class.prototype.save;
 /** @type {_storage_interface} */
 _model_class.prototype.data;
-/** @type {Function} */
+/** @type {_cache_struct} */
 _model_class.prototype.cache;
 /** @type {Function} */
 //_model_class.prototype.session;

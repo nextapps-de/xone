@@ -31,13 +31,31 @@ var CONFIG_TICK_PROCESS_TIME = 3;
 
 (function(){
 
+    "use strict";
+
     /**
      * Async Model Timer IDs
-     * @type {Object<string|undefined, TimeoutId>}
+     * @type {Object<string|undefined, number>}
      * @private
      */
 
     var ASYNC_TIMER = {};
+
+    /**
+     * Async Queue Timestamps
+     * @type {Object<string, number>}
+     * @private
+     */
+
+    var QUEUE_TIMER = {};
+
+    /**
+     * Async Stack Timestamps
+     * @type {Object<string, number>}
+     * @private
+     */
+
+    var STACK_TIMER = {};
 
     /**
      * Async Callback Register
@@ -106,7 +124,10 @@ var CONFIG_TICK_PROCESS_TIME = 3;
         var targetNode = document.createTextNode('');
         var registered = false;
 
-        MutationObserver || (MutationObserver = window['WebKitMutationObserver']);
+        MutationObserver || (
+
+            MutationObserver = window['WebKitMutationObserver']
+        );
 
         var toggle = 1;
         var observer = new MutationObserver(function(){
@@ -146,6 +167,8 @@ var CONFIG_TICK_PROCESS_TIME = 3;
                     targetNode.data = String(toggle *= -1);
                 }
             }
+
+            fn = null;
         };
     })();
 
@@ -175,13 +198,19 @@ var CONFIG_TICK_PROCESS_TIME = 3;
 
     /**
      * Creates dedicated task within the main thread (macro task)
-     * @param {!Function} fn
-     * @param {number=} delay
+     * @param {Function} fn
+     * @param {number|string=} delay
      * @param {string=} key
      * @return {string}
      */
 
     CORE.async = function(fn, delay, key){
+
+        if(typeof delay === 'string'){
+
+            key = delay;
+            delay = 0;
+        }
 
         key || (key = 'async:' + (++ID_COUNT));
         key = /** @type {string} */ (key);
@@ -199,14 +228,10 @@ var CONFIG_TICK_PROCESS_TIME = 3;
 
                 CURRENT_RECURSION = 0;
 
-                key = /** @type {string} */ (key);
+                execute(key = /** @type {string} */ (key));
 
-                var fn = CALLBACK[key];
-
-                delete CALLBACK[key];
                 delete ASYNC_TIMER[key];
-
-                if(fn) fn();
+                key = void 0;
 
             }, delay || 0);
         }
@@ -216,27 +241,34 @@ var CONFIG_TICK_PROCESS_TIME = 3;
 
     /**
      * Creates dedicated task within the render event loop (macro task)
-     * @param {!Function} fn
-     * @param {number=} delay
+     * @param {Function} fn
+     * @param {number|string=} delay
      * @param {string=} key
      * @return {string}
      */
 
     CORE.paint = function(fn, delay, key){
 
+        if(typeof delay === 'string'){
+
+            key = delay;
+            delay = 0;
+        }
+
         key || (key = 'paint:' + (++ID_COUNT));
-        key = /** @type {!string} */ (key);
+        key = /** @type {string} */ (key);
+
+        CALLBACK[key] = fn;
 
         if(delay){
 
             return CORE.async(function(){
 
-                CORE.paint(fn, 0, key);
+                CORE.paint(CALLBACK[key], 0, key);
+                key = void 0;
 
             }, delay, 'async:' + key);
         }
-
-        CALLBACK[key] = fn;
 
         PAINT_EXEC || (
 
@@ -252,14 +284,14 @@ var CONFIG_TICK_PROCESS_TIME = 3;
 
         if(index !== -1){
 
-            PAINT_INDEX[index] = key;
+            PAINT_INDEX[index] = /** @type {string} */ (key);
         }
         else{
 
-            PAINT_INDEX[PAINT_INDEX.length] = key;
+            PAINT_INDEX[PAINT_INDEX.length] = /** @type {string} */ (key);
         }
 
-        return key;
+        return /** @type {string} */ (key);
     };
 
     /**
@@ -277,25 +309,27 @@ var CONFIG_TICK_PROCESS_TIME = 3;
     /**
      * Queue job asynchronously
      * @param {Array<Function>|Function} fn
+     * @param {number|string=} delay_or_id
      * @param {string=} id
      * @return {string|Array<string>}
      */
 
-    CORE.queue = function(fn, id){
+    CORE.queue = function(fn, delay_or_id, id){
 
-        return registerJob('queue', fn, id);
+        return registerJob('queue', fn, delay_or_id, id);
     };
 
     /**
      * Stack job asynchronously
      * @param {Array<Function>|Function} fn
+     * @param {number|string=} delay_or_id
      * @param {string=} id
      * @return {string|Array<string>}
      */
 
-    CORE.stack = function(fn, id){
+    CORE.stack = function(fn, delay_or_id, id){
 
-        return registerJob('stack', fn, id);
+        return registerJob('stack', fn, delay_or_id, id);
     };
 
     /**
@@ -317,13 +351,24 @@ var CONFIG_TICK_PROCESS_TIME = 3;
 
                 if(key = id[len]){
 
+                    CALLBACK[key] = null;
                     delete CALLBACK[key];
+                    delete QUEUE_TIMER[key];
+                    delete STACK_TIMER[key];
 
-                    if(ASYNC_TIMER[key] /*&& CORE.contains(key, 'async:')*/){
+                    if(ASYNC_TIMER[key]){
 
                         clearTimeout(ASYNC_TIMER[key]);
 
                         delete ASYNC_TIMER[key];
+
+                        if(CORE.contains(key, 'async:paint:')){
+
+                            key = key.substring(6);
+
+                            CALLBACK[key] = null;
+                            delete CALLBACK[key];
+                        }
                     }
                 }
             }
@@ -366,23 +411,48 @@ var CONFIG_TICK_PROCESS_TIME = 3;
         return QUEUE_INDEX.length;
     };
 
+    /**
+     * @returns {Object<string, Array<string>>}
+     */
+
+    CORE.getFullStack = function(){
+
+        return {
+
+            queue_index: QUEUE_INDEX,
+            paint_index: PAINT_INDEX,
+            queue_timer: CORE.getKeys(QUEUE_TIMER),
+            stack_timer: CORE.getKeys(STACK_TIMER),
+            async_timer: CORE.getKeys(ASYNC_TIMER),
+            callback_fn: CORE.getKeys(CALLBACK)
+        };
+    };
+
     // Private Helpers
     // -------------------------------------------------------
 
     /**
      * @param {!string} type
      * @param {!Array<Function>|Function} fn
+     * @param {number|string=} delay
      * @param {string=} id
      * @return {string|Array<string>}
      */
 
-    function registerJob(type, fn, id){
+    function registerJob(type, fn, delay, id){
+
+        if(typeof delay === 'string'){
+
+            id = delay;
+            delay = 0;
+        }
 
         if(!PAINT_EXEC) {
 
             ASYNC_RUNNER.start();
         }
 
+        var time = delay && CORE.time.now();
         var stack_length = QUEUE_INDEX.length;
         var key;
 
@@ -395,16 +465,14 @@ var CONFIG_TICK_PROCESS_TIME = 3;
 
                 key = id || (type + ':' + (++ID_COUNT));
 
-                CALLBACK[key] = /** @type {Function} */ (fn.pop());
+                addJob(
 
-                if(type === 'queue'){
-
-                    QUEUE_INDEX[stack_length + len] = key;
-                }
-                else{
-
-                    QUEUE_INDEX.unshift(key);
-                }
+                    fn.pop(),
+                    type,
+                    key,
+                    delay && (time + delay),
+                    stack_length + len
+                );
 
                 ids[len] = key;
             }
@@ -415,18 +483,44 @@ var CONFIG_TICK_PROCESS_TIME = 3;
 
             key = id || (type + ':' + (++ID_COUNT));
 
-            CALLBACK[key] = /** @type {Function} */ (fn);
+            addJob(
 
-            if(type === 'queue'){
+                fn,
+                type,
+                key,
+                delay && (time + delay),
+                stack_length
+            );
 
-                QUEUE_INDEX[stack_length] = key;
+            return key;
+        }
+    }
+
+    function addJob(fn, type, key, delay, index){
+
+        CALLBACK[key] = /** @type {Function} */ (fn);
+
+        if(type === 'queue'){
+
+            if(delay){
+
+                QUEUE_TIMER[key] = delay;
+            }
+            else{
+
+                QUEUE_INDEX[index] = key;
+            }
+        }
+        else{
+
+            if(delay){
+
+                STACK_TIMER[key] = delay;
             }
             else{
 
                 QUEUE_INDEX.unshift(key);
             }
-
-            return key;
         }
     }
 
@@ -440,23 +534,55 @@ var CONFIG_TICK_PROCESS_TIME = 3;
 
         var time = CORE.time.now();
         var end = time;
+        var stack_timer = CORE.getKeys(STACK_TIMER);
+        var queue_timer = CORE.getKeys(QUEUE_TIMER);
+
+        for(var i = stack_timer.length - 1; i >= 0; i--){
+
+            if((end - time) > CONFIG_TICK_PROCESS_TIME){
+
+                break;
+            }
+
+            if(STACK_TIMER[stack_timer[i]] < time){
+
+                end = execute(
+
+                    stack_timer.splice(i, 1)[0], true
+
+                ) || time;
+            }
+        }
+
+        for(var i = 0; i < queue_timer.length; i++){
+
+            if((end - time) > CONFIG_TICK_PROCESS_TIME){
+
+                break;
+            }
+
+            if(QUEUE_TIMER[queue_timer[i]] < time){
+
+                end = execute(
+
+                    queue_timer.splice(i--, 1)[0], true
+
+                ) || time;
+            }
+        }
 
         while(((end - time) <= CONFIG_TICK_PROCESS_TIME) && QUEUE_INDEX.length){
 
-            var key = QUEUE_INDEX.shift();
-            var fn = CALLBACK[key];
+            end = execute(
 
-            if(fn) {
+                QUEUE_INDEX.shift(), true
 
-                delete CALLBACK[key];
-
-                fn();
-            }
-
-            end = CORE.time.now();
+            ) || time;
         }
 
-        if(!QUEUE_INDEX.length){
+        if(!QUEUE_INDEX.length &&
+           !stack_timer.length &&
+           !queue_timer.length){
 
             ASYNC_RUNNER.stop();
         }
@@ -473,10 +599,21 @@ var CONFIG_TICK_PROCESS_TIME = 3;
     var register_frames_idle_state = -1;
 
     /**
+     * @type {number|null}
+     */
+
+    var last_time = null;
+
+    /**
      * Draw Processor
      */
 
-    function runPaint(){
+    function runPaint(time){
+
+        if(DEBUG) {
+
+            var debug_time = CORE.time.now();
+        }
 
         CURRENT_RECURSION = 0;
 
@@ -486,7 +623,7 @@ var CONFIG_TICK_PROCESS_TIME = 3;
 
             if(queue_length){
 
-                register_frames_idle_state = 1;
+                register_frames_idle_state = 2;
             }
             else{
 
@@ -498,44 +635,74 @@ var CONFIG_TICK_PROCESS_TIME = 3;
 
             requestAnimationFrame(runPaint);
 
-            var key, fn;
-
             if(CONFIG_SUCCESSIVE_PAINT){
 
-                key = PAINT_INDEX.shift();
-                fn = CALLBACK[key];
-
-                if(fn) {
-
-                    delete CALLBACK[key];
-
-                    fn();
-                }
+                execute(PAINT_INDEX.shift());
             }
             else{
 
                 var tasks = PAINT_INDEX.splice(0, queue_length),
                     length = tasks.length,
-                    count = -1;
+                    count = 0;
 
-                while(++count < length){
+                while(count < length){
 
-                    key = tasks[count];
-                    fn = CALLBACK[key];
-
-                    if(fn) {
-
-                        delete CALLBACK[key];
-
-                        fn();
-                    }
+                    execute(tasks[count++]);
                 }
             }
         }
         else{
 
-            PAINT_EXEC = null;
+            //TODO: move this into debug.js
+
+            if(DEBUG && CONFIG.SHOW_DEBUG){
+
+                requestAnimationFrame(runPaint);
+
+                if(debug_time > 0) {
+
+                    APP.STATS.time_draw += CORE.time.now() - debug_time;
+                }
+
+                APP.STATS.count_draw++;
+
+                //TODO: move
+                DEBUGGER.showStatistic(time, last_time);
+
+                last_time = time;
+            }
+            else{
+
+                PAINT_EXEC = null;
+            }
+
             ASYNC_RUNNER.start();
+        }
+    }
+
+    /**
+     * @param {string} key
+     * @param {boolean=} calc_time
+     * @returns {number|undefined}
+     */
+
+    function execute(key, calc_time){
+
+        var fn = CALLBACK[key];
+
+        // delete first:
+        CALLBACK[key] = null;
+        delete CALLBACK[key];
+
+        // callback may register again to the same key:
+        if(fn) {
+
+            fn();
+
+            if(calc_time){
+
+                return CORE.time.now();
+            }
         }
     }
 
@@ -595,5 +762,4 @@ var CONFIG_TICK_PROCESS_TIME = 3;
             }
         };
     }
-
 })();

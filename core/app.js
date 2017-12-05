@@ -79,7 +79,6 @@ var APP = {
     /**
      * @name APP.STORAGE
      * @namespace APP
-     * @type {_storage_struct}
      */
     STORAGE: {
 
@@ -105,7 +104,7 @@ var APP = {
          * @name APP.STORAGE.VIEW
          * @namespace APP
          */
-        VIEW: /** @type _storage_struct */ ({}/*new CORE.Storage('View')*/), //window['Rhaboo']['persistent']('View'), //TODO: move to setup
+        VIEW: ({}/*new CORE.Storage('View')*/), //TODO: move to setup
 
         /**
          * @param {string} val
@@ -303,7 +302,7 @@ var APP = {
      */
     MAIN: function(){
 
-        if(DEBUG) CORE.console.log('Error: no main function found!');
+        if(DEBUG) Console.log('Error: no main function found!');
     }
 };
 

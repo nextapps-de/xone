@@ -13,15 +13,15 @@ describe("Check Paint Initialize Status", function() {
 
     it("Check CORE.getStyle()", function() {
 
-        document.getElementById('test_wrapper').style.width = "638px";
-        expect(roundStyleValue(CORE.getStyle('#test_wrapper', 'width')))
-            .toBe("638px");
+        expect(CORE.getStyle('#test_wrapper'))
+        .toContainAnyOf(window.getComputedStyle(document.getElementById('test_wrapper'), null));
     });
 
     it("Check CORE.getStyle()", function() {
 
-        expect(CORE.getStyle('#test_wrapper'))
-            .toEqual(window.getComputedStyle(document.getElementById('test_wrapper'), null));
+        document.getElementById('test_wrapper').style.width = "638px";
+        expect(roundStyleValue(CORE.getStyle('#test_wrapper', 'width')))
+            .toBe("638px");
     });
 
     it("Check CORE.setStyle()", function() {
@@ -329,7 +329,7 @@ describe("Check Paint Initialize Status", function() {
         expect(CORE.getById('test_layer').className)
             .toBe('foo');
         expect(CORE.getById('test_layer')._class.foo)
-            .toBe(1);
+            .toBe(true);
         expect(CORE.getById('test_layer')._class.bar)
             .toBe(undefined);
         expect(CORE.getById('test_layer')._class_new.foo)
@@ -354,7 +354,7 @@ describe("Check Paint Initialize Status", function() {
         expect(CORE.getById('test_layer').className)
             .toBe('foo');
         expect(CORE.getById('test_layer')._class.foo)
-            .toBe(1);
+            .toBe(true);
         expect(CORE.getById('test_layer')._class.bar)
             .toBe(undefined);
         expect(CORE.getById('test_layer')._class.foobar)
@@ -383,19 +383,19 @@ describe("Check Paint Initialize Status", function() {
         expect(CORE.getById('test_layer').className)
             .toBe('foo');
         expect(CORE.getById('test_layer')._class.foo)
-            .toBe(1);
+            .toBe(true);
         expect(CORE.getById('test_layer')._class.bar)
             .toBe(undefined);
         expect(CORE.getById('test_layer')._class.foobar)
             .toBe(undefined);
         expect(CORE.getById('test_layer')._class_new.foo)
-            .toBe(false);
+            .toBe(1);
         expect(CORE.getById('test_layer')._class_new.bar)
             .toBe(1);
         expect(CORE.getById('test_layer')._class_new.foobar)
             .toBe(1);
         expect(CORE.getById('test_layer')._class_keys.length)
-            .toBe(2);
+            .toBe(3);
         expect(CORE.getById('test_layer')._class_keys)
             .toContain('foobar');
 
@@ -413,19 +413,19 @@ describe("Check Paint Initialize Status", function() {
         expect(CORE.getById('test_layer').className)
             .toBe('foo');
         expect(CORE.getById('test_layer')._class.foo)
-            .toBe(1);
+            .toBe(true);
         expect(CORE.getById('test_layer')._class.bar)
             .toBe(undefined);
         expect(CORE.getById('test_layer')._class.foobar)
             .toBe(undefined);
         expect(CORE.getById('test_layer')._class_new.foo)
-            .toBe(false);
+            .toBe(1);
         expect(CORE.getById('test_layer')._class_new.bar)
             .toBe(0);
         expect(CORE.getById('test_layer')._class_new.foobar)
             .toBe(0);
         expect(CORE.getById('test_layer')._class_keys.length)
-            .toBe(2);
+            .toBe(3);
         expect(CORE.getById('test_layer')._class_keys)
             .toContain('bar');
         expect(CORE.getById('test_layer')._class_keys)

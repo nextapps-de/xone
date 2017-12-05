@@ -329,12 +329,12 @@ _get more details [here](app_config.md)_
 
 * CORE.__`console`__
     * _Methods:_
-        * CORE.console.__`log`__: function(msg)
-        * CORE.console.__`warn`__: function(msg)
-        * CORE.console.__`err`__: function(msg)
-        * CORE.console.__`info`__: function(msg)
-        * CORE.console.__`show`__: function()
-        * CORE.console.__`hide`__: function()
+        * Console.__`log`__: function(msg)
+        * Console.__`warn`__: function(msg)
+        * Console.__`err`__: function(msg)
+        * Console.__`info`__: function(msg)
+        * Console.__`show`__: function()
+        * Console.__`hide`__: function()
 
 #### Helpers
 

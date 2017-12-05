@@ -6,951 +6,948 @@ goog.require('APP.MAIN');
 
 (function(){
 
-    if(1 === 2) window.setTimeout(function(){
-
-        var start = CORE.time.now();
-        var count = 5000000;
-
-        function callback(){
-
-            if(--count === 0) console.log(CORE.time.now() - start);
-        }
-
-        // synced: 1.625
-
-        // for(var i = 0, loops = count; i < loops; i++){
-        //
-        //     callback();
-        // }
-
-        ///////////////////////////////////////////////////////////////////////////////////////////
-        // MACRO TASKS (SIMULTANEOUSLY)                                                          //
-        ///////////////////////////////////////////////////////////////////////////////////////////
-
-        // ----------------------------------------------------------------------------------------
-
-        // setTimeout: 526.1200000000001
-
-        // for(var i = 0; i < count; i++){
-        //
-        //     setTimeout(callback);
-        // }
-
-        // ----------------------------------------------------------------------------------------
-
-        // setImmediate: 1602.7599999999998
-
-        // for(var i = 0; i < count; i++){
-        //
-        //     setImmediate(callback);
-        // }
-
-        // ----------------------------------------------------------------------------------------
-
-        // asap: 23.295000000000073
-
-        // for(var i = 0; i < count; i++){
-        //
-        //     asap(callback);
-        // }
-
-        ///////////////////////////////////////////////////////////////////////////////////////////
-        // MICRO TASKS (SIMULTANEOUSLY)                                                          //
-        ///////////////////////////////////////////////////////////////////////////////////////////
-
-        // es6: 416.5250000000001
-        // Bluebird: 7.014999999999873
-
-        // for(var i = 0, loops = count; i < loops; i++){
-        //
-        //     Promise.resolve(callback());
-        // }
-
-        // ----------------------------------------------------------------------------------------
-
-        // Bluebird: 10.274999999999864
-
-        // var promise = Promise.promisify(callback);
-        //
-        // for(var i = 0, loops = count; i < loops; i++){
-        //
-        //     promise();
-        // }
-
-        // ----------------------------------------------------------------------------------------
-
-        // async.nextTick: 822.4099999999999
-
-        // for(var i = 0, loops = count; i < count; i++){
-        //
-        //     async.nextTick(callback);
-        // }
-
-        // ----------------------------------------------------------------------------------------
-
-        // async.setImmediate: 790.1999999999998
-
-        // for(var i = 0, loops = count; i < loops; i++){
-        //
-        //     async.setImmediate(callback);
-        // }
-
-        // ----------------------------------------------------------------------------------------
-
-        // async.parallel: 6.080000000000155
-
-        // var stack = new Array(loops);
-        //
-        // for(var i = 0, loops = count; i < loops; i++){
-        //
-        //     stack[i] = callback;
-        // }
-        //
-        // async.parallel(stack);
-
-        // ----------------------------------------------------------------------------------------
-
-        // async.times: 11.289999999999964
-
-        //async.times(count, callback);
-
-        // ----------------------------------------------------------------------------------------
-
-        // async.race: 4.564999999999827
-
-        // var stack = new Array(count);
-        //
-        // for(var i = 0, loops = count; i < loops; i++){
-        //
-        //     stack[i] = callback;
-        // }
-        //
-        // async.race(stack);
-
-        // ----------------------------------------------------------------------------------------
-
-        // setZeroTimeout: 1190.12
-
-        // var setZeroTimeout = (function() {
-        //
-        //     var stack = [];
-        //
-        //     // Like setTimeout, but only takes a function argument.  There's
-        //     // no time argument (always zero) and no arguments (you have to
-        //     // use a closure).
-        //     function setZeroTimeout(fn) {
-        //         stack.push(fn);
-        //         window.postMessage("message", "*");
-        //     }
-        //
-        //     window.addEventListener("message", function(){
-        //
-        //         stack.shift()();
-        //
-        //     }, true);
-        //
-        //     // Add the one thing we want added to the window object.
-        //     return setZeroTimeout;
-        //
-        // })();
-        //
-        // for(var i = 0, loops = count; i < loops; i++){
-        //
-        //     setZeroTimeout(callback);
-        // }
-
-        // ----------------------------------------------------------------------------------------
-
-        // MutationObserver: 257.52499999999986
-
-        // var observer = new MutationObserver(function(mutations) {
-        //
-        //     var len = mutations.length;
-        //
-        //     while(len--) callback();
-        // });
-        //
-        // // Node, config
-        // // In this case we'll listen to all changes to body and child nodes
-        // var targetNode = document.createElement('span');
-        //
-        // observer.observe(targetNode, {
-        //
-        //     attributes: true,
-        //     childList: false,
-        //     characterData: false
-        // });
-        //
-        // var stack = [];
-        //
-        // var worker = APP.WORKER.register(
-        //
-        //     // name:
-        //     'test',
-        //
-        //     // worker:
-        //     function(){
-        //
-        //         this.onmessage = function(event){
-        //
-        //             this.postMessage(0);
-        //         };
-        //     },
-        //
-        //     // callback:
-        //     function(event){
-        //
-        //         stack.shift()();
-        //     },
-        //
-        //     64
-        // );
-        //
-        // var async = function(fn){
-        //     worker.postMessage(0);
-        //     stack.push(fn);
-        //
-        // };
-
-
-        function loop(){
-
-            //for(var i = 0, loops = count; i < loops; i++){
-
-                CORE.queue(function(){
-
-                    for(var x = 0, loops = count; x < loops; x++){}
-
-                    CORE.asap(function(){
-
-                        for(var x = 0, loops = count; x < loops; x++){}
-
-                        CORE.queue(function(){
-
-                            for(var x = 0, loops = count; x < loops; x++){}
-
-                            CORE.stack(function(){
-
-                                for(var x = 0, loops = count; x < loops; x++){}
-
-                                CORE.paint(function(){
-
-                                    for(var x = 0, loops = count; x < loops; x++){}
-
-                                    CORE.queue(function(){
-
-                                        for(var x = 0, loops = count; x < loops; x++){}
-
-                                        CORE.asap(function(){
-
-                                            for(var x = 0, loops = count; x < loops; x++){}
-
-                                            CORE.stack(function(){
-
-                                                for(var x = 0, loops = count; x < loops; x++){}
-
-                                                CORE.paint(function(){
-
-                                                    for(var x = 0, loops = count; x < loops; x++){}
-
-                                                    CORE.queue(function(){
-
-                                                        for(var x = 0, loops = count; x < loops; x++){}
-
-                                                        CORE.stack(function(){
-
-                                                            for(var x = 0, loops = count; x < loops; x++){}
-
-                                                            CORE.queue(function(){
-
-                                                                for(var x = 0, loops = count; x < loops; x++){}
-
-                                                                CORE.asap(function(){
-
-                                                                    for(var x = 0, loops = count; x < loops; x++){}
-
-                                                                    CORE.queue(function(){
-
-                                                                        for(var x = 0, loops = count; x < loops; x++){}
-
-                                                                        CORE.stack(function(){
-
-                                                                            for(var x = 0, loops = count; x < loops; x++){}
-
-                                                                            CORE.paint(function(){
-
-                                                                                for(var x = 0, loops = count; x < loops; x++){}
-
-                                                                                CORE.stack(callback);
-
-                                                                                CORE.queue(loop);
-
-                                                                                console.log(CORE.time.now() - start);
-                                                                                start = CORE.time.now();
-
-                                                                                if(count === 0) {
-
-                                                                                    count = 5000;
-                                                                                }
-                                                                            });
-                                                                        });
-                                                                    });
-                                                                });
-                                                            });
-                                                        });
-                                                    });
-                                                });
-                                            });
-                                        });
-                                    });
-                                });
-                            });
-                        });
-                    });
-                });
-                //targetNode.dataset.id = i;
-            //}
-        }
-
-        loop();
-
-
-        // ----------------------------------------------------------------------------------------
-
-        // MessageChannel: 323.14999999999986
-
-        // var channel = new MessageChannel();
-        // // linked list of tasks (single, with head node)
-        //
-        // channel.port1.onmessage = function() {
-        //
-        //     callback();
-        // };
-        //
-        // for(var i = 0, loops = count; i < loops; i++){
-        //
-        //     channel.port2.postMessage(0);
-        // }
-
-        // ----------------------------------------------------------------------------------------
-
-        // dispatchEvent: 93.27500000000009
-
-        // var targetNode = document.createElement('span');
-        //
-        // targetNode.addEventListener('tick', function(event){
-        //
-        //     callback();
-        //
-        // }, false);
-        //
-        // var event; // The custom event that will be created
-        //
-        // if (document.createEvent) {
-        //
-        //     event = document.createEvent("HTMLEvents");
-        //     event.initEvent("tick", true, true);
-        //
-        // } else {
-        //
-        //     event = document.createEventObject();
-        //     event.eventType = "tick";
-        // }
-        //
-        // event.eventName = "tick";
-        //
-        // if(document.createEvent) {
-        //
-        //     for(var i = 0, loops = count; i < loops; i++){
-        //
-        //         targetNode.dispatchEvent(event);
-        //     }
-        //
-        // } else {
-        //
-        //     for(var i = 0, loops = count; i < loops; i++){
-        //
-        //         targetNode.fireEvent("on" + event.eventType, event);
-        //     }
-        // }
-
-        // ----------------------------------------------------------------------------------------
-
-        // window.postMessag: 1071.58
-
-        // window.addEventListener("", callback, true);
-        //
-        // for(var i = 0, loops = count; i < loops; i++){
-        //
-        //     window.postMessage(0, '*');
-        // }
-
-        // ###############################################################################################
-        // ###############################################################################################
-
-        // console.log('a');
-        //
-        // setTimeout(function(){
-        //
-        //     console.log(1);
-        //
-        //     setTimeout(function(){
-        //
-        //         console.log('a1');
-        //     });
-        // });
-        //
-        // console.log('b');
-        //
-        // setTimeout(function(){
-        //
-        //     console.log(2);
-        //
-        //     setTimeout(function(){
-        //
-        //         console.log('b2');
-        //     });
-        // });
-        //
-        // console.log('c');
-        //
-        // setTimeout(function(){
-        //
-        //     console.log(3);
-        //
-        //     setTimeout(function(){
-        //
-        //         console.log('c3');
-        //     });
-        // });
-        //
-        // console.log('d');
-        //
-        // setTimeout(function(){
-        //
-        //     console.log(4);
-        //
-        //     setTimeout(function(){
-        //
-        //         console.log('d4');
-        //     });
-        // });
-        //
-        // console.log('e');
-        //
-        // setTimeout(function(){
-        //
-        //     console.log(5);
-        //
-        //     setTimeout(function(){
-        //
-        //         console.log('e5');
-        //     });
-        // });
-
-        // a, b, c, d, e, 1, 2, 3, 4, 5, a1, b2, c3, d4, e5
-
-        // ###############################################################################################
-        // ###############################################################################################
-
-        // console.log('a');
-        //
-        // setImmediate(function(){
-        //
-        //     console.log(1);
-        //
-        //     setImmediate(function(){
-        //
-        //         console.log('a1');
-        //     });
-        // });
-        //
-        // console.log('b');
-        //
-        // setImmediate(function(){
-        //
-        //     console.log(2);
-        //
-        //     setImmediate(function(){
-        //
-        //         console.log('b2');
-        //     });
-        // });
-        //
-        // console.log('c');
-        //
-        // setImmediate(function(){
-        //
-        //     console.log(3);
-        //
-        //     setImmediate(function(){
-        //
-        //         console.log('c3');
-        //     });
-        // });
-        //
-        // console.log('d');
-        //
-        // setImmediate(function(){
-        //
-        //     console.log(4);
-        //
-        //     setImmediate(function(){
-        //
-        //         console.log('d4');
-        //     });
-        // });
-        //
-        // console.log('e');
-        //
-        // setImmediate(function(){
-        //
-        //     console.log(5);
-        //
-        //     setImmediate(function(){
-        //
-        //         console.log('e5');
-        //     });
-        // });
-
-        // a, b, c, d, e, 1, 2, 3, 4, 5, a1, b2, c3, d4, e5
-
-        // ###############################################################################################
-        // ###############################################################################################
-
-        // console.log('a');
-        //
-        // asap(function(){
-        //
-        //     console.log(1);
-        //
-        //     asap(function(){
-        //
-        //         console.log('a1');
-        //     });
-        // });
-        //
-        // console.log('b');
-        //
-        // asap(function(){
-        //
-        //     console.log(2);
-        //
-        //     asap(function(){
-        //
-        //         console.log('b2');
-        //     });
-        // });
-        //
-        // console.log('c');
-        //
-        // asap(function(){
-        //
-        //     console.log(3);
-        //
-        //     asap(function(){
-        //
-        //         console.log('c3');
-        //     });
-        // });
-        //
-        // console.log('d');
-        //
-        // asap(function(){
-        //
-        //     console.log(4);
-        //
-        //     asap(function(){
-        //
-        //         console.log('d4');
-        //     });
-        // });
-        //
-        // console.log('e');
-        //
-        // asap(function(){
-        //
-        //     console.log(5);
-        //
-        //     asap(function(){
-        //
-        //         console.log('e5');
-        //     });
-        // });
-
-        // a, b, c, d, e, 1, 2, 3, 4, 5, a1, b2, c3, d4, e5
-
-        // ###############################################################################################
-        // ###############################################################################################
-
-        // console.log('a');
-        //
-        // Promise.resolve(function(){
-        //
-        //     console.log(1);
-        //
-        //     Promise.resolve(function(){
-        //
-        //         console.log('a1');
-        //     }());
-        // }());
-        //
-        // console.log('b');
-        //
-        // Promise.resolve(function(){
-        //
-        //     console.log(2);
-        //
-        //     Promise.resolve(function(){
-        //
-        //         console.log('b2');
-        //     }());
-        // }());
-        //
-        // console.log('c');
-        //
-        // Promise.resolve(function(){
-        //
-        //     console.log(3);
-        //
-        //     Promise.resolve(function(){
-        //
-        //         console.log('c3');
-        //     }());
-        // }());
-        //
-        // console.log('d');
-        //
-        // Promise.resolve(function(){
-        //
-        //     console.log(4);
-        //
-        //     Promise.resolve(function(){
-        //
-        //         console.log('d4');
-        //     }());
-        // }());
-        //
-        // console.log('e');
-        //
-        // Promise.resolve(function(){
-        //
-        //     console.log(5);
-        //
-        //     Promise.resolve(function(){
-        //
-        //         console.log('e5');
-        //     }());
-        // }());
-
-        // a, 1, a1, b, 2, b2, c, 3, c3, d, 4, d4, e, 5, e5
-
-        // ###############################################################################################
-        // ###############################################################################################
-
-        // console.log('a');
-        //
-        // async.nextTick(function(){
-        //
-        //     console.log(1);
-        //
-        //     async.nextTick(function(){
-        //
-        //         console.log('a1');
-        //     });
-        // });
-        //
-        // console.log('b');
-        //
-        // async.nextTick(function(){
-        //
-        //     console.log(2);
-        //
-        //     async.nextTick(function(){
-        //
-        //         console.log('b2');
-        //     });
-        // });
-        //
-        // console.log('c');
-        //
-        // async.nextTick(function(){
-        //
-        //     console.log(3);
-        //
-        //     async.nextTick(function(){
-        //
-        //         console.log('c3');
-        //     });
-        // });
-        //
-        // console.log('d');
-        //
-        // async.nextTick(function(){
-        //
-        //     console.log(4);
-        //
-        //     async.nextTick(function(){
-        //
-        //         console.log('d4');
-        //     });
-        // });
-        //
-        // console.log('e');
-        //
-        // async.nextTick(function(){
-        //
-        //     console.log(5);
-        //
-        //     async.nextTick(function(){
-        //
-        //         console.log('e5');
-        //     });
-        // });
-
-        // a, b, c, d, e, 1, 2, 3, 4, 5, a1, b2, c3, d4, e5
-
-        // ###############################################################################################
-        // ###############################################################################################
-
-        // console.log('a');
-        //
-        // async.setImmediate(function(){
-        //
-        //     console.log(1);
-        //
-        //     async.setImmediate(function(){
-        //
-        //         console.log('a1');
-        //     });
-        // });
-        //
-        // console.log('b');
-        //
-        // async.setImmediate(function(){
-        //
-        //     console.log(2);
-        //
-        //     async.setImmediate(function(){
-        //
-        //         console.log('b2');
-        //     });
-        // });
-        //
-        // console.log('c');
-        //
-        // async.setImmediate(function(){
-        //
-        //     console.log(3);
-        //
-        //     async.setImmediate(function(){
-        //
-        //         console.log('c3');
-        //     });
-        // });
-        //
-        // console.log('d');
-        //
-        // async.setImmediate(function(){
-        //
-        //     console.log(4);
-        //
-        //     async.setImmediate(function(){
-        //
-        //         console.log('d4');
-        //     });
-        // });
-        //
-        // console.log('e');
-        //
-        // async.setImmediate(function(){
-        //
-        //     console.log(5);
-        //
-        //     async.setImmediate(function(){
-        //
-        //         console.log('e5');
-        //     });
-        // });
-
-        // a, b, c, d, e, 1, 2, 3, 4, 5, a1, b2, c3, d4, e5
-
-        // ###############################################################################################
-        // ###############################################################################################
-
-        // var setZeroTimeout = (function() {
-        //
-        //     var stack = [];
-        //
-        //     // Like setTimeout, but only takes a function argument.  There's
-        //     // no time argument (always zero) and no arguments (you have to
-        //     // use a closure).
-        //     function setZeroTimeout(fn) {
-        //         stack.push(fn);
-        //         window.postMessage("message", "*");
-        //     }
-        //
-        //     window.addEventListener("message", function(){
-        //
-        //         stack.shift()();
-        //
-        //     }, true);
-        //
-        //     // Add the one thing we want added to the window object.
-        //     return setZeroTimeout;
-        //
-        // })();
-        //
-        // console.log('a');
-        //
-        // setZeroTimeout(function(){
-        //
-        //     console.log(1);
-        //
-        //     setZeroTimeout(function(){
-        //
-        //         console.log('a1');
-        //     });
-        // });
-        //
-        // console.log('b');
-        //
-        // setZeroTimeout(function(){
-        //
-        //     console.log(2);
-        //
-        //     setZeroTimeout(function(){
-        //
-        //         console.log('b2');
-        //     });
-        // });
-        //
-        // console.log('c');
-        //
-        // setZeroTimeout(function(){
-        //
-        //     console.log(3);
-        //
-        //     setZeroTimeout(function(){
-        //
-        //         console.log('c3');
-        //     });
-        // });
-        //
-        // console.log('d');
-        //
-        // setZeroTimeout(function(){
-        //
-        //     console.log(4);
-        //
-        //     setZeroTimeout(function(){
-        //
-        //         console.log('d4');
-        //     });
-        // });
-        //
-        // console.log('e');
-        //
-        // setZeroTimeout(function(){
-        //
-        //     console.log(5);
-        //
-        //     setZeroTimeout(function(){
-        //
-        //         console.log('e5');
-        //     });
-        // });
-
-        // a, b, c, d, e, 1, 2, 3, 4, 5, a1, b2, c3, d4, e5
-
-        // ***********************************************************************************************
-        // ***********************************************************************************************
-
-        // var async = (function(){
-        //
-        //
-        //
-        //     var stack = [];
-        //
-        //     var targetNode = document.createElement('span');
-        //
-        //     targetNode.addEventListener('tick', function(event){
-        //
-        //         event.stopPropagation();
-        //         stack.shift()();
-        //
-        //         return false;
-        //
-        //     }, true);
-        //
-        //
-        //     //event.initEvent("tick", true, true);
-        //     // event.eventName = "tick";
-        //
-        //     return function(fn){
-        //
-        //         stack.push(fn);
-        //
-        //         var event = document.createEvent("HTMLEvents");
-        //         event.initEvent("tick", true, true);
-        //         event.eventName = "tick";
-        //
-        //         targetNode.dispatchEvent(event);
-        //
-        //     }
-        //
-        // })();
-
-
-
-
-
-
-
-
-
-        //
-        // var nextTick8 = function() {
-        //
-        //     var resolved = Promise.resolve();
-        //
-        //     function nextTick(fn) {
-        //
-        //         resolved.then(fn);
-        //     }
-        //
-        //     console.log(1);
-        //
-        //     return nextTick;
-        // }();
-        //
-        //
-        //
-        // function loopa(){
-        //
-        //     nextTick8(function(){
-        //
-        //         loopb();
-        //     });
-        // }
-        //
-        //
-        // function loopb(){
-        //
-        //     nextTick8(function(){
-        //
-        //         loopa();
-        //     });
-        // }
-        //
-        // loopa();
-
-    }, 2000);
-
-
-
-
-
+    "use strict";
+
+    // if(1 === 2) window.setTimeout(function(){
+    //
+    //     var start = CORE.time.now();
+    //     var count = 5000000;
+    //
+    //     function callback(){
+    //
+    //         if(--count === 0) console.log(CORE.time.now() - start);
+    //     }
+    //
+    //     // synced: 1.625
+    //
+    //     // for(var i = 0, loops = count; i < loops; i++){
+    //     //
+    //     //     callback();
+    //     // }
+    //
+    //     ///////////////////////////////////////////////////////////////////////////////////////////
+    //     // MACRO TASKS (SIMULTANEOUSLY)                                                          //
+    //     ///////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //     // ----------------------------------------------------------------------------------------
+    //
+    //     // setTimeout: 526.1200000000001
+    //
+    //     // for(var i = 0; i < count; i++){
+    //     //
+    //     //     setTimeout(callback);
+    //     // }
+    //
+    //     // ----------------------------------------------------------------------------------------
+    //
+    //     // setImmediate: 1602.7599999999998
+    //
+    //     // for(var i = 0; i < count; i++){
+    //     //
+    //     //     setImmediate(callback);
+    //     // }
+    //
+    //     // ----------------------------------------------------------------------------------------
+    //
+    //     // asap: 23.295000000000073
+    //
+    //     // for(var i = 0; i < count; i++){
+    //     //
+    //     //     asap(callback);
+    //     // }
+    //
+    //     ///////////////////////////////////////////////////////////////////////////////////////////
+    //     // MICRO TASKS (SIMULTANEOUSLY)                                                          //
+    //     ///////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //     // es6: 416.5250000000001
+    //     // Bluebird: 7.014999999999873
+    //
+    //     // for(var i = 0, loops = count; i < loops; i++){
+    //     //
+    //     //     Promise.resolve(callback());
+    //     // }
+    //
+    //     // ----------------------------------------------------------------------------------------
+    //
+    //     // Bluebird: 10.274999999999864
+    //
+    //     // var promise = Promise.promisify(callback);
+    //     //
+    //     // for(var i = 0, loops = count; i < loops; i++){
+    //     //
+    //     //     promise();
+    //     // }
+    //
+    //     // ----------------------------------------------------------------------------------------
+    //
+    //     // async.nextTick: 822.4099999999999
+    //
+    //     // for(var i = 0, loops = count; i < count; i++){
+    //     //
+    //     //     async.nextTick(callback);
+    //     // }
+    //
+    //     // ----------------------------------------------------------------------------------------
+    //
+    //     // async.setImmediate: 790.1999999999998
+    //
+    //     // for(var i = 0, loops = count; i < loops; i++){
+    //     //
+    //     //     async.setImmediate(callback);
+    //     // }
+    //
+    //     // ----------------------------------------------------------------------------------------
+    //
+    //     // async.parallel: 6.080000000000155
+    //
+    //     // var stack = new Array(loops);
+    //     //
+    //     // for(var i = 0, loops = count; i < loops; i++){
+    //     //
+    //     //     stack[i] = callback;
+    //     // }
+    //     //
+    //     // async.parallel(stack);
+    //
+    //     // ----------------------------------------------------------------------------------------
+    //
+    //     // async.times: 11.289999999999964
+    //
+    //     //async.times(count, callback);
+    //
+    //     // ----------------------------------------------------------------------------------------
+    //
+    //     // async.race: 4.564999999999827
+    //
+    //     // var stack = new Array(count);
+    //     //
+    //     // for(var i = 0, loops = count; i < loops; i++){
+    //     //
+    //     //     stack[i] = callback;
+    //     // }
+    //     //
+    //     // async.race(stack);
+    //
+    //     // ----------------------------------------------------------------------------------------
+    //
+    //     // setZeroTimeout: 1190.12
+    //
+    //     // var setZeroTimeout = (function() {
+    //     //
+    //     //     var stack = [];
+    //     //
+    //     //     // Like setTimeout, but only takes a function argument.  There's
+    //     //     // no time argument (always zero) and no arguments (you have to
+    //     //     // use a closure).
+    //     //     function setZeroTimeout(fn) {
+    //     //         stack.push(fn);
+    //     //         window.postMessage("message", "*");
+    //     //     }
+    //     //
+    //     //     window.addEventListener("message", function(){
+    //     //
+    //     //         stack.shift()();
+    //     //
+    //     //     }, true);
+    //     //
+    //     //     // Add the one thing we want added to the window object.
+    //     //     return setZeroTimeout;
+    //     //
+    //     // })();
+    //     //
+    //     // for(var i = 0, loops = count; i < loops; i++){
+    //     //
+    //     //     setZeroTimeout(callback);
+    //     // }
+    //
+    //     // ----------------------------------------------------------------------------------------
+    //
+    //     // MutationObserver: 257.52499999999986
+    //
+    //     // var observer = new MutationObserver(function(mutations) {
+    //     //
+    //     //     var len = mutations.length;
+    //     //
+    //     //     while(len--) callback();
+    //     // });
+    //     //
+    //     // // Node, config
+    //     // // In this case we'll listen to all changes to body and child nodes
+    //     // var targetNode = document.createElement('span');
+    //     //
+    //     // observer.observe(targetNode, {
+    //     //
+    //     //     attributes: true,
+    //     //     childList: false,
+    //     //     characterData: false
+    //     // });
+    //     //
+    //     // var stack = [];
+    //     //
+    //     // var worker = APP.WORKER.register(
+    //     //
+    //     //     // name:
+    //     //     'test',
+    //     //
+    //     //     // worker:
+    //     //     function(){
+    //     //
+    //     //         this.onmessage = function(event){
+    //     //
+    //     //             this.postMessage(0);
+    //     //         };
+    //     //     },
+    //     //
+    //     //     // callback:
+    //     //     function(event){
+    //     //
+    //     //         stack.shift()();
+    //     //     },
+    //     //
+    //     //     64
+    //     // );
+    //     //
+    //     // var async = function(fn){
+    //     //     worker.postMessage(0);
+    //     //     stack.push(fn);
+    //     //
+    //     // };
+    //
+    //
+    //     function loop(){
+    //
+    //         //for(var i = 0, loops = count; i < loops; i++){
+    //
+    //             CORE.queue(function(){
+    //
+    //                 for(var x = 0, loops = count; x < loops; x++){}
+    //
+    //                 CORE.asap(function(){
+    //
+    //                     for(var x = 0, loops = count; x < loops; x++){}
+    //
+    //                     CORE.queue(function(){
+    //
+    //                         for(var x = 0, loops = count; x < loops; x++){}
+    //
+    //                         CORE.stack(function(){
+    //
+    //                             for(var x = 0, loops = count; x < loops; x++){}
+    //
+    //                             CORE.paint(function(){
+    //
+    //                                 for(var x = 0, loops = count; x < loops; x++){}
+    //
+    //                                 CORE.queue(function(){
+    //
+    //                                     for(var x = 0, loops = count; x < loops; x++){}
+    //
+    //                                     CORE.asap(function(){
+    //
+    //                                         for(var x = 0, loops = count; x < loops; x++){}
+    //
+    //                                         CORE.stack(function(){
+    //
+    //                                             for(var x = 0, loops = count; x < loops; x++){}
+    //
+    //                                             CORE.paint(function(){
+    //
+    //                                                 for(var x = 0, loops = count; x < loops; x++){}
+    //
+    //                                                 CORE.queue(function(){
+    //
+    //                                                     for(var x = 0, loops = count; x < loops; x++){}
+    //
+    //                                                     CORE.stack(function(){
+    //
+    //                                                         for(var x = 0, loops = count; x < loops; x++){}
+    //
+    //                                                         CORE.queue(function(){
+    //
+    //                                                             for(var x = 0, loops = count; x < loops; x++){}
+    //
+    //                                                             CORE.asap(function(){
+    //
+    //                                                                 for(var x = 0, loops = count; x < loops; x++){}
+    //
+    //                                                                 CORE.queue(function(){
+    //
+    //                                                                     for(var x = 0, loops = count; x < loops; x++){}
+    //
+    //                                                                     CORE.stack(function(){
+    //
+    //                                                                         for(var x = 0, loops = count; x < loops; x++){}
+    //
+    //                                                                         CORE.paint(function(){
+    //
+    //                                                                             for(var x = 0, loops = count; x < loops; x++){}
+    //
+    //                                                                             CORE.stack(callback);
+    //
+    //                                                                             CORE.queue(loop);
+    //
+    //                                                                             console.log(CORE.time.now() - start);
+    //                                                                             start = CORE.time.now();
+    //
+    //                                                                             if(count === 0) {
+    //
+    //                                                                                 count = 5000;
+    //                                                                             }
+    //                                                                         });
+    //                                                                     });
+    //                                                                 });
+    //                                                             });
+    //                                                         });
+    //                                                     });
+    //                                                 });
+    //                                             });
+    //                                         });
+    //                                     });
+    //                                 });
+    //                             });
+    //                         });
+    //                     });
+    //                 });
+    //             });
+    //             //targetNode.dataset.id = i;
+    //         //}
+    //     }
+    //
+    //     loop();
+    //
+    //
+    //     // ----------------------------------------------------------------------------------------
+    //
+    //     // MessageChannel: 323.14999999999986
+    //
+    //     // var channel = new MessageChannel();
+    //     // // linked list of tasks (single, with head node)
+    //     //
+    //     // channel.port1.onmessage = function() {
+    //     //
+    //     //     callback();
+    //     // };
+    //     //
+    //     // for(var i = 0, loops = count; i < loops; i++){
+    //     //
+    //     //     channel.port2.postMessage(0);
+    //     // }
+    //
+    //     // ----------------------------------------------------------------------------------------
+    //
+    //     // dispatchEvent: 93.27500000000009
+    //
+    //     // var targetNode = document.createElement('span');
+    //     //
+    //     // targetNode.addEventListener('tick', function(event){
+    //     //
+    //     //     callback();
+    //     //
+    //     // }, false);
+    //     //
+    //     // var event; // The custom event that will be created
+    //     //
+    //     // if (document.createEvent) {
+    //     //
+    //     //     event = document.createEvent("HTMLEvents");
+    //     //     event.initEvent("tick", true, true);
+    //     //
+    //     // } else {
+    //     //
+    //     //     event = document.createEventObject();
+    //     //     event.eventType = "tick";
+    //     // }
+    //     //
+    //     // event.eventName = "tick";
+    //     //
+    //     // if(document.createEvent) {
+    //     //
+    //     //     for(var i = 0, loops = count; i < loops; i++){
+    //     //
+    //     //         targetNode.dispatchEvent(event);
+    //     //     }
+    //     //
+    //     // } else {
+    //     //
+    //     //     for(var i = 0, loops = count; i < loops; i++){
+    //     //
+    //     //         targetNode.fireEvent("on" + event.eventType, event);
+    //     //     }
+    //     // }
+    //
+    //     // ----------------------------------------------------------------------------------------
+    //
+    //     // window.postMessag: 1071.58
+    //
+    //     // window.addEventListener("", callback, true);
+    //     //
+    //     // for(var i = 0, loops = count; i < loops; i++){
+    //     //
+    //     //     window.postMessage(0, '*');
+    //     // }
+    //
+    //     // ###############################################################################################
+    //     // ###############################################################################################
+    //
+    //     // console.log('a');
+    //     //
+    //     // setTimeout(function(){
+    //     //
+    //     //     console.log(1);
+    //     //
+    //     //     setTimeout(function(){
+    //     //
+    //     //         console.log('a1');
+    //     //     });
+    //     // });
+    //     //
+    //     // console.log('b');
+    //     //
+    //     // setTimeout(function(){
+    //     //
+    //     //     console.log(2);
+    //     //
+    //     //     setTimeout(function(){
+    //     //
+    //     //         console.log('b2');
+    //     //     });
+    //     // });
+    //     //
+    //     // console.log('c');
+    //     //
+    //     // setTimeout(function(){
+    //     //
+    //     //     console.log(3);
+    //     //
+    //     //     setTimeout(function(){
+    //     //
+    //     //         console.log('c3');
+    //     //     });
+    //     // });
+    //     //
+    //     // console.log('d');
+    //     //
+    //     // setTimeout(function(){
+    //     //
+    //     //     console.log(4);
+    //     //
+    //     //     setTimeout(function(){
+    //     //
+    //     //         console.log('d4');
+    //     //     });
+    //     // });
+    //     //
+    //     // console.log('e');
+    //     //
+    //     // setTimeout(function(){
+    //     //
+    //     //     console.log(5);
+    //     //
+    //     //     setTimeout(function(){
+    //     //
+    //     //         console.log('e5');
+    //     //     });
+    //     // });
+    //
+    //     // a, b, c, d, e, 1, 2, 3, 4, 5, a1, b2, c3, d4, e5
+    //
+    //     // ###############################################################################################
+    //     // ###############################################################################################
+    //
+    //     // console.log('a');
+    //     //
+    //     // setImmediate(function(){
+    //     //
+    //     //     console.log(1);
+    //     //
+    //     //     setImmediate(function(){
+    //     //
+    //     //         console.log('a1');
+    //     //     });
+    //     // });
+    //     //
+    //     // console.log('b');
+    //     //
+    //     // setImmediate(function(){
+    //     //
+    //     //     console.log(2);
+    //     //
+    //     //     setImmediate(function(){
+    //     //
+    //     //         console.log('b2');
+    //     //     });
+    //     // });
+    //     //
+    //     // console.log('c');
+    //     //
+    //     // setImmediate(function(){
+    //     //
+    //     //     console.log(3);
+    //     //
+    //     //     setImmediate(function(){
+    //     //
+    //     //         console.log('c3');
+    //     //     });
+    //     // });
+    //     //
+    //     // console.log('d');
+    //     //
+    //     // setImmediate(function(){
+    //     //
+    //     //     console.log(4);
+    //     //
+    //     //     setImmediate(function(){
+    //     //
+    //     //         console.log('d4');
+    //     //     });
+    //     // });
+    //     //
+    //     // console.log('e');
+    //     //
+    //     // setImmediate(function(){
+    //     //
+    //     //     console.log(5);
+    //     //
+    //     //     setImmediate(function(){
+    //     //
+    //     //         console.log('e5');
+    //     //     });
+    //     // });
+    //
+    //     // a, b, c, d, e, 1, 2, 3, 4, 5, a1, b2, c3, d4, e5
+    //
+    //     // ###############################################################################################
+    //     // ###############################################################################################
+    //
+    //     // console.log('a');
+    //     //
+    //     // asap(function(){
+    //     //
+    //     //     console.log(1);
+    //     //
+    //     //     asap(function(){
+    //     //
+    //     //         console.log('a1');
+    //     //     });
+    //     // });
+    //     //
+    //     // console.log('b');
+    //     //
+    //     // asap(function(){
+    //     //
+    //     //     console.log(2);
+    //     //
+    //     //     asap(function(){
+    //     //
+    //     //         console.log('b2');
+    //     //     });
+    //     // });
+    //     //
+    //     // console.log('c');
+    //     //
+    //     // asap(function(){
+    //     //
+    //     //     console.log(3);
+    //     //
+    //     //     asap(function(){
+    //     //
+    //     //         console.log('c3');
+    //     //     });
+    //     // });
+    //     //
+    //     // console.log('d');
+    //     //
+    //     // asap(function(){
+    //     //
+    //     //     console.log(4);
+    //     //
+    //     //     asap(function(){
+    //     //
+    //     //         console.log('d4');
+    //     //     });
+    //     // });
+    //     //
+    //     // console.log('e');
+    //     //
+    //     // asap(function(){
+    //     //
+    //     //     console.log(5);
+    //     //
+    //     //     asap(function(){
+    //     //
+    //     //         console.log('e5');
+    //     //     });
+    //     // });
+    //
+    //     // a, b, c, d, e, 1, 2, 3, 4, 5, a1, b2, c3, d4, e5
+    //
+    //     // ###############################################################################################
+    //     // ###############################################################################################
+    //
+    //     // console.log('a');
+    //     //
+    //     // Promise.resolve(function(){
+    //     //
+    //     //     console.log(1);
+    //     //
+    //     //     Promise.resolve(function(){
+    //     //
+    //     //         console.log('a1');
+    //     //     }());
+    //     // }());
+    //     //
+    //     // console.log('b');
+    //     //
+    //     // Promise.resolve(function(){
+    //     //
+    //     //     console.log(2);
+    //     //
+    //     //     Promise.resolve(function(){
+    //     //
+    //     //         console.log('b2');
+    //     //     }());
+    //     // }());
+    //     //
+    //     // console.log('c');
+    //     //
+    //     // Promise.resolve(function(){
+    //     //
+    //     //     console.log(3);
+    //     //
+    //     //     Promise.resolve(function(){
+    //     //
+    //     //         console.log('c3');
+    //     //     }());
+    //     // }());
+    //     //
+    //     // console.log('d');
+    //     //
+    //     // Promise.resolve(function(){
+    //     //
+    //     //     console.log(4);
+    //     //
+    //     //     Promise.resolve(function(){
+    //     //
+    //     //         console.log('d4');
+    //     //     }());
+    //     // }());
+    //     //
+    //     // console.log('e');
+    //     //
+    //     // Promise.resolve(function(){
+    //     //
+    //     //     console.log(5);
+    //     //
+    //     //     Promise.resolve(function(){
+    //     //
+    //     //         console.log('e5');
+    //     //     }());
+    //     // }());
+    //
+    //     // a, 1, a1, b, 2, b2, c, 3, c3, d, 4, d4, e, 5, e5
+    //
+    //     // ###############################################################################################
+    //     // ###############################################################################################
+    //
+    //     // console.log('a');
+    //     //
+    //     // async.nextTick(function(){
+    //     //
+    //     //     console.log(1);
+    //     //
+    //     //     async.nextTick(function(){
+    //     //
+    //     //         console.log('a1');
+    //     //     });
+    //     // });
+    //     //
+    //     // console.log('b');
+    //     //
+    //     // async.nextTick(function(){
+    //     //
+    //     //     console.log(2);
+    //     //
+    //     //     async.nextTick(function(){
+    //     //
+    //     //         console.log('b2');
+    //     //     });
+    //     // });
+    //     //
+    //     // console.log('c');
+    //     //
+    //     // async.nextTick(function(){
+    //     //
+    //     //     console.log(3);
+    //     //
+    //     //     async.nextTick(function(){
+    //     //
+    //     //         console.log('c3');
+    //     //     });
+    //     // });
+    //     //
+    //     // console.log('d');
+    //     //
+    //     // async.nextTick(function(){
+    //     //
+    //     //     console.log(4);
+    //     //
+    //     //     async.nextTick(function(){
+    //     //
+    //     //         console.log('d4');
+    //     //     });
+    //     // });
+    //     //
+    //     // console.log('e');
+    //     //
+    //     // async.nextTick(function(){
+    //     //
+    //     //     console.log(5);
+    //     //
+    //     //     async.nextTick(function(){
+    //     //
+    //     //         console.log('e5');
+    //     //     });
+    //     // });
+    //
+    //     // a, b, c, d, e, 1, 2, 3, 4, 5, a1, b2, c3, d4, e5
+    //
+    //     // ###############################################################################################
+    //     // ###############################################################################################
+    //
+    //     // console.log('a');
+    //     //
+    //     // async.setImmediate(function(){
+    //     //
+    //     //     console.log(1);
+    //     //
+    //     //     async.setImmediate(function(){
+    //     //
+    //     //         console.log('a1');
+    //     //     });
+    //     // });
+    //     //
+    //     // console.log('b');
+    //     //
+    //     // async.setImmediate(function(){
+    //     //
+    //     //     console.log(2);
+    //     //
+    //     //     async.setImmediate(function(){
+    //     //
+    //     //         console.log('b2');
+    //     //     });
+    //     // });
+    //     //
+    //     // console.log('c');
+    //     //
+    //     // async.setImmediate(function(){
+    //     //
+    //     //     console.log(3);
+    //     //
+    //     //     async.setImmediate(function(){
+    //     //
+    //     //         console.log('c3');
+    //     //     });
+    //     // });
+    //     //
+    //     // console.log('d');
+    //     //
+    //     // async.setImmediate(function(){
+    //     //
+    //     //     console.log(4);
+    //     //
+    //     //     async.setImmediate(function(){
+    //     //
+    //     //         console.log('d4');
+    //     //     });
+    //     // });
+    //     //
+    //     // console.log('e');
+    //     //
+    //     // async.setImmediate(function(){
+    //     //
+    //     //     console.log(5);
+    //     //
+    //     //     async.setImmediate(function(){
+    //     //
+    //     //         console.log('e5');
+    //     //     });
+    //     // });
+    //
+    //     // a, b, c, d, e, 1, 2, 3, 4, 5, a1, b2, c3, d4, e5
+    //
+    //     // ###############################################################################################
+    //     // ###############################################################################################
+    //
+    //     // var setZeroTimeout = (function() {
+    //     //
+    //     //     var stack = [];
+    //     //
+    //     //     // Like setTimeout, but only takes a function argument.  There's
+    //     //     // no time argument (always zero) and no arguments (you have to
+    //     //     // use a closure).
+    //     //     function setZeroTimeout(fn) {
+    //     //         stack.push(fn);
+    //     //         window.postMessage("message", "*");
+    //     //     }
+    //     //
+    //     //     window.addEventListener("message", function(){
+    //     //
+    //     //         stack.shift()();
+    //     //
+    //     //     }, true);
+    //     //
+    //     //     // Add the one thing we want added to the window object.
+    //     //     return setZeroTimeout;
+    //     //
+    //     // })();
+    //     //
+    //     // console.log('a');
+    //     //
+    //     // setZeroTimeout(function(){
+    //     //
+    //     //     console.log(1);
+    //     //
+    //     //     setZeroTimeout(function(){
+    //     //
+    //     //         console.log('a1');
+    //     //     });
+    //     // });
+    //     //
+    //     // console.log('b');
+    //     //
+    //     // setZeroTimeout(function(){
+    //     //
+    //     //     console.log(2);
+    //     //
+    //     //     setZeroTimeout(function(){
+    //     //
+    //     //         console.log('b2');
+    //     //     });
+    //     // });
+    //     //
+    //     // console.log('c');
+    //     //
+    //     // setZeroTimeout(function(){
+    //     //
+    //     //     console.log(3);
+    //     //
+    //     //     setZeroTimeout(function(){
+    //     //
+    //     //         console.log('c3');
+    //     //     });
+    //     // });
+    //     //
+    //     // console.log('d');
+    //     //
+    //     // setZeroTimeout(function(){
+    //     //
+    //     //     console.log(4);
+    //     //
+    //     //     setZeroTimeout(function(){
+    //     //
+    //     //         console.log('d4');
+    //     //     });
+    //     // });
+    //     //
+    //     // console.log('e');
+    //     //
+    //     // setZeroTimeout(function(){
+    //     //
+    //     //     console.log(5);
+    //     //
+    //     //     setZeroTimeout(function(){
+    //     //
+    //     //         console.log('e5');
+    //     //     });
+    //     // });
+    //
+    //     // a, b, c, d, e, 1, 2, 3, 4, 5, a1, b2, c3, d4, e5
+    //
+    //     // ***********************************************************************************************
+    //     // ***********************************************************************************************
+    //
+    //     // var async = (function(){
+    //     //
+    //     //
+    //     //
+    //     //     var stack = [];
+    //     //
+    //     //     var targetNode = document.createElement('span');
+    //     //
+    //     //     targetNode.addEventListener('tick', function(event){
+    //     //
+    //     //         event.stopPropagation();
+    //     //         stack.shift()();
+    //     //
+    //     //         return false;
+    //     //
+    //     //     }, true);
+    //     //
+    //     //
+    //     //     //event.initEvent("tick", true, true);
+    //     //     // event.eventName = "tick";
+    //     //
+    //     //     return function(fn){
+    //     //
+    //     //         stack.push(fn);
+    //     //
+    //     //         var event = document.createEvent("HTMLEvents");
+    //     //         event.initEvent("tick", true, true);
+    //     //         event.eventName = "tick";
+    //     //
+    //     //         targetNode.dispatchEvent(event);
+    //     //
+    //     //     }
+    //     //
+    //     // })();
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //     //
+    //     // var nextTick8 = function() {
+    //     //
+    //     //     var resolved = Promise.resolve();
+    //     //
+    //     //     function nextTick(fn) {
+    //     //
+    //     //         resolved.then(fn);
+    //     //     }
+    //     //
+    //     //     console.log(1);
+    //     //
+    //     //     return nextTick;
+    //     // }();
+    //     //
+    //     //
+    //     //
+    //     // function loopa(){
+    //     //
+    //     //     nextTick8(function(){
+    //     //
+    //     //         loopb();
+    //     //     });
+    //     // }
+    //     //
+    //     //
+    //     // function loopb(){
+    //     //
+    //     //     nextTick8(function(){
+    //     //
+    //     //         loopa();
+    //     //     });
+    //     // }
+    //     //
+    //     // loopa();
+    //
+    // }, 2000);
 
 
 
@@ -996,7 +993,7 @@ goog.require('APP.MAIN');
 
                                     APP.MIGRATE[versions[i]]();
 
-                                    if(DEBUG) CORE.console.log("Migration done: " + versions[i]);
+                                    if(DEBUG) Console.log("Migration done: " + versions[i]);
                                 }
                             }
 
@@ -1014,27 +1011,27 @@ goog.require('APP.MAIN');
                     }
                     else{
 
-                        if(DEBUG) CORE.console.log("Migration aborted: App version missing.");
+                        if(DEBUG) Console.log("Migration aborted: App version missing.");
                     }
 
                 }
                 catch(e){
 
-                    if(DEBUG) CORE.console.log("Migration error.", e);
+                    if(DEBUG) Console.log("Migration error.", e);
 
                     current_version = false;
                 }
 
                 if(!current_version){
 
-                    if(DEBUG) CORE.console.log("Reset Local Storage.");
+                    if(DEBUG) Console.log("Reset Local Storage.");
 
                     window.localStorage.clear();
                 }
 
                 if(migration_success){
 
-                    if(DEBUG) CORE.console.log("Migration successfully.");
+                    if(DEBUG) Console.log("Migration successfully.");
                 }
 
                 window.localStorage.setItem('app_version', last_version);
@@ -1135,12 +1132,12 @@ goog.require('APP.MAIN');
 
         if(APP.CONFIG.PROC || CORE.getStackLength()){
 
-            if(DEBUG) CORE.console.log("Processing ...");
+            if(DEBUG) Console.log("Processing ...");
 
             return CORE.queue(/** @type {Function} */ (runApp));
         }
 
-        if(DEBUG) CORE.console.log('App initialized successfully.');
+        if(DEBUG) Console.log('App initialized successfully.');
 
         //APP.SETUP();
         //APP.VIEWPORT.update();
@@ -1248,10 +1245,10 @@ goog.require('APP.MAIN');
                 //     //'visibility': 'hidden'
                 //
                 //     /* does not unload gpu, reflow */
-                //    // 'left': '-300%'
+                //     'left': '-300%'
                 //
                 //     /* does not unload gpu, maybe z-index conflict */
-                //     'opacity': 0
+                //     //'opacity': 0
                 // });
                 //
                 // CORE.addCssRule('xone-main[role="main"].show', {
@@ -1260,13 +1257,13 @@ goog.require('APP.MAIN');
                 //     //'display': 'block'
                 //
                 //     /* does not unload gpu, repaint */
-                //     //'visibility': 'visible',
+                //     //'visibility': 'visible'
                 //
                 //     /* does not unload gpu, reflow */
-                //     //'left': '0'
+                //     'left': '0'
                 //
                 //     /* does not unload gpu, maybe z-index conflict */
-                //     'opacity': 1
+                //     //'opacity': 1
                 // });
            // }
 
@@ -1287,7 +1284,7 @@ goog.require('APP.MAIN');
 
                         if(top === 0){
 
-                            if(/*!this.hasAttribute('bounce') &&*/
+                            if(//!this.hasAttribute('bounce') &&
                                (!this.previousElementSibling || !CORE.hasClass(this.previousElementSibling, 'pull')) &&
                                (!this.firstElementChild.firstElementChild || !CORE.hasClass(this.firstElementChild.firstElementChild, 'zoom'))){
 
@@ -1361,7 +1358,7 @@ goog.require('APP.MAIN');
 
         if(DEBUG){
 
-            CORE.console.log('Initialize Settings');
+            Console.log('Initialize Settings');
         }
 
         /** @type {_storage_interface} */
@@ -1376,7 +1373,7 @@ goog.require('APP.MAIN');
 
         if(DEBUG) {
 
-            CORE.console.log('Initialize App');
+            Console.log('Initialize App');
 
             if(CONFIG.SHOW_DEBUG){
 
@@ -1393,7 +1390,7 @@ goog.require('APP.MAIN');
 
                 if(applicationCache){
 
-                    if(DEBUG) CORE.console.log('Check Update (ApplicationCache), Status: ' + applicationCache['status']);
+                    if(DEBUG) Console.log('Check Update (ApplicationCache), Status: ' + applicationCache['status']);
 
                     applicationCache.addEventListener('updateready', function() {
 
@@ -1418,7 +1415,7 @@ goog.require('APP.MAIN');
                             }
                         }
 
-                        else if(DEBUG) CORE.console.log("Status ApplicationCache: " + applicationCache['status']);
+                        else if(DEBUG) Console.log("Status ApplicationCache: " + applicationCache['status']);
 
                     }, false);
 
@@ -1435,7 +1432,7 @@ goog.require('APP.MAIN');
     /** @type {Function|null} */
     var initialize_config = function() {
 
-        if(DEBUG) CORE.console.log('Initialize Config');
+        if(DEBUG) Console.log('Initialize Config');
 
         APP.CONFIG.LANG = (navigator.language || navigator['userLanguage'] || 'en').substring(0, 2);
     };
@@ -1445,37 +1442,41 @@ goog.require('APP.MAIN');
 
         if(DEBUG) {
 
-            CORE.console.log('Initialize Debug');
+            Console.log('Initialize Debug');
 
-            // if(ENV === 'development'){
-            //
-            //     // Experimental: Register Call Statistics (may breaks some tests)
-            //
-            //     DEBUGGER.registerCallListener(CORE, 'CORE');
-            //     DEBUGGER.registerCallListener(APP, 'APP');
-            // }
+            if(ENV === 'development' && CONFIG.DEBUG_TRACE_MODE){
 
-            if(window['applicationCache']) {
+                // Experimental: Register Call Statistics (may breaks some tests)
 
-                var logEvent = function (event) {
+                DEBUGGER.registerCallListener(CORE, 'CORE');
+                DEBUGGER.registerCallListener(APP, 'APP');
+                DEBUGGER.registerCallListener(Util, 'Util');
+            }
 
-                    CORE.console.log(event.type);
-                };
+            if(PLATFORM === 'webapp'){
 
-                var applicationCacheEvents = [
+                if(window['applicationCache']){
 
-                    'checking',
-                    'noupdate',
-                    'downloading',
-                    'cached',
-                    'updateready',
-                    'obsolete',
-                    'error'
-                ];
+                    var logEvent = function(event){
 
-                for(var i = 0; i < applicationCacheEvents.length; i++) {
+                        Console.log(event.type);
+                    };
 
-                    window['applicationCache'].addEventListener(applicationCacheEvents[i], logEvent, false);
+                    var applicationCacheEvents = [
+
+                        'checking',
+                        'noupdate',
+                        'downloading',
+                        'cached',
+                        'updateready',
+                        'obsolete',
+                        'error'
+                    ];
+
+                    for(var i = 0; i < applicationCacheEvents.length; i++){
+
+                        window['applicationCache'].addEventListener(applicationCacheEvents[i], logEvent, false);
+                    }
                 }
             }
         }
@@ -1484,7 +1485,7 @@ goog.require('APP.MAIN');
     /** @type {Function|null} */
     var initialize_layout = function() {
 
-        if(DEBUG) CORE.console.log('Initialize Layout');
+        if(DEBUG) Console.log('Initialize Layout');
 
         var definitions = APP.CONFIG.LAYOUT;
 
@@ -1538,7 +1539,7 @@ goog.require('APP.MAIN');
                 }
                 else{
 
-                    if(DEBUG) CORE.console.warn("Warning: '" + definitions[i] + "' is not defined in 'view/app/'.");
+                    if(DEBUG) Console.warn("Warning: '" + definitions[i] + "' is not defined in 'view/app/'.");
                 }
 
                 /* Friendly Garbage Collection */
@@ -1582,18 +1583,27 @@ goog.require('APP.MAIN');
                 if(main[i].id) {
 
                     APP.VIEW[main[i].id] = new ViewModel(main[i]);
+
+                    if(main[i].getAttribute('role') === 'main'){
+
+                        document.body.insertBefore(
+
+                            main[i],
+                            document.body.childNodes[0]
+                        );
+                    }
                 }
                 else{
 
-                    if(DEBUG) CORE.console.warn("View container has no id: ", main[i]);
+                    if(DEBUG) Console.warn("View container has no id: ", main[i]);
                 }
             }
 
-            CORE.setStyle([
-
-                main, 'xone-tabbar'
-
-            ], 'visibility', 'hidden');
+            // CORE.setStyle([
+            //
+            //     main, 'xone-tabbar'
+            //
+            // ], 'visibility', 'hidden');
 
             definitions = null;
             html = null;
@@ -1659,7 +1669,7 @@ goog.require('APP.MAIN');
     /** @type {Function|null} */
     var initialize_views = function(){
 
-        if(DEBUG) CORE.console.log('Initialize Views');
+        if(DEBUG) Console.log('Initialize Views');
 
         var views = APP.TEMPLATE;
 
@@ -1773,7 +1783,7 @@ goog.require('APP.MAIN');
                 }
             }
 
-            if(DEBUG) CORE.console.log('Initialize DOM-Cache: ' + count + ' Objects', CORE.DOM);
+            if(DEBUG) Console.log('Initialize DOM-Cache: ' + count + ' Objects', CORE.DOM);
         }
     };
     */
@@ -1799,7 +1809,7 @@ goog.require('APP.MAIN');
     /** @type {Function|null} */
     var initialize_events = function(){
 
-        if(DEBUG) CORE.console.log('Initialize Events');
+        if(DEBUG) Console.log('Initialize Events');
 
         /* Feature Detection: Passive Events */
 
@@ -1814,7 +1824,7 @@ goog.require('APP.MAIN');
                         'passive': true
                     };
 
-                    if(DEBUG) CORE.console.log('Passive Events Supported');
+                    if(DEBUG) Console.log('Passive Events Supported');
                 }
             })));
 
@@ -1878,7 +1888,7 @@ goog.require('APP.MAIN');
 
                 if(!node){
 
-                    if(DEBUG) CORE.console.warn('WARNING: Element ' + key + ' was missing for binding event.');
+                    if(DEBUG) Console.warn('WARNING: Element ' + key + ' was missing for binding event.');
                     continue;
                 }
 
@@ -2051,7 +2061,7 @@ goog.require('APP.MAIN');
     /** @type {Function|null} */
     var initialize_translations = function(){
 
-        if(DEBUG) CORE.console.log('Initialize Translations');
+        if(DEBUG) Console.log('Initialize Translations');
 
         APP.CONTROLLER.changeLanguage(APP.CONFIG.LANG);
     };
@@ -2059,7 +2069,7 @@ goog.require('APP.MAIN');
     /** @type {Function|null} */
     var initialize_storage = function(){
 
-        if(DEBUG) CORE.console.log('Load Storage');
+        if(DEBUG) Console.log('Load Storage');
 
         //determine_storage_size(/* error value: */39500);
 
@@ -2069,7 +2079,7 @@ goog.require('APP.MAIN');
         //
         //         var data = APP.MODEL[model].all();
         //
-        //         if(data.length) if(DEBUG) CORE.console.log(model + ' loaded: ' + data.length);
+        //         if(data.length) if(DEBUG) Console.log(model + ' loaded: ' + data.length);
         //     }
         // }
     };
@@ -2077,7 +2087,7 @@ goog.require('APP.MAIN');
     /** @type {Function|null} */
     var initialize_models = function(){
 
-        if(DEBUG) CORE.console.log('Initialize Models');
+        if(DEBUG) Console.log('Initialize Models');
 
         // var models = APP.MODEL;
         //

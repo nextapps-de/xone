@@ -296,9 +296,13 @@ href
 alt
 
  */
-
+/*
+vdom{
+    will-change: contents;
+}*/
 xone-main,
 xone-section{
+    display: inline;
     position: absolute;
     top:0;
     right:0;
@@ -313,6 +317,7 @@ xone-main{
 }
 xone-section{
     background-color: #fff;
+    display: inline;
     position: absolute;
     bottom:0;
     right:0;
@@ -323,6 +328,7 @@ xone-main{
     pointer-events: none;
     touch-action: none;
     z-index:-1;
+    /*will-change: visibility, z-index;*/
 }
 xone-header{
     top:0;
@@ -350,7 +356,7 @@ xone-tabbar{
     z-index: 9;
     background: #fff;
     text-align: center;
-    display: table;
+    display: inline-table;
     table-layout: fixed;
 }
 xone-main xone-header ~ xone-section{
@@ -360,18 +366,23 @@ xone-main[statusbar] xone-header ~ xone-section{
     top: @xone-navbar-height + @xone-statusbar-height - 1;
 }
 xone-main[role="main"]{
+    display: none;
+    visibility: visible;
     bottom: @xone-tabbar-height;
     background: #fff;
+    /*will-change: display, z-index;*/
 }
 xone-main.reveal{
     z-index: 0;
     pointer-events: none;
 }
 xone-main.show{
+    visibility: visible;
     z-index: 2;
     pointer-events: auto;
 }
 xone-main[role="main"].show{
+    display: inline;
     z-index: 1;
 }
 xone-main.slide,
@@ -507,20 +518,29 @@ xone-header nav:nth-of-type(2){
 xone-section,
 .scrollpane,
 .scrollpane-y,
-.scrollpane-x{
-    width:auto;
-    height:auto;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    touch-action: pan-y;
-    -webkit-overflow-scrolling: touch;
-    overflow-scrolling: touch;
-    will-change: scroll-position;
+.scrollpane-x {
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    /*will-change: contents;*/
 }
-.scrollpane-x{
-    overflow-x: scroll;
-    overflow-y: hidden;
-    touch-action: pan-x;
+xone-main.show {
+    xone-section,
+    .scrollpane,
+    .scrollpane-y,
+    .scrollpane-x {
+        overflow-x: hidden;
+        overflow-y: scroll;
+        touch-action: pan-y;
+        -webkit-overflow-scrolling: touch;
+        overflow-scrolling: touch;
+        will-change: /*contents,*/ scroll-position;
+    }
+    .scrollpane-x {
+        overflow-x: scroll;
+        overflow-y: hidden;
+        touch-action: pan-x;
+    }
 }
 xone-section[bounce]:before,
 .scrollpane[bounce]:before,
@@ -696,21 +716,26 @@ xone-main[statusbar] .shadow {
     left:0;
     right:0;
     pointer-events: none;
-    will-change: transform;
 }
 .pull.pause .spinner div{
     animation: none !important;
 }
-.pull > div{
-    will-change: transform;
+/*
+xone-main.show:not(.reveal) {
+    .pull {
+        will-change: transform;
+    }
+    .pull > div {
+        will-change: transform;
+    }
+    .slider {
+        will-change: transform;
+    }
+    .zoom > div {
+        will-change: transform;
+    }
 }
-.slider{
-    will-change: transform;
-}
-.zoom > div{
-    will-change: transform;
-}
-
+*/
 /* Demo Screen */
 
 #demo{

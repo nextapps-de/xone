@@ -17,6 +17,7 @@ describe("Check Core Initialize Status", function() {
         expect(CORE).toBeDefined();
         expect(CONFIG).toBeDefined();
         expect(APP).toBeDefined();
+        expect(Console).toBeDefined();
     });
 
     it("Check if framework contains all required functions", function() {
@@ -46,7 +47,7 @@ describe("Check Core Initialize Status", function() {
             expect(APP).toHaveArray("INIT");
             expect(APP).toHaveMethod("SETUP");
             expect(APP).toHaveMethod("MAIN");
-            expect(APP).toHaveObject("HTML");
+            //expect(APP).toHaveObject("HTML");
         }
     });
 
@@ -56,8 +57,6 @@ describe("Check Core Initialize Status", function() {
         expect(CORE).toHaveMethod("parseNode");
         expect(CORE).toHaveMethod("buildPattern");
         expect(CORE).toHaveMethod("ajax");
-        //todo: to method
-        expect(CORE).toHaveObject("console");
     });
 
     it("Check google dependency manager", function() {

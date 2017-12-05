@@ -146,6 +146,8 @@ Array.prototype['filter'] || (Array.prototype['filter'] = function(fun/*, thisAr
 // Reference: http://es5.github.io/#x15.4.4.19
 Array.prototype['map'] || (Array.prototype['map'] = function(callback, thisArg) {
 
+    "use strict";
+
     var T, A, k;
 
     if (this == null) {
@@ -362,6 +364,8 @@ Object['keys'] || (Object['keys'] = (function() {
 
 Array.prototype['indexOf'] || (Array.prototype['indexOf'] = function(d, e) {
 
+    "use strict";
+
     var a;
 
     if(this == null) throw new TypeError('"this" is null or not defined');
@@ -389,6 +393,8 @@ Array.prototype['indexOf'] || (Array.prototype['indexOf'] = function(d, e) {
 if(window.Element && !Element.prototype['closest']){
 
     Element.prototype['closest'] = function(s){
+
+        "use strict";
 
         var matches = (this.document || this.ownerDocument).querySelectorAll(s),
             i,

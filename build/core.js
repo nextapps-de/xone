@@ -35,10 +35,10 @@ APP.SETUP = APP.MAIN;
         "isBlank": CORE.isBlank,
         "getNode": CORE.getNode,
         "console": {
-            "log": CORE.console.log,
-            "warn": CORE.console.warn,
-            "err": CORE.console.err,
-            "info": CORE.console.info
+            "log": Console.log,
+            "warn": Console.warn,
+            "err": Console.err,
+            "info": Console.info
         },
         "query": CORE.query,
         "getById": CORE.getById,

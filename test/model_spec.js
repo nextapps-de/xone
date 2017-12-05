@@ -1,8 +1,7 @@
 describe("Check Model Implementation", function(){
 
     CONFIG.ENABLE_MODEL_CACHE = false;
-    // TODO: provide temporary cache, from the time of requesting storage save up to saving was done (readings can occur in the meanwhile)
-    CONFIG.ENABLE_STORAGE_CACHE = true;
+    CONFIG.ENABLE_STORAGE_CACHE = false;
     CONFIG.ENABLE_MAPPER_CACHE = false;
 
     // var ENABLE_MODEL_CACHE;
@@ -184,8 +183,8 @@ describe("Check Model Implementation", function(){
         expect(Object.keys(model)).toEqual(['id', 'version', 'name']);
         expect(APP.MODEL.TestRecord4.count()).toBe(1);
         expect(APP.MODEL.TestRecord4.count("name", "foobar")).toBe(1);
-        expect(APP.MODEL.TestRecord4.count("version", 1)).toBe(0);
-        expect(APP.MODEL.TestRecord4.count("version", void 0)).toBe(1);
+        expect(APP.MODEL.TestRecord4.count("version", 1)).toBe(1);
+        expect(APP.MODEL.TestRecord4.count("version", void 0)).toBe(0);
         expect(APP.MODEL.TestRecord4.all().length).toBe(1);
 
         APP.MODEL.TestRecord4.deleteAll();
@@ -636,7 +635,7 @@ describe("Check Model Implementation", function(){
 
         CONFIG.ENABLE_MODEL_CACHE = true;
         CONFIG.ENABLE_STORAGE_CACHE = true;
-        CONFIG.ENABLE_MAPPER_CACHE = true;
+        CONFIG.ENABLE_MAPPER_CACHE = false;
 
         var test_record = APP.MODEL.TestRecord.create({
 
@@ -673,7 +672,7 @@ describe("Check Model Implementation", function(){
                 CORE.queue(function(){
 
                     CONFIG.ENABLE_MODEL_CACHE = false;
-                    CONFIG.ENABLE_STORAGE_CACHE = true;
+                    CONFIG.ENABLE_STORAGE_CACHE = false;
                     CONFIG.ENABLE_MAPPER_CACHE = false;
 
                     done();
@@ -764,9 +763,8 @@ describe("Check Model Implementation", function(){
     it("Check if model found by like", function(done){
 
         CONFIG.ENABLE_MODEL_CACHE = true;
-        // TODO: SET TO FALSE AND FIX!!!
-        CONFIG.ENABLE_STORAGE_CACHE = true;
-        CONFIG.ENABLE_MAPPER_CACHE = true;
+        CONFIG.ENABLE_STORAGE_CACHE = false;
+        CONFIG.ENABLE_MAPPER_CACHE = false;
 
         expect(APP.MODEL.TestRecord.count()).toBe(0);
 
@@ -796,7 +794,7 @@ describe("Check Model Implementation", function(){
             expect(APP.MODEL.TestRecord.where({version: 'version'}).length).toBe(0);
             expect(APP.MODEL.TestRecord.like({version: 'version'}).length).toBe(3);
 
-            APP.MODEL.TestRecord.saveAll(test_records);
+            APP.MODEL.TestRecord.saveAll(test_records, true);
 
             CORE.queue(function(){
 
@@ -817,7 +815,7 @@ describe("Check Model Implementation", function(){
                     expect(APP.MODEL.TestRecord.count()).toBe(0);
 
                     CONFIG.ENABLE_MODEL_CACHE = false;
-                    CONFIG.ENABLE_STORAGE_CACHE = true;
+                    CONFIG.ENABLE_STORAGE_CACHE = false;
                     CONFIG.ENABLE_MAPPER_CACHE = false;
 
                     done();
@@ -851,11 +849,11 @@ describe("Check Model Implementation", function(){
         expect(test_record.id).toBe('');
 
         DEBUG = true;
-        spyOn(CORE.console, 'warn');
+        spyOn(Console, 'warn');
         test_record.save();
         DEBUG = false;
 
-        expect(CORE.console.warn).toHaveBeenCalled();
+        expect(Console.warn).toHaveBeenCalled();
     });
 
     it("Check model callbacks", function(){

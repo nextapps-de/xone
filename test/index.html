@@ -6,12 +6,40 @@
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1, maximum-scale=1.0, user-scalable=no">
     <title></title>
     <link type="image/png" rel="shortcut icon" href="../node_modules/jasmine-core/images/jasmine_favicon.png">
+    <link rel="stylesheet" href="../node_modules/jasmine-core/lib/jasmine-core/jasmine.css">
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/xone.css">
+    <link rel="stylesheet" href="../css/animate.css">
     <style type="text/css" media="all">
         body{
-            visibility: visible !important; transform: none !important; top: 0 !important; right:0; bottom:0; left:0; padding: 0; margin: 0; height: 100% !important; width: 100% !important; transform: none !important;
+            top: 0 !important;
+            right:0;
+            bottom:0;
+            left:0;
+            padding: 0 !important;
+            margin: 0 !important;
+            height: 100% !important;
+            width: 100% !important;
+            transform: none !important;
+            background-color: #eee;
         }
         .jasmine_html-reporter{
-            text-align: left; position: absolute; z-index: 9999; height: 100%; width: 100%; left: 0; top: 0; right: 0; bottom: 0; padding: 0 !important; margin: 0 !important; overflow: auto;
+            text-align: left;
+            position: absolute;
+            z-index: 9999;
+            height: auto;
+            width: 100%;
+            left: 0;
+            top: 21px !important;
+            right: 0;
+            bottom: 0;
+            padding: 0 !important;
+            margin: 0 !important;
+            overflow: scroll;
+            -webkit-overflow-scrolling: touch;
+        }
+        .jasmine-banner{
+            margin-top:5px !important;
         }
     </style>
     <style type="text/css" media="all">
@@ -26,10 +54,6 @@
         #test_wrapper.inactive ul{ top: -7px; height:0px; }
         #test_wrapper.inactive .ul_li{ top: -8px; height:0px; }
     </style>
-    <link rel="stylesheet" href="../node_modules/jasmine-core/lib/jasmine-core/jasmine.css">
-    <link rel="stylesheet" href="../css/reset.css">
-    <link rel="stylesheet" href="../css/xone.css">
-    <link rel="stylesheet" href="../css/animate.css">
     <script>window.localStorage.clear();</script>
     <script src="../node_modules/jasmine-core/lib/jasmine-core/jasmine.js"></script>
     <script src="../node_modules/jasmine-core/lib/jasmine-core/jasmine-html.js"></script>
@@ -38,37 +62,54 @@
     <script src="../local/stub.js" data-cover-flags="branchTracking"></script>
     <script src="../project/app/manifest.js"></script>
     <script>goog.provide("PLATFORM"); var PLATFORM = MANIFEST.platform = ''; var ENV = MANIFEST.env = 'test';</script>
-    <script src="../lib/amd.js"></script>
     <script src="../build/config.js"></script>
-    <!--<script>var DEBUG = CONFIG.DEBUG = true;</script>-->
+    <script>var DEBUG = CONFIG.DEBUG;</script>
+    <script src="../lib/amd.js"></script>
     <script src="../local/env.js"></script>
     <script src="../core/polyfill.js"></script>
+    <script src="../interface/actionsheet.js"></script>
     <script src="../interface/ajax.js"></script>
     <script src="../interface/event.js"></script>
+    <script src="../interface/filesystem.js"></script>
     <script src="../interface/model.js"></script>
+    <script src="../interface/notification.js"></script>
     <script src="../interface/pattern.js"></script>
+    <script src="../interface/reminder.js"></script>
     <script src="../interface/route.js"></script>
-    <script src="../interface/storage.js" data-cover-flags="branchTracking"></script>
+    <script src="../interface/storage.js"></script>
     <script src="../interface/template.js"></script>
+    <script src="../interface/transition.js"></script>
     <script src="../interface/view.js"></script>
     <script src="../core/interface.js"></script>
+    <script src="../core/polyfill.js"></script>
+    <script src="../lib/console.js"></script>
+    <script src="../lib/cache.js"></script>
+    <script src="../lib/ajax.js"></script>
     <script src="../core/core.js"></script>
-    <script src="../core/async.js"></script>
     <script src="../core/app.js"></script>
+    <script src="../core/async.js"></script>
+    <script src="../core/controller.js"></script>
+    <script src="../core/model.js"></script>
+    <script src="../core/view.js"></script>
+    <script src="../lib/actionsheet.js"></script>
+    <script src="../lib/bounce.js"></script>
     <script src="../lib/debug.js"></script>
+    <script src="../lib/event.js"></script>
+    <script src="../lib/filesystem.js"></script>
+    <script src="../lib/image.js"></script>
+    <script src="../lib/notification.js"></script>
     <script src="../lib/paint.js"></script>
     <script src="../lib/animate.js"></script>
-    <script src="../lib/event.js"></script>
-    <script src="../lib/retina.js"></script>
+    <script src="../lib/pull.js"></script>
+    <script src="../lib/slider.js"></script>
+    <script src="../lib/statusbar.js"></script>
+    <script src="../lib/storage.js" data-cover-flags="branchTracking"></script>
+    <script src="../lib/swipe.js"></script>
+    <script src="../lib/transition.js"></script>
+    <script src="../lib/viewport.js"></script>
     <script src="../lib/worker.js"></script>
     <script src="../lib/compress.js"></script>
-    <script src="../lib/storage.js"></script>
-    <script src="../core/model.js"></script>
-    <script src="../core/controller.js"></script>
-    <script src="../core/view.js"></script>
-    <script src="../lib/layout.js"></script>
-    <script src="../lib/viewport.js"></script>
-    <script src="../lib/validate.js"></script>
+    <script src="../lib/zoom.js"></script>
     <!--
     <script src="../project/app/tmp/layout.js"></script>
     <script src="../project/app/tmp/view.js"></script>
@@ -83,6 +124,9 @@
     <script src="../test/async_spec.js"></script>
     <script src="../test/amd_spec.js"></script>
     <script src="../test/controller_spec.js"></script>
+    <script src="../test/cache_spec.js"></script>
+    <script src="../test/storage_spec.js"></script>
+    <script src="../test/view_spec.js"></script>
 </head>
 <body>
     <div id="test_wrapper" class="test_wrapper" style="top: 100px;">

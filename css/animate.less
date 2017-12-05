@@ -13,11 +13,11 @@ body.no-transition xone-tabbar{
 /* Initial Slider Values */
 /* -------------------------------- */
 xone-main.slide{
+    transition: z-index 800ms @xone-animation-easing,
+                visibility 800ms @xone-animation-easing,
+                transform 800ms @xone-animation-easing;
     transform: translate3d(100%, 0, 0);
     backface-visibility: hidden;
-    transition: z-index 800ms @xone-animation-easing,
-                transform 800ms @xone-animation-easing;
-    will-change: transform;
 }
 xone-main.slide xone-header{
     opacity: 0;
@@ -25,25 +25,34 @@ xone-main.slide xone-header{
     backface-visibility: hidden;
     transition: opacity 400ms @xone-animation-easing,
                 transform 800ms @xone-animation-easing;
-    will-change: transform, opacity;
 }
 xone-main.slide .shadow{
     transform: translate3d(0, 0, 0);
     backface-visibility: hidden;
     transition: transform 800ms @xone-animation-easing;
+}/*
+xone-main.slide.show{
     will-change: transform;
 }
-
+xone-main.slide.show xone-header{
+    will-change: transform, opacity;
+}
+xone-main.slide.show .shadow{
+    will-change: transform;
+}
+*/
 /* Show State */
 /* -------------------------------- */
 xone-main.slide.show{
+    visibility: visible;
+    transition: transform 800ms @xone-animation-easing;
     transform: translate3d(0, 0, 0);
 }
 xone-main.slide.show xone-header{
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
     transition: opacity 400ms ease-in,
                 transform 800ms @xone-animation-easing;
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
 }
 xone-main.slide.show .shadow{
     transform: translate3d(-44px, 0, 0);
@@ -56,15 +65,16 @@ xone-main[role="main"] ~ xone-tabbar{
     transform: translate3d(0, 0, 0);
     backface-visibility: hidden;
     transition: transform 800ms @xone-animation-easing;
-    will-change: transform;
 }
-
-xone-main[role="main"] xone-header h1{
+xone-main[role="main"].show,
+xone-main[role="main"] ~ xone-tabbar{
+    /*will-change: transform;*/
+}
+xone-main[role="main"].show xone-header h1{
     opacity: 1;
     transition: opacity 300ms ease-in;
-    will-change: opacity;
+    /*will-change: opacity;*/
 }
-
 
 /* Hide State */
 /* -------------------------------- */
@@ -72,12 +82,10 @@ xone-main[role="main"].reveal,
 xone-main[role="main"].reveal ~ xone-tabbar{
     transform: translate3d(-33%, 0, 0);
 }
-
 xone-main[role="main"].reveal xone-header h1{
     opacity: 0;
     transition: opacity 800ms @xone-animation-easing;
 }
-
 
 /* Slide Bottom */
 /* -------------------------------- */
@@ -85,7 +93,7 @@ xone-main.slideBottom{
     transform: translate3d(0, 100%, 0);
     backface-visibility: hidden;
     transition: transform 800ms @xone-animation-easing;
-    will-change: transform;
+    /*will-change: transform;*/
 }
 xone-main.slideBottom.show{
     transform: translate3d(0, 0, 0);

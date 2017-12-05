@@ -110,6 +110,36 @@ var customMatchers = {
                 };
             }
         };
+    },
+
+    toEqualFunction: function(){
+
+        return {
+
+            compare: function(actual, expected){
+
+                return {
+
+                    pass: actual.toString() === expected.toString(), // true || false
+                    message: "Expected " + actual.name + " to equal function '" + expected.name + "'"
+                };
+            }
+        };
+    },
+
+    toEqualObject: function(){
+
+        return {
+
+            compare: function(actual, expected){
+
+                return {
+
+                    pass: JSON.stringify(actual) === JSON.stringify(expected), // true || false
+                    message: "Expected " + actual + " to equal object '" + expected + "'"
+                };
+            }
+        };
     }
 };
 

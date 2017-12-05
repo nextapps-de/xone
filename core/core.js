@@ -1,6 +1,9 @@
 goog.provide('CORE');
 goog.require('INTERFACE');
 goog.require("ENV");
+goog.require("Util.Console");
+goog.require("Util.Cache");
+goog.require('Util.Ajax');
 goog.require('CONFIG');
 
 /**
@@ -15,37 +18,18 @@ goog.require('CONFIG');
 
 var CORE = (function(CORE){
 
-    /**
-     * @private
-     * @type {XMLHttpRequest}
-     */
-
-    var xhr = null;
+    "use strict";
 
     var capitalize = function(text){
 
         return text[0].toUpperCase() + text.slice(1);
     };
 
-    /**
-     * @type {string}
-     * @const
-     * https://davidwalsh.name/vendor-prefix
-     */
+    /** @type {_ajax_struct} */
+    CORE.ajax = Util.Ajax;
 
-    /*
-    var prefix = (function(){
-
-        var styles = window.getComputedStyle(document.documentElement, '');
-
-        return (
-
-            Array.prototype.slice.call(styles).join('').match(/-(moz|webkit|ms)-/) || (styles['OLink'] === '' && ['', 'o'])
-
-        )[1];
-
-    })();
-    */
+    /** @type {_cache_struct} */
+    var DOM_CACHE = new Util.Cache(3 * 60 * 1000, 1000, true);
 
     /**
      * @type {Object<string, string>}
@@ -367,387 +351,14 @@ var CORE = (function(CORE){
 
     var getNode = CORE.getNode = function(element){
 
-        if(DEBUG){
-
-            if(CORE.isType(element, 'string')){
-
-                if(CORE.DOM[/** @type {string} */ (element)]) APP.STATS.count_dom_cache++;
-                else APP.STATS.count_dom++;
-            }
-        }
-
         return (
 
-            CORE.isType(element, 'string') ?
+            typeof element === 'string' ?
 
-                CORE.DOM[/** @type {string} */ (element)] || CORE.getById(/** @type {string} */ (element))
+                CORE.getById(element)
             :
                 /** @type {Node|Element|HTMLDocument|Window|null} */ (element)
         );
-    };
-
-    //var hasClassList = CORE.isType(document.body.classList);
-
-    /**
-     * @const
-     * @final
-     */
-
-    CORE.console = {
-
-        /**
-         * @param {string|number=} text
-         * @param {*=} obj
-         * @param {string=} color
-         */
-
-        log: function(text, obj, color){},
-
-        /**
-         * @param {string|number=} param
-         * @param {*=} obj
-         */
-
-        warn: function(param, obj){},
-
-        /**
-         * @param {string|number=} param
-         * @param {*=} obj
-         */
-
-        err: function(param, obj){},
-
-        /**
-         * @param {string|number=} param
-         * @param {*=} obj
-         */
-
-        info: function(param, obj){}
-    };
-
-    /**
-     * @private
-     * @return {XMLHttpRequest}
-     */
-
-    var createXHR = function createXHR(){
-
-        // IE7, Firefox, all modern browsers:
-
-        if(typeof XMLHttpRequest !== 'undefined'){
-
-            xhr = new XMLHttpRequest();
-        }
-
-        // IE6, IE5:
-
-        if(!xhr){
-
-            try{
-
-                xhr = new ActiveXObject("Msxml2.XMLHTTP");
-            }
-            catch(e){
-
-                try{
-
-                    xhr = new ActiveXObject("Microsoft.XMLHTTP");
-                }
-                catch(e){
-
-                    //xhr = null;
-                }
-            }
-        }
-
-        return xhr;
-    };
-
-    /**
-     * @private
-     * @param {string} type
-     * @return {Object<string, string>}
-     */
-
-    var getDefaultRequestHeader = function getDefaultRequestHeader(type){
-
-        /** @dict */
-
-        return {
-
-            "Accept": "application/json",
-            "Content-Type": "application/json"
-        };
-    };
-
-    /**
-     * @private
-     * @param {string} type
-     * @param {string} url
-     * @param {Object<string, string|number>|string=} params
-     * @param {Function=} success
-     * @param {Function=} error
-     * @param {Object<string, string>=} header
-     * @param {boolean=} async
-     * @param {boolean=} clear
-     * @param {boolean=} cache
-     */
-
-    var ajaxHandler = function ajaxHandler(type, url, params, success, error, header, async, clear, cache){
-
-        type = type.toUpperCase();
-
-        /* SET REQUEST HEADERS */
-
-        /** @dict */
-        var current_header = header || getDefaultRequestHeader(type);
-
-        // TODO: handle FormData() type
-        var str_params = /** @type {string|null} */ ((type === 'POST' || type === 'PATCH' || type === 'DELETE') && current_header['Accept'] === "application/json" ? JSON.stringify(params) : '');
-        var cache_params = str_params.replace(/ /g, '').replace(/"/g, '').replace(/{/g, '/').replace(/}/g, '').replace(/:/g, '/');
-        //var str_params = CORE.paramsToString(params || '');
-
-        if(type === 'GET') url += '?' + CORE.paramsToString(params);
-
-        /* CLEAR LAST OPEN REQUEST */
-
-        if(clear && xhr && (typeof xhr.abort !== 'undefined')) xhr.abort();
-
-        if(cache && type === 'GET' /*&& ((typeof cache === 'undefined') || cache)*/){
-
-            var last_cache = /** @lends CORE.CACHE */ CORE.CACHE.get(url + cache_params);
-
-            if(last_cache){
-
-                if(DEBUG) CORE.console.log("Fetched from Cache: " + url + cache_params);
-
-                return success(last_cache);
-            }
-        }
-
-        /* CREATE NEW XHR INSTANCE */
-
-        xhr = createXHR();
-
-        /* NON-AJAX FALLBACK */
-
-        if(!xhr){
-
-            if(type === 'GET') document.location.href = url + (str_params.length ? '?' : '') + str_params;
-
-            return;
-        }
-
-        if(DEBUG){
-
-            var debug_time = CORE.time.now();
-        }
-
-        /* ESTABLISH CONNECTION */
-
-        xhr.open(type, url, ((typeof async === 'undefined') ? true : async));
-
-        // TODO: Refused to set unsafe header "Content-length"
-        /*
-         if(type === "POST") {
-
-         if(str_params.length) current_header["Content-length"] = str_params.length;
-         }
-         */
-
-        for(var property in current_header){
-
-            if(current_header.hasOwnProperty(property)){
-
-                xhr.setRequestHeader(property, current_header[property]);
-            }
-        }
-
-        (function(xhr, current_header, cache, type, url, str_params, success, error){
-
-            if(current_header['Authorization']) xhr.withCredentials = true;
-
-            /* SET CALLBACKS */
-
-            xhr.onreadystatechange = function(e){
-
-                if(xhr.readyState === 4){
-
-                    var json = null;
-
-                    if((xhr.status === 200) || (xhr.status === 201)){
-
-                        //if(DEBUG) CORE.console.log(xhr.responseText);
-
-                        try{
-
-                            json = xhr.responseText ? JSON.parse(xhr.responseText) : [];
-                        }
-                        catch(e){}
-
-                        if(cache && (type === "GET") /*|| (type === "GET" && typeof cache === 'undefined')*/){
-
-                            /** @lends CORE.CACHE */
-                            CORE.CACHE.set(url + cache_params, json);
-                        }
-
-                        if(DEBUG){
-
-                            APP.STATS.time_request += CORE.time.now() - debug_time;
-                        }
-
-                        if(success){
-
-                            if(json === null) json = []; // FIX: NULL Responses
-
-                            success(json);
-                        }
-
-                        //return;
-                    }
-                    else if(error){
-
-                        try{
-
-                            json = xhr.responseText ? JSON.parse(xhr.responseText) : [];
-                        }
-                        catch(e){}
-
-                        if(json && json['error']){
-
-                            if(DEBUG) CORE.console.warn(
-
-                                json['error'].constructor === Object ?
-
-                                    JSON.stringify(json['error'])
-                                :
-                                    json['error']
-                            );
-                        }
-
-                        return error(xhr.status, json);
-                    }
-                }
-                //else if(error) error(e);
-            };
-
-        })(xhr, current_header, cache, type, url, str_params, success, error);
-
-        /* SEND PARAMETERS */
-
-        xhr.send(str_params.length ? str_params : null);
-    };
-
-    /**
-     * Application Cache
-     * @struct
-     * @public
-     * @const
-     * @name CACHE
-     * @namespace Application Cache
-     * @constructor
-     * @implements {_cache_struct}
-     */
-
-    var CACHE = function CACHE(){
-
-        /** @dict @private */
-        var data = {};
-
-        /** @dict @private */
-        var timer = {};
-
-        /**
-         * @param {string} key
-         * @param {*} val
-         */
-
-        this.set = function set(key, val){
-
-            if(DEBUG) {
-
-                CORE.console.log("Set Cache to: " + key);
-            }
-
-            data[key] = val;
-            timer[key] = (new Date()).getTime();
-        };
-
-        /**
-         * @param {string} key
-         * @param {boolean=} force
-         * @return {*}
-         */
-
-        this.get = function get(key, force){
-
-            if(DEBUG) {
-
-                CORE.console.log("Get Cache from: " + key);
-            }
-
-            if(timer[key]){
-
-                if(force || (
-
-                    ((new Date()).getTime() - timer[key]) < (CONFIG.MAX_CACHE_TIME || 300000)
-                )){
-
-                    return data[key];
-                }
-            }
-
-            return timer[key] = data[key] = null;
-        };
-
-        /**
-         * @return {Object<string, *>}
-         */
-
-        this.all = function all(){
-
-            if(DEBUG) {
-
-                CORE.console.log("Get All from Cache");
-            }
-
-            return data;
-        };
-
-        /**
-         * @param {string} key
-         * @return {*}
-         */
-
-        this.remove = function remove(key){
-
-            if(DEBUG) {
-
-                CORE.console.log("Remove from Cache: " + key);
-            }
-
-            var val = data[key];
-
-            data[key] = null;
-            timer[key] = null;
-
-            return val;
-        };
-
-        /**
-         * @type {function()}
-         */
-
-        this.clear = function clear(){
-
-            if(DEBUG) {
-
-                CORE.console.log("Clear Cache");
-            }
-
-            data = {};
-            timer = {};
-        };
     };
 
     var crcTable = (function(){
@@ -770,6 +381,23 @@ var CORE = (function(CORE){
         return crcTable;
 
     })();
+
+    /**
+     * @param {string} str
+     * @returns {number}
+     */
+
+    CORE.crc32 = function(str){
+
+        var crc = 0 ^ (-1);
+
+        for(var i = 0, length = str.length; i < length; i++){
+
+            crc = (crc >>> 8) ^ crcTable[(crc ^ str.charCodeAt(i)) & 0xFF];
+        }
+
+        return (crc ^ (-1)) >>> 0;
+    };
 
     var regex_query = /[[:=+>*,~(]/;
 
@@ -1034,7 +662,7 @@ var CORE = (function(CORE){
 
         if(DEBUG){
 
-            if(CORE.DOM[id]) {
+            if(DOM_CACHE.get(id)) {
 
                 APP.STATS.count_dom_cache++;
             }
@@ -1046,7 +674,13 @@ var CORE = (function(CORE){
 
         if(CONFIG.ENABLE_DOM_CACHE){
 
-            return CORE.DOM[id] || (CORE.DOM[id] = document.getElementById(id));
+            return /** @type  {Element} */ (
+
+                DOM_CACHE.get(id) || (
+
+                    DOM_CACHE.set(id, document.getElementById(id))
+                )
+            );
         }
         else{
 
@@ -1314,36 +948,10 @@ var CORE = (function(CORE){
 	};
 
     /**
-     * @type {_cache_struct}
-     */
-
-    CORE.CACHE = new CACHE();
-
-    /**
      * @type {Object<string, Element>}
      */
 
     CORE.DOM = {};
-
-    /**
-     * @public
-     * @param {_ajax_struct} params
-     */
-
-    CORE.ajax = function ajax(params){
-
-        ajaxHandler(
-            params.type || 'GET',
-            params.url || '/',
-            params.params || '',
-            params.success,
-            params.error,
-            params.header,
-            params.async,
-            params.clear,
-            params.cache
-        );
-    };
 
     CORE.paramsToString = function(params){
 
@@ -1693,8 +1301,6 @@ var CORE = (function(CORE){
         }
     };
 
-
-
     CORE.loadScript = function loadScript(src, callback){
 
         var ready = false;
@@ -1763,23 +1369,6 @@ var CORE = (function(CORE){
     CORE.capitalize = capitalize;
 
     CORE.prefix = prefix;
-
-    /**
-     * @param {string} str
-     * @returns {number}
-     */
-
-    CORE.crc32 = function(str){
-
-        var crc = 0 ^ (-1);
-
-        for(var i = 0; i < str.length; i++){
-
-            crc = (crc >>> 8) ^ crcTable[(crc ^ str.charCodeAt(i)) & 0xFF];
-        }
-
-        return (crc ^ (-1)) >>> 0;
-    };
 
     /**
      * @param {Array<number|string|boolean>|string} source
@@ -2168,6 +1757,108 @@ var CORE = (function(CORE){
     };
 
     /**
+     * @param {number|boolean|number|Array|Object|Date|Element|null} val
+     * @param {number=} max_level
+     * @param {number=} _current_level
+     * @returns {number|boolean|number|Array|Object|Date|Element|null}
+     */
+
+    CORE.clone = function(val, max_level, _current_level){
+
+        if(val && (typeof val === 'object')){
+
+            if(val.cloneNode){
+
+                return val.cloneNode(true);
+            }
+
+            var constructor = val.constructor;
+
+            if(constructor === Array){
+
+                var length = val.length;
+
+                if(length){
+
+                    var type = typeof val[0];
+
+                    if((type === 'number') ||
+                       (type === 'string') ||
+                       (type === 'boolean')){
+
+                        return val.slice();
+                    }
+
+                    _current_level || (_current_level = 0);
+
+                    if((max_level || (max_level === 0)) && (_current_level >= max_level)){
+
+                        return null;
+                    }
+
+                    var copy = new Array(length);
+                    var i = 0;
+
+                    while(i < length){
+
+                        copy[i] = CORE.clone(val[i++], max_level, _current_level + 1);
+                    }
+
+                    return copy;
+                }
+
+                return [];
+            }
+            else if(constructor === Object){
+
+                if(val instanceof Date){
+
+                    return new Date(val);
+                }
+
+                var keys = CORE.getKeys(val);
+                var length = keys.length;
+                var copy = {};
+
+                if(length){
+
+                    _current_level || (_current_level = 0);
+
+                    var i = 0;
+                    var key, type, item;
+
+                    while(i < length){
+
+                        key = keys[i++];
+                        item = val[key];
+                        type = typeof item;
+
+                        if((type === 'number') ||
+                           (type === 'string') ||
+                           (type === 'boolean')){
+
+                            copy[key] = item;
+                        }
+                        else{
+
+                            if((max_level || (max_level === 0)) && (_current_level >= max_level)){
+
+                                continue;
+                            }
+
+                            copy[key] = CORE.clone(item, max_level, _current_level + 1);
+                        }
+                    }
+                }
+
+                return copy;
+            }
+        }
+
+        return val;
+    };
+
+    /**
      * @param {!string} query
      * @returns {Object<string, *>}
      */
@@ -2509,7 +2200,7 @@ var CORE = (function(CORE){
 
                 if(typeof CORE.System['is' + type] === 'undefined'){
 
-                    CORE.console.warn("WARNING: The passed parameter '" + type + "' is not supported!");
+                    Console.warn("WARNING: The passed parameter '" + type + "' is not supported!");
                 }
             }
 
