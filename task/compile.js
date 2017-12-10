@@ -394,12 +394,12 @@ walkSync('./app/view/app/', '.shtml', function(filePath){
 
     var html = fs.readFileSync(filePath, 'utf8');
 
-    if((html.indexOf('<xone-main') !== -1) && (html.indexOf('<xone-main') === html.lastIndexOf('<xone-main'))){
+    if((html.indexOf('<xone-view') !== -1) && (html.indexOf('<xone-view') === html.lastIndexOf('<xone-view'))){
 
         var tmp = html.substring(
 
-            html.indexOf('<xone-main'),
-            html.indexOf('>', html.indexOf('<xone-main'))
+            html.indexOf('<xone-view'),
+            html.indexOf('>', html.indexOf('<xone-view'))
         );
 
         if((tmp.indexOf(' id=') === -1) && (tmp.indexOf(' id =') === -1)){
@@ -410,7 +410,7 @@ walkSync('./app/view/app/', '.shtml', function(filePath){
                              .replace('\\', '-')
                              .replace('.shtml', '');
 
-            html = html.replace('<xone-main', '<xone-main id="' + id + '"');
+            html = html.replace('<xone-view', '<xone-view id="' + id + '"');
         }
     }
 
@@ -470,6 +470,8 @@ else{
     less.push('@import "../' + xone_manifest.dependencies.xone + 'css/reset.less";');
     less.push('@import "../' + xone_manifest.dependencies.xone + 'css/xone.less";');
     less.push('@import "../' + xone_manifest.dependencies.xone + 'css/animate.less";');
+    less.push('@import "../' + xone_manifest.dependencies.xone + 'css/checkbox.less";');
+    less.push('@import "../' + xone_manifest.dependencies.xone + 'css/control.less";');
 
     walkSync('./app/css/', '.less', function(filePath){
 

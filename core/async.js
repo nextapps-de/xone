@@ -1,5 +1,6 @@
 goog.provide('CORE.ASYNC');
 goog.require('CORE');
+goog.require('Util.Console');
 
 /**
  * @define {boolean}
@@ -268,6 +269,15 @@ var CONFIG_TICK_PROCESS_TIME = 3;
                 key = void 0;
 
             }, delay, 'async:' + key);
+        }
+        else{
+
+            if(ASYNC_TIMER['async:' + key]){
+
+                clearTimeout(ASYNC_TIMER['async:' + key]);
+
+                delete ASYNC_TIMER['async:' + key];
+            }
         }
 
         PAINT_EXEC || (
@@ -667,7 +677,8 @@ var CONFIG_TICK_PROCESS_TIME = 3;
                 APP.STATS.count_draw++;
 
                 //TODO: move
-                DEBUGGER.showStatistic(time, last_time);
+                Debugger.updateStatistic(time, last_time);
+                /** @type {_console_interface} */ (Console).flush();
 
                 last_time = time;
             }

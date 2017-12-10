@@ -47,10 +47,8 @@ table, tr, td, th, thead, tbody{
 input{
     -webkit-user-select: text;
 }
-a:link {
-    text-decoration: inherit;
-    color: inherit;
-}
+a,
+a:link,
 a:visited {
     text-decoration: inherit;
     color: inherit;
@@ -58,7 +56,7 @@ a:visited {
 .clear{
     clear:both;
 }
-.sticky {
+[sticky] {
     position: fixed;
     position: -webkit-sticky;
     position: -moz-sticky;
@@ -68,240 +66,14 @@ a:visited {
     top: 0;
     z-index: 1;
 }
-/*
-.sticky:before,
-.sticky:after {
-    content: '';
-    display: table;
-}
-.sticky:active{
-    position: absolute;
-}
-*/
-
 .border-hairline-bottom{
     box-shadow: 0 1px 1px -1px rgba(200, 199, 204, .5);
 }
 
 /* Default Layout Definitions */
 
-/*
-
-// Page Fullscreen + Stretch:
-// ------------------------------------------
-
-<main>
-  <content>
-</main>
-
-// Page Fullscreen + Scroll List:
-// ------------------------------------------
-
-<main>
-  <section>
-    <ul>
-      <li><img>Text</li>
-      <li>Text<img></li>
-      <li>
-    <ul>
-  </section>
-</main>
-
-// View + Header + Footer:
-// ------------------------------------------
-
-<header>
-  <nav>
-  <h1><img></h1>
-  <nav>
-</header>
-<main>
-  <section>
-    <content>
-  </section>
-  <section>
-    <content>
-  </section>
-</main>
-<footer>
-  <nav>
-</footer>
-
-
-<xone-header>
-  <xone-nav></xone-nav>
-  <xone-title><xone-img></xone-title>
-  <xone-nav></xone-nav>
-</xone-header>
-<xone-main>
-  <xone-section></xone-section>
-  <xone-section-scroll-xy></xone-section-scroll-xy>
-</xone-main>
-<xone-footer>
-  <xone-nav></xone-nav>
-</xone-footer>
-
-
-// View Content + Inner Header/Footer:
-// ------------------------------------------
-
-<main>
-  <section>
-    <header>
-    <content>
-    <footer>
-  </section>
-</main>
-
-// Menu
-// ------------------------------------------
-
-<menu>
-  <menuitem>
-  <menuitem>
-<menu>
-
-
-// Navigation
-// ------------------------------------------
-
-<nav>
-  <a><img></a>
-  <a><img></a>
-</nav>
-
-
-// Header
-// ------------------------------------------+
-
-<header>
-  <nav>
-  <h1><img></h1>
-  <nav>
-</header>
-
-// Footer
-// ------------------------------------------
-
-<footer>
-  <nav>
-</footer>
-
-// View
-// ------------------------------------------
-
-<main>
-  <header>
-  <section>
-  <footer>
-</main>
-
-// List
-// ------------------------------------------
-
-<ul>
-  <li>
-    <img> Text <button>
-  </li>
-</ul>
-
-// Forms
-// ------------------------------------------
-
-<form>
-  <fieldset>
-    <legend>
-    <label>
-    <input>
-    <label>
-    <select>
-      <optgroup>
-      <option>
-      <optgroup>
-      <option>
-    </select>
-  </fieldset>
-<form>
-
-// Grid Flex Layout
-// ------------------------------------------
-
-<table>
-    <caption>
-    <thead>
-    <tfoot>
-    <tbody>
-</table>
-
-// Content Styles
-// ------------------------------------------
-
-<article>
-  <center>
-    <title>
-    <hr>
-    <p>
-    <font>
-    <time>
-    <mark>
-  </center>
-</article>
-
-// Unused
-// ------------------------------------------
-
-<figure>
-  <img>
-  <figcaption>
-<figure>
-
-<details>
-    <summary>
-    <p>
-</details>
-
-<data>
-<datalist>
-<dialog>
-<output>
-<param>
-<source>
-
-
-<dl>
-    <dt>
-    <dd>
-    <dd>
-    <dd>
-    <dt>
-    <dd>
-</dl>
-
-data-*
-hidden
-lang
-tabindex
-title
-translate
-autofocus
-disabled
-label
-name
-target
-type
-value
-icon
-src
-href
-alt
-
- */
-/*
-vdom{
-    will-change: contents;
-}*/
-xone-main,
-xone-section{
+xone-view,
+xone-main{
     display: inline;
     position: absolute;
     top:0;
@@ -312,10 +84,10 @@ xone-section{
     margin:0;
     padding:0;
 }
-xone-main{
+xone-view{
     bottom:0;
 }
-xone-section{
+xone-main{
     background-color: #fff;
     display: inline;
     position: absolute;
@@ -323,20 +95,13 @@ xone-section{
     right:0;
     left:0;
 }
-xone-main{
-    visibility: hidden;
-    pointer-events: none;
-    touch-action: none;
-    z-index:-1;
-    /*will-change: visibility, z-index;*/
-}
 xone-header{
     top:0;
-    height: @xone-navbar-height - 1;
+    height: @xone-navbar-height;
     /* NOTE: the border should be excluded from the opacity fade animation */
     /*border-bottom: 1px solid #dee3ed;*/
 }
-xone-main[statusbar] xone-header{
+xone-view[statusbar] xone-header{
     padding-top: @xone-statusbar-height;
 }
 xone-tabbar{
@@ -345,7 +110,6 @@ xone-tabbar{
     height: @xone-tabbar-height;
     border-top: 1px solid @xone-border-color;
     box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
-    visibility: hidden;
 }
 xone-header,
 xone-tabbar{
@@ -353,47 +117,27 @@ xone-tabbar{
     width: 100%;
     right: 0;
     left: 0;
-    z-index: 9;
     background: #fff;
     text-align: center;
     display: inline-table;
     table-layout: fixed;
 }
-xone-main xone-header ~ xone-section{
+xone-view xone-header ~ xone-main{
     top: @xone-navbar-height - 1;
 }
-xone-main[statusbar] xone-header ~ xone-section{
+xone-view[statusbar] xone-header ~ xone-main{
     top: @xone-navbar-height + @xone-statusbar-height - 1;
 }
-xone-main[role="main"]{
-    display: none;
-    visibility: visible;
+xone-view[role="main"]{
     bottom: @xone-tabbar-height;
     background: #fff;
-    /*will-change: display, z-index;*/
 }
-xone-main.reveal{
-    z-index: 0;
-    pointer-events: none;
+xone-view[role="sidebar"]{
+    right: 20%;
+    width: 80%;
 }
-xone-main.show{
-    visibility: visible;
-    z-index: 2;
-    pointer-events: auto;
-}
-xone-main[role="main"].show{
-    display: inline;
-    z-index: 1;
-}
-xone-main.slide,
-xone-main.slideBottom {
-    z-index: 10;
-}
-xone-main.slide.show,
-xone-main.slideBottom.show {
-    z-index: 12;
-}
-xone-main:after{
+/*
+xone-view:after{
     content: "";
     position: absolute;
     top: @xone-navbar-height - 1;
@@ -404,10 +148,11 @@ xone-main:after{
     background: #fff;
     z-index: -1;
 }
-xone-main[statusbar]:after{
+xone-view[statusbar]:after{
     top: @xone-navbar-height + @xone-statusbar-height - 1;
 }
-xone-main:not([popup]):before{
+*/
+xone-view:not([popup]):before{
     content: "";
     position: absolute;
     top: @xone-navbar-height - 1;
@@ -418,7 +163,7 @@ xone-main:not([popup]):before{
     border-top: 1px solid @xone-border-color;
     z-index: 10;
 }
-xone-main[statusbar]:not([popup]):before{
+xone-view[statusbar]:not([popup]):before{
     top: @xone-navbar-height + @xone-statusbar-height - 1;
 }
 hr{
@@ -442,8 +187,12 @@ xone-header h1{
     display: inline-block;
     vertical-align: middle;
 }
-xone-main[statusbar] xone-header h1{
+xone-view[statusbar] xone-header h1{
     top: @xone-statusbar-height;
+}
+xone-view[role="sidebar"] xone-header h1{
+    text-align: left;
+    left:15px;
 }
 xone-header h1 img {
     height: 17px;
@@ -515,36 +264,18 @@ xone-header nav:nth-of-type(2){
 
 /* Scrollpane */
 
-xone-section,
-.scrollpane,
-.scrollpane-y,
-.scrollpane-x {
+xone-scroll,
+[scroll],
+xone-scroll-y,
+[scroll-y],
+[scroll="y"],
+xone-scroll-x,
+[scroll-x],
+[scroll="x"]{
     width: 100%;
     height: auto;
-    overflow: hidden;
-    /*will-change: contents;*/
 }
-xone-main.show {
-    xone-section,
-    .scrollpane,
-    .scrollpane-y,
-    .scrollpane-x {
-        overflow-x: hidden;
-        overflow-y: scroll;
-        touch-action: pan-y;
-        -webkit-overflow-scrolling: touch;
-        overflow-scrolling: touch;
-        will-change: /*contents,*/ scroll-position;
-    }
-    .scrollpane-x {
-        overflow-x: scroll;
-        overflow-y: hidden;
-        touch-action: pan-x;
-    }
-}
-xone-section[bounce]:before,
-.scrollpane[bounce]:before,
-.scrollpane-y[bounce]:before{
+[bounce]:before{
     content: "";
     position: absolute;
     top:0;
@@ -554,9 +285,10 @@ xone-section[bounce]:before,
     width: 100%;
     height:100.1%;
     min-height:100.1%;
-    pointer-events: none;
 }
-.scrollpane-x[bounce]:before{
+xone-scroll-x[bounce]:before,
+[scroll-x][bounce]:before,
+[scroll="x"][bounce]:before{
     content: "";
     position: absolute;
     top:0;
@@ -566,9 +298,8 @@ xone-section[bounce]:before,
     height: 100%;
     width: 100.1%;
     min-width: 100.1%;
-    pointer-events: none;
 }
-.shadow {
+xone-shadow {
     position:absolute;
     left: 0;
     top: @xone-navbar-height - 1;
@@ -579,11 +310,11 @@ xone-section[bounce]:before,
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACsAAAH0CAMAAACTnCS8AAAAdVBMVEX///8AAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQEAAQHwovl+AAAAJ3RSTlMAAQIDBAUGBwgKDA0PERMWGBodICMmKSwvMzY6PkJGSk1RVFdaXWAI3rA2AAAAXUlEQVR4nO3KQQ0AMBAEoVn/pqvgkgqAN6tW++K6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruueHo2rTC2o11w0AAAAAElFTkSuQmCC');
     background-repeat: repeat-y;
     background-position: left center;
-    z-index: 0;
 }
-xone-main[statusbar] .shadow {
+xone-view[statusbar] xone-shadow {
     top: @xone-navbar-height + @xone-statusbar-height - 1;
 }
+
 
 /* Slide Wrapper */
 
@@ -606,9 +337,7 @@ xone-main[statusbar] .shadow {
     will-change: transform;
 }
 */
-.no-transition{
-    transition: none !important;
-}
+
 
 /* Confirmation Box */
 
@@ -687,27 +416,28 @@ xone-main[statusbar] .shadow {
     float:right;
 }
 */
-
-.swipe{
+xone-swipe-sidebar,
+xone-swipe{
     content: "";
-    width:25px;
+    width:30px;
     height:100%;
     position: absolute;
     top:0;
     left:0;
     bottom:0;
-    z-index:10;
 }
-.spinner{
+xone-view.reveal-sidebar xone-swipe-sidebar{
+    width:100px;
+}
+xone-spinner{
     width:25px;
     height:25px;
     position: absolute;
     top:0;
     left:0;
     bottom:0;
-    z-index:1;
 }
-.pull{
+xone-pull{
     opacity: 0;
     height:35px;
     width: 100%;
@@ -717,25 +447,8 @@ xone-main[statusbar] .shadow {
     right:0;
     pointer-events: none;
 }
-.pull.pause .spinner div{
-    animation: none !important;
-}
-/*
-xone-main.show:not(.reveal) {
-    .pull {
-        will-change: transform;
-    }
-    .pull > div {
-        will-change: transform;
-    }
-    .slider {
-        will-change: transform;
-    }
-    .zoom > div {
-        will-change: transform;
-    }
-}
-*/
+
+
 /* Demo Screen */
 
 #demo{

@@ -1273,7 +1273,7 @@ var CORE = (function(CORE){
                     tag: 'div',
                     attr: {
                         'id': 'image-preload',
-                        'style': 'display:none;position:absolute;height:0px;width:0px;overflow:hidden;pointer-events:none'
+                        'style': 'z-index:-1;position:absolute;height:0;width:0;overflow:hidden;pointer-events:none'
                     }
                 }));
 

@@ -1,100 +1,101 @@
 @import "config.less";
 
-/* Disable Transitions */
+/* Slider */
 /* -------------------------------- */
-body.no-transition xone-main,
-body.no-transition xone-header,
-body.no-transition xone-header h1,
-body.no-transition .shadow,
-body.no-transition xone-tabbar{
-    transition: none !important;
-}
-
-/* Initial Slider Values */
-/* -------------------------------- */
-xone-main.slide{
-    transition: z-index 800ms @xone-animation-easing,
+xone-view[role="slide"]{
+    transition: /*z-index 800ms @xone-animation-easing,*/
                 visibility 800ms @xone-animation-easing,
                 transform 800ms @xone-animation-easing;
     transform: translate3d(100%, 0, 0);
     backface-visibility: hidden;
 }
-xone-main.slide xone-header{
+xone-view[role="slide"] xone-header{
     opacity: 0;
     transform: translate3d(-50%, 0, 0);
     backface-visibility: hidden;
     transition: opacity 400ms @xone-animation-easing,
                 transform 800ms @xone-animation-easing;
 }
-xone-main.slide .shadow{
+xone-view[role="slide"] xone-shadow{
     transform: translate3d(0, 0, 0);
     backface-visibility: hidden;
     transition: transform 800ms @xone-animation-easing;
-}/*
-xone-main.slide.show{
-    will-change: transform;
 }
-xone-main.slide.show xone-header{
-    will-change: transform, opacity;
-}
-xone-main.slide.show .shadow{
-    will-change: transform;
-}
-*/
-/* Show State */
-/* -------------------------------- */
-xone-main.slide.show{
-    visibility: visible;
+
+xone-view[role="slide"].show{
     transition: transform 800ms @xone-animation-easing;
     transform: translate3d(0, 0, 0);
 }
-xone-main.slide.show xone-header{
+xone-view[role="slide"].show xone-header{
     transition: opacity 400ms ease-in,
                 transform 800ms @xone-animation-easing;
     opacity: 1;
     transform: translate3d(0, 0, 0);
 }
-xone-main.slide.show .shadow{
+xone-view[role="slide"].show xone-shadow{
     transform: translate3d(-44px, 0, 0);
 }
 
-/* Initial Slider-Back Values */
+/* Slider Reveal */
 /* -------------------------------- */
-xone-main[role="main"],
-xone-main[role="main"] ~ xone-tabbar{
+xone-view[role="main"].show,
+xone-view[role="main"].show ~ xone-tabbar{
     transform: translate3d(0, 0, 0);
     backface-visibility: hidden;
     transition: transform 800ms @xone-animation-easing;
 }
-xone-main[role="main"].show,
-xone-main[role="main"] ~ xone-tabbar{
-    /*will-change: transform;*/
-}
-xone-main[role="main"].show xone-header h1{
+xone-view[role="main"].show xone-header h1{
     opacity: 1;
     transition: opacity 300ms ease-in;
-    /*will-change: opacity;*/
 }
-
-/* Hide State */
-/* -------------------------------- */
-xone-main[role="main"].reveal,
-xone-main[role="main"].reveal ~ xone-tabbar{
+xone-view[role="main"].reveal,
+xone-view[role="main"].reveal ~ xone-tabbar{
     transform: translate3d(-33%, 0, 0);
 }
-xone-main[role="main"].reveal xone-header h1{
+xone-view[role="main"].reveal xone-header h1{
     opacity: 0;
     transition: opacity 800ms @xone-animation-easing;
 }
 
+/* Sidebar */
+/* -------------------------------- */
+xone-view[role="sidebar"]{
+    transition: visibility 800ms @xone-animation-easing;
+}
+xone-view[role="sidebar"] xone-main,
+xone-view[role="sidebar"] h1{
+    transition:opacity 300ms ease-out;
+    opacity: 0;
+}
+xone-view[role="sidebar"].show xone-main,
+xone-view[role="sidebar"].show h1{
+    transition: opacity 300ms ease-in;
+    opacity: 1;
+}
+
+/* Sidebar Reveal */
+/* -------------------------------- */
+xone-view[role="main"].reveal-sidebar,
+xone-view[role="main"].reveal-sidebar ~ xone-tabbar{
+    transform: translate3d(80%, 0, 0);
+}
+xone-view[role="main"].reveal-sidebar xone-header h1{
+    opacity: 0;
+    transition: opacity 800ms @xone-animation-easing;
+}
+xone-view[role="main"].show xone-shadow{
+    transition: none;
+    transform: translate3d(-28px, 0, 0);
+}
+
 /* Slide Bottom */
 /* -------------------------------- */
-xone-main.slideBottom{
+xone-view[role="popup"]{
     transform: translate3d(0, 100%, 0);
     backface-visibility: hidden;
-    transition: transform 800ms @xone-animation-easing;
-    /*will-change: transform;*/
+    transition: visibility 800ms @xone-animation-easing,
+                transform 800ms @xone-animation-easing;
 }
-xone-main.slideBottom.show{
+xone-view[role="popup"].show{
     transform: translate3d(0, 0, 0);
 }

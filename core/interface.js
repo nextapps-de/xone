@@ -32,6 +32,26 @@ _controller_struct.prototype.requestBatch;
 _controller_struct.prototype.requestSync;
 
 /**
+ * Console Interface
+ * @interface
+ * @template Console
+ * @this {_console_interface}
+ * @const
+ */
+
+function _console_interface(){}
+/** @type {Function} */
+_console_interface.prototype.log;
+/** @type {Function} */
+_console_interface.prototype.warn;
+/** @type {Function} */
+_console_interface.prototype.err;
+/** @type {Function} */
+_console_interface.prototype.info;
+/** @type {Function} */
+_console_interface.prototype.flush;
+
+/**
  * Mapping Interface
  * @typedef {_mapping_struct}
  * @const
@@ -91,6 +111,8 @@ _cache_struct.prototype.get;
 _cache_struct.prototype.remove;
 /** @type {function()} */
 _cache_struct.prototype.clear;
+/** @type {function()} */
+_cache_struct.caches;
 
 /**
  * Application Storage Interface

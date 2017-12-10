@@ -258,6 +258,8 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
             MANIFEST.dependencies.xone + 'css/reset.less',
             MANIFEST.dependencies.xone + 'css/xone.less',
             MANIFEST.dependencies.xone + 'css/animate.less',
+            MANIFEST.dependencies.xone + 'css/checkbox.less',
+            MANIFEST.dependencies.xone + 'css/control.less',
             //'https://cdn.jsdelivr.net/font-hack/2.020/css/hack.min.css',
             MANIFEST.dependencies.xone + 'page/lib/highlight/styles/agate.css',
             MANIFEST.dependencies.xone + 'css/benchmark.less'

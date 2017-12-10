@@ -1,5 +1,7 @@
 describe("Check Async Implementation", function() {
 
+    var is_phantom = navigator.userAgent.indexOf('PhantomJS/1.9.8') !== -1;
+
     it("CORE.async(fn)", function(done) {
 
         var value = 'foo';
@@ -174,14 +176,14 @@ describe("Check Async Implementation", function() {
 
             expect(value).toBe('foobar 2');
 
-        }, 30);
+        }, is_phantom ? 30 : 12);
 
         window.setTimeout(function(){
 
             expect(value).toBe('foobar 3');
             done();
 
-        }, 50);
+        }, is_phantom ? 50 : 24);
     });
 
     it("CORE.queue([fn], delay)", function(done) {

@@ -494,6 +494,11 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
         var len = keys.length;
         var start = from || 0;
+
+        if(start < 0) start = len + start;
+        if(start < 0) start = 0;
+        if(start >= len) return [];
+
         var end = to ? to + 1 : len;
 
         if(end > len) end = len;

@@ -1,46 +1,50 @@
 #debug-log{
-    padding:5px;
+    padding:1%;
     position:absolute;
     top:0px;
     bottom:0px;
     right:0px;
-    width:185px;
-    font-size:8px;
-    line-height:8px;
-    z-index:998;
-    font-family: monospace;
+    width:58%;
+    font-size:6px;
+    line-height:6px;
+    z-index:99998;
     background-color: rgba(0, 0, 0, 0.5);
     overflow-y: auto;
     overflow-x: hidden;
     color: #fff;
     pointer-events: none;
-    font-weight: 300;
+    touch-action: none;
+    font-weight: 400;
     display:none;
     white-space: pre;
+    will-change: contents;
 }
 #debug-stats{
-    padding:5px;
+    padding:1%;
     position:absolute;
     bottom:0px;
     left:0px;
-    width:185px;
+    width:38%;
     height:auto;
-    font-size:8px;
-    line-height:8px;
-    z-index:999;
-    font-family: monospace;
+    font-size:6px;
+    line-height:6px;
+    z-index:99999;
     background-color: rgba(0, 0, 0, 0.5);
     overflow-y: auto;
     overflow-x: hidden;
     color: #fff;
     pointer-events: none;
-    font-weight: 300;
+    touch-action: none;
+    font-weight: 400;
     display:none;
     text-align: left;
 }
 #debug-stats span:nth-of-type(odd) {
     display: inline-block;
-    width: 70px;
+    width: 60px;
+}
+#debug-stats span:nth-of-type(even) {
+    will-change: contents;
 }
 #debug-graph {
     padding: 5px;
@@ -49,7 +53,7 @@
     left: 0;
     right: 0;
     top: 0;
-    z-index:999;
+    z-index:99999;
     font-family: monospace;
     background-color: rgba(0, 0, 0, 0.5);
     color: #fff;

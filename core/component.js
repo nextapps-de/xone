@@ -10,7 +10,7 @@ Object.defineProperty(html_proto, 'badges', {
     writable : true
 });
 
-var xone_main = document.registerElement('xone-main',  {
+var xone_main = document.registerElement('xone-view',  {
     prototype: html_proto
 });
 */

@@ -1,0 +1,180 @@
+/* Disable Transitions */
+/* -------------------------------- */
+body.no-transition xone-view,
+body.no-transition xone-header,
+body.no-transition xone-main,
+body.no-transition xone-header h1,
+body.no-transition xone-shadow,
+body.no-transition xone-tabbar,
+.no-transition{
+    transition: none !important;
+}
+
+vdom{
+    will-change: contents;
+}
+
+/* Main Components */
+
+xone-view,
+xone-main{
+    display: inline;
+    will-change: auto;
+    transition: none;
+}
+xone-view{
+    visibility: hidden;
+    pointer-events: none;
+    touch-action: none;
+    will-change: visibility;
+    z-index:1;
+}
+xone-view.show{
+    visibility: visible;
+    z-index: 2;
+    pointer-events: auto;
+}
+xone-tabbar{
+    visibility: hidden;
+}
+xone-header,
+xone-tabbar{
+    z-index: 9;
+    will-change: auto;
+    transition: none;
+}
+
+/* Main View Components */
+
+xone-view[role="main"]{
+    display: none;
+    visibility: visible;
+    will-change: display;
+}
+xone-view[role="main"].show{
+    display: inline;
+    z-index: 1;
+}
+xone-view[role="main"].show,
+xone-view[role="main"].show ~ xone-tabbar{
+    will-change: transform;
+}
+xone-view[role="main"].show xone-header h1{
+    will-change: transform, opacity;
+}
+
+/* Revealed View Components */
+
+xone-view.show.reveal,
+xone-view.show.reveal-sidebar xone-main{
+    pointer-events: none;
+}
+
+/* Slider Components */
+
+xone-view[role="slide"],
+xone-view[role="slide"] xone-shadow{
+    will-change: transform;
+}
+xone-view[role="slide"] xone-header{
+    will-change: transform, opacity;
+}
+xone-view[role="slide"],
+xone-view.slideBottom {
+    z-index: 10;
+}
+xone-view[role="slide"].show,
+xone-view.slideBottom.show {
+    z-index: 12;
+}
+
+/* Sidebar Components */
+
+xone-view[role="sidebar"] xone-main,
+xone-view[role="sidebar"] h1{
+    will-change: opacity;
+}
+xone-view[role="sidebar"]{
+    z-index: 0;
+}
+
+/* Popup */
+
+xone-view[role="popup"]{
+    z-index: 20;
+}
+
+/* Scrollpane */
+
+xone-main,
+xone-scroll,
+[scroll],
+xone-scroll-y,
+[scroll-y],
+[scroll="y"],
+xone-scroll-x,
+[scroll-x],
+[scroll="x"]{
+    overflow: hidden;
+}
+
+xone-view.show:not(.reveal):not(.reveal-sidebar) {
+    xone-scroll,
+    [scroll],
+    xone-scroll-y,
+    [scroll-y],
+    [scroll="y"]{
+        overflow-x: hidden;
+        overflow-y: scroll;
+        touch-action: pan-y;
+        -webkit-overflow-scrolling: touch;
+        overflow-scrolling: touch;
+        will-change: scroll-position;
+    }
+    xone-scroll-x,
+    [scroll-x],
+    [scroll="x"] {
+        overflow-x: scroll;
+        overflow-y: hidden;
+        touch-action: pan-x;
+        -webkit-overflow-scrolling: touch;
+        overflow-scrolling: touch;
+        will-change: scroll-position;
+    }
+}
+/*
+xone-main[bounce]:before,
+.scroll[bounce]:before,
+.scroll-y[bounce]:before,
+.scroll-x[bounce]:before{
+    pointer-events: none;
+}
+*/
+
+/* Components Helpers */
+
+xone-swipe-sidebar,
+xone-swipe{
+    z-index:10;
+}
+xone-spinner{
+    z-index:1;
+}
+xone-shadow {
+    z-index: -1;
+}
+
+xone-view.show:not(.reveal):not(.reveal-sidebar) {
+    xone-pull {
+        will-change: transform, opacity;
+    }
+    xone-pull + div {
+        will-change: transform;
+    }
+    xone-zoom + div {
+        will-change: transform;
+    }
+    xone-slider {
+        will-change: transform;
+    }
+}

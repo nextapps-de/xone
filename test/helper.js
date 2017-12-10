@@ -120,8 +120,8 @@ var customMatchers = {
 
                 return {
 
-                    pass: actual.toString() === expected.toString(), // true || false
-                    message: "Expected " + actual.name + " to equal function '" + expected.name + "'"
+                    pass: typeof expected === 'function' && (actual.constructor === expected.constructor), // true || false
+                    message: "Expected " + actual + " to equal function '" + expected + "'"
                 };
             }
         };
@@ -135,7 +135,7 @@ var customMatchers = {
 
                 return {
 
-                    pass: JSON.stringify(actual) === JSON.stringify(expected), // true || false
+                    pass: actual === expected || (JSON.stringify(actual) === JSON.stringify(expected)), // true || false
                     message: "Expected " + actual + " to equal object '" + expected + "'"
                 };
             }

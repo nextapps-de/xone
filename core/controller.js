@@ -809,7 +809,7 @@ goog.require('APP');
 
                 typeof target.view === 'string' ?
 
-                    CORE.queryOne('#' + target.view + ' xone-section')
+                    CORE.queryOne('#' + target.view + ' xone-main')
                 :
                     typeof target.target === 'string' ?
 
@@ -857,7 +857,7 @@ goog.require('APP');
                     Console.log("HTML Content Updated: " + dest.id);
                 }
             }
-
+/*
             var old_style_value = CORE.getStyle(dest, 'will-change');
 
             if(!old_style_value || !CORE.contains(old_style_value, 'contents')){
@@ -871,7 +871,7 @@ goog.require('APP');
                         'contents'
                 );
             }
-
+*/
             // diffDOM
 /*
             (function(dest, target, template, callback){
@@ -1187,14 +1187,14 @@ goog.require('APP');
 
         //APP.PLUGIN.Image.loadImages(CORE.getByClass('lazy'));
 
-        var pull_elements = CORE.getByClass('pull', dest);
+        var pull_elements = CORE.getByTag('xone-pull', dest);
 
         for(var i = 0; i < pull_elements.length; i++){
 
             APP.VIEW.PULL.register(pull_elements[i]);
         }
 
-        pull_elements = CORE.getByClass('zoom', dest);
+        pull_elements = CORE.getByTag('xone-zoom', dest);
 
         for(var i = 0; i < pull_elements.length; i++){
 

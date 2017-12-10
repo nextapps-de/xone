@@ -97,7 +97,9 @@ APP.VIEW = (function(){
 
                 if(target_view !== current_view){
 
-                    // CORE.setStyle('#' + target_view + ' xone-section', {
+                    // NOTE: slightly speeds up changing visibility state of views
+
+                    // CORE.setStyle('#' + target_view + ' xone-main', {
                     //
                     //     'overflow': 'hidden'
                     // });
@@ -106,7 +108,7 @@ APP.VIEW = (function(){
 
                     // CORE.queue(function(){
                     //
-                    //     CORE.setStyle('#' + target_view + ' xone-section', {
+                    //     CORE.setStyle('#' + target_view + ' xone-main', {
                     //
                     //         'overflow': ''
                     //     });
@@ -139,7 +141,7 @@ APP.VIEW = (function(){
                     //     //'zIndex': target_index.length - index + (is_popup ? 10 : 0)
                     // });
 
-                    var sections = CORE.queryAll('#' + target_view + ' xone-section');
+                    var sections = CORE.queryAll('#' + target_view + ' xone-main');
 
                     for(var i = 0; i < sections.length; i++){
 
@@ -157,7 +159,9 @@ APP.VIEW = (function(){
 
                     if(source_view){
 
-                        if(CORE.hasClass('#' + source_view, 'reveal')){
+                        if(CORE.hasClass('#' + source_view, 'reveal') ||
+                           CORE.hasClass('#' + source_view, 'reveal-sidebar') ||
+                           CORE.getById(target_view).getAttribute('role') === 'popup'){
 
                             // CORE.removeClass('#' + source_view, 'reveal');
                         }
@@ -279,6 +283,31 @@ APP.VIEW = (function(){
             this.hide(from_view, to_view);
         },
 
+        showSidebar: function(from_view, to_view){
+
+            if(!to_view){
+
+                to_view = from_view;
+                from_view = view_index[0];
+            }
+
+            CORE.addClass('#' + from_view, 'reveal-sidebar');
+
+            this.show(from_view, to_view);
+        },
+
+        hideSidebar: function(from_view, to_view){
+
+            if(!to_view){
+
+                to_view = view_index[0];
+            }
+
+            CORE.removeClass('#' +  to_view, 'reveal-sidebar');
+
+            this.hide(from_view, to_view);
+        },
+
         slideInBottom: function(from_view, to_view){
 
             if(!to_view){
@@ -286,6 +315,8 @@ APP.VIEW = (function(){
                 to_view = from_view;
                 from_view = view_index[0];
             }
+
+            //CORE.addClass('#' +  from_view, 'reveal');
 
             this.show(from_view, to_view);
         },
@@ -296,6 +327,8 @@ APP.VIEW = (function(){
 
                 to_view = view_index[0];
             }
+
+            //CORE.removeClass('#' +  to_view, 'reveal');
 
             this.hide(from_view, to_view);
         }
