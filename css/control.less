@@ -11,14 +11,14 @@ body.no-transition xone-tabbar,
 }
 
 vdom{
-    will-change: contents;
+    /*will-change: contents;*/
 }
 
 /* Main Components */
 
 xone-view,
 xone-main{
-    display: inline;
+    display: block;
     will-change: auto;
     transition: none;
 }
@@ -26,7 +26,7 @@ xone-view{
     visibility: hidden;
     pointer-events: none;
     touch-action: none;
-    will-change: visibility;
+    /*will-change: visibility;*/
     z-index:1;
 }
 xone-view.show{
@@ -49,10 +49,10 @@ xone-tabbar{
 xone-view[role="main"]{
     display: none;
     visibility: visible;
-    will-change: display;
+    /*will-change: display;*/
 }
 xone-view[role="main"].show{
-    display: inline;
+    display: block;
     z-index: 1;
 }
 xone-view[role="main"].show,
@@ -168,10 +168,10 @@ xone-view.show:not(.reveal):not(.reveal-sidebar) {
     xone-pull {
         will-change: transform, opacity;
     }
-    xone-pull + div {
+    xone-pull + * {
         will-change: transform;
     }
-    xone-zoom + div {
+    xone-zoom + * {
         will-change: transform;
     }
     xone-slider {
