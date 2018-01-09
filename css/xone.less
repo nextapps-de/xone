@@ -79,7 +79,7 @@ xone-main{
     top:0;
     right:0;
     left:0;
-    width:100%;
+    width:auto;
     height:auto;
     margin:0;
     padding:0;
@@ -130,10 +130,10 @@ xone-tabbar{
 }
 xone-header{
     display: block;
+    border-bottom: 1px solid @xone-border-color;
 }
 xone-view xone-header ~ xone-main{
     top: @xone-navbar-height;
-    border-top: 1px solid @xone-border-color;
 }
 xone-view[statusbar] xone-header ~ xone-main{
     top: @xone-navbar-height + @xone-statusbar-height;
@@ -284,7 +284,7 @@ xone-scroll-y,
 xone-scroll-x,
 [scroll-x],
 [scroll="x"]{
-    width: 100%;
+    width: auto;
     height: auto;
 }
 [bounce]:before{

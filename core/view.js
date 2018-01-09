@@ -45,7 +45,10 @@ APP.VIEW = (function(){
             var node = CORE.getById(view_id);
             var index;
 
-            node.parentNode.removeChild(node);
+            if(node && node.parentNode){
+
+                node.parentNode.removeChild(node);
+            }
 
             if((index = view_index.indexOf(view_id)) !== -1){
 
