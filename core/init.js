@@ -901,6 +901,24 @@ goog.require('APP.MAIN');
 
                     handle_routes(href);
 				}
+				else if(PLATFORM === 'cordova' && CORE.System.isIOS){
+
+                    if((href.indexOf('mailto:') === 0) ||
+                       (href.indexOf('tel:') === 0) ||
+                       (href.indexOf('sms:') === 0)){
+
+                        CORE.preventEvent(event, true, true);
+
+                        if(window['cordova']['InAppBrowser']){
+
+                            window['cordova']['InAppBrowser']['open'](href, '_system'/*, 'location=no'*/);
+                        }
+                        else{
+
+                            window.open(href, '_system');
+                        }
+                    }
+				}
 			},
 			stopBubble: false,
 			preventDefault: false
