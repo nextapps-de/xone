@@ -24,7 +24,7 @@ var CONFIG_MAX_RECURSION = CONFIG_PRIORITIZE_PAINT ? 200 : 1000;
  * @define {number}
  */
 
-var CONFIG_TICK_PROCESS_TIME = 3;
+var CONFIG_TICK_PROCESS_TIME = CONFIG_PRIORITIZE_PAINT ? 8 : 100;
 
 /**
  * Xone Non-blocking Processing Module

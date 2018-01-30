@@ -1008,7 +1008,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
         if(this.beforeUpdate) this.beforeUpdate();
         if(!_batch){
-            if(APP.MODEL[this.modelName].beforeUpdate) APP.MODEL[this.modelName].beforeUpdate();
+            if(APP.MODEL[this.__proto__.modelName].beforeUpdate) APP.MODEL[this.__proto__.modelName].beforeUpdate();
         }
 
         var has_update = false;
@@ -1042,7 +1042,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
 			if(this.onUpdate) this.onUpdate();
 			if(!_batch){
-				if(APP.MODEL[this.modelName].onUpdate) APP.MODEL[this.modelName].onUpdate();
+				if(APP.MODEL[this.__proto__.modelName].onUpdate) APP.MODEL[this.__proto__.modelName].onUpdate();
 			}
         }
 
@@ -1055,7 +1055,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
     ModelClass.prototype.restore = function(){
 
-        return APP.MODEL[this.modelName].parse.call(APP.MODEL[this.modelName], '' + this['id'], true);
+        return APP.MODEL[this.__proto__.modelName].parse.call(APP.MODEL[this.__proto__.modelName], '' + this['id'], true);
     };
 
     /**
@@ -1065,7 +1065,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
     ModelClass.prototype.delete = function(_batch){
 
-        var model_helper = APP.MODEL[this.modelName];
+        var model_helper = APP.MODEL[this.__proto__.modelName];
 
 		if(this.beforeDelete) this.beforeDelete();
 		if(!_batch) {

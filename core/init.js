@@ -129,6 +129,7 @@ goog.require('APP.MAIN');
             initialize_app,
             initialize_config,
             initialize_debug,
+            initialize_components,
             initialize_layout,
             //initialize_translations,
             initialize_views,
@@ -272,6 +273,7 @@ goog.require('APP.MAIN');
         initialize_app = null;
         initialize_config = null;
         initialize_debug = null;
+        initialize_components = null;
         initialize_layout = null;
         //initialize_translations = null;
         initialize_views = null;
@@ -536,6 +538,22 @@ goog.require('APP.MAIN');
                     }
                 }
             }
+        }
+    };
+
+    var initialize_components= function(){
+
+        if(document.registerElement){
+
+            document.registerElement('xone-view');
+            document.registerElement('xone-main');
+            document.registerElement('xone-section');
+            document.registerElement('xone-header');
+            document.registerElement('xone-shadow');
+            document.registerElement('xone-swipe');
+            document.registerElement('xone-pull');
+            document.registerElement('xone-slider');
+            document.registerElement('xone-swipe-sidebar');
         }
     };
 
@@ -907,11 +925,11 @@ goog.require('APP.MAIN');
                        (href.indexOf('tel:') === 0) ||
                        (href.indexOf('sms:') === 0)){
 
-                        CORE.preventEvent(event, true, true);
+                        //CORE.preventEvent(event, true, true);
 
-                        if(window['cordova']['InAppBrowser']){
+                        if(window['cordova'] && window['cordova']['InAppBrowser']){
 
-                            window['cordova']['InAppBrowser']['open'](href, '_system'/*, 'location=no'*/);
+                            window['cordova']['InAppBrowser']['open'](href, '_system', 'location=no');
                         }
                         else{
 

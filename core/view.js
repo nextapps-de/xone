@@ -76,9 +76,10 @@ APP.VIEW = (function(){
         /**
          * @param {!string} source_view
          * @param {!string=} target_view
+         * @param {!Function=} callback
          */
 
-        show: function(source_view, target_view){
+        show: function(source_view, target_view, callback){
 
             if(DEBUG) Console.log('Current View: ' + current_view);
 

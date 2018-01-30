@@ -108,6 +108,7 @@ function compile_view_to_array(html, array, exp, not, loop){
 
     while(html.indexOf("\n ") !== -1) html = html.replace("\n ", "\n");
     while(html.indexOf("\n")  !== -1) html = html.replace("\n", ' ');
+    while(html.indexOf(">  <") !== -1) html = html.replace(">  <", '><');
     while(html.indexOf("> <") !== -1) html = html.replace("> <", '><');
     while(html.indexOf("}} {{ include(") !== -1) html = html.replace("}} {{ include(", '}}{{ include(');
     while(html.indexOf("> {{") !== -1) html = html.replace("> {{", '>{{');

@@ -13,7 +13,6 @@ goog.require('CONFIG');
  * Application Core
  * @name CORE
  * @namespace CORE
- * @const
  */
 
 var CORE = (function(CORE){
@@ -66,7 +65,6 @@ var CORE = (function(CORE){
      * @param {!*} value
      * @param {string=} type
      * @return {boolean}
-     * @const
      */
 
     CORE.isType = function(value, type){
@@ -172,7 +170,6 @@ var CORE = (function(CORE){
     /**
      * @param {!Node|*} value
      * @return {boolean}
-     * @const
      */
 
     CORE.isNode = function(value){

@@ -231,6 +231,7 @@ goog.require('APP');
                 params: params,
                 type: route_obj.type || request_type,
                 header: route_obj.header,
+                async: route_obj.async,
                 cache: route_obj.cache,
                 clear: route_obj.clear,
                 success: fn_success,

@@ -30,7 +30,7 @@ var _ajax_struct = {
     async: true,
 
     /** @type {boolean} */
-    clear: true,
+    clear: false,
 
     /** @type {boolean} */
     cache: true
