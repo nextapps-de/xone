@@ -802,15 +802,18 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
         this.cache = STORAGE.CACHE[key];
 
-        /* Bind References from ModelCallbacks */
+        if(model.prototype){
 
-        var prototype = model.prototype;
+            /* Bind References from ModelCallbacks */
 
-        for(var field in prototype){
+            var prototype = model.prototype;
 
-            if(prototype.hasOwnProperty(field)){
+            for(var field in prototype){
 
-                this[field] = prototype[field];
+                if(prototype.hasOwnProperty(field)){
+
+                    this[field] = prototype[field];
+                }
             }
         }
     }

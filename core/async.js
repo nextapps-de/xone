@@ -6,7 +6,7 @@ goog.require('Util.Console');
  * @define {boolean}
  */
 
-var CONFIG_SUCCESSIVE_PAINT = true;
+var CONFIG_SUCCESSIVE_PAINT = false;
 
 /**
  * @define {boolean}
@@ -24,7 +24,7 @@ var CONFIG_MAX_RECURSION = CONFIG_PRIORITIZE_PAINT ? 200 : 1000;
  * @define {number}
  */
 
-var CONFIG_TICK_PROCESS_TIME = CONFIG_PRIORITIZE_PAINT ? 8 : 100;
+var CONFIG_TICK_PROCESS_TIME = CONFIG_PRIORITIZE_PAINT ? 4 : 100;
 
 /**
  * Xone Non-blocking Processing Module
@@ -551,14 +551,19 @@ var CONFIG_TICK_PROCESS_TIME = CONFIG_PRIORITIZE_PAINT ? 8 : 100;
 
             if((end - time) > CONFIG_TICK_PROCESS_TIME){
 
-                break;
+                return;
+            }
+
+            if(CONFIG_PRIORITIZE_PAINT && PAINT_EXEC){
+
+                return;
             }
 
             if(STACK_TIMER[stack_timer[i]] < time){
 
                 end = execute(
 
-                    stack_timer.splice(i, 1)[0], true
+                    stack_timer.splice(i, 1)[0], /* return time? */ true
 
                 ) || time;
             }
@@ -568,14 +573,19 @@ var CONFIG_TICK_PROCESS_TIME = CONFIG_PRIORITIZE_PAINT ? 8 : 100;
 
             if((end - time) > CONFIG_TICK_PROCESS_TIME){
 
-                break;
+                return;
+            }
+
+            if(CONFIG_PRIORITIZE_PAINT && PAINT_EXEC){
+
+                return;
             }
 
             if(QUEUE_TIMER[queue_timer[i]] < time){
 
                 end = execute(
 
-                    queue_timer.splice(i--, 1)[0], true
+                    queue_timer.splice(i--, 1)[0], /* return time? */ true
 
                 ) || time;
             }
@@ -583,9 +593,14 @@ var CONFIG_TICK_PROCESS_TIME = CONFIG_PRIORITIZE_PAINT ? 8 : 100;
 
         while(((end - time) <= CONFIG_TICK_PROCESS_TIME) && QUEUE_INDEX.length){
 
+            if(CONFIG_PRIORITIZE_PAINT && PAINT_EXEC){
+
+                return;
+            }
+
             end = execute(
 
-                QUEUE_INDEX.shift(), true
+                QUEUE_INDEX.shift(), /* return time? */ true
 
             ) || time;
         }
@@ -629,19 +644,19 @@ var CONFIG_TICK_PROCESS_TIME = CONFIG_PRIORITIZE_PAINT ? 8 : 100;
 
         var queue_length = PAINT_INDEX.length;
 
-        if(CONFIG_PRIORITIZE_PAINT){
+        // if(CONFIG_PRIORITIZE_PAINT){
+        //
+        //     if(queue_length){
+        //
+        //         register_frames_idle_state = 0;
+        //     }
+        //     else{
+        //
+        //         register_frames_idle_state--;
+        //     }
+        // }
 
-            if(queue_length){
-
-                register_frames_idle_state = 2;
-            }
-            else{
-
-                register_frames_idle_state--;
-            }
-        }
-
-        if(queue_length || (register_frames_idle_state >= 0)){
+        if(queue_length /*|| (register_frames_idle_state >= 0)*/){
 
             requestAnimationFrame(runPaint);
 

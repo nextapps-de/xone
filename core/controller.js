@@ -765,7 +765,7 @@ goog.require('APP');
                     config =
                     local_render_id = void 0;
 
-                }, 1, key);
+                }, key);
             }
         }
         else{

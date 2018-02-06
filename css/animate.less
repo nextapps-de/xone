@@ -51,6 +51,7 @@ xone-view[role="main"].show xone-header h1{
 xone-view[role="main"].reveal,
 xone-view[role="main"].reveal ~ xone-tabbar{
     transform: translate3d(-33%, 0, 0);
+    backface-visibility: hidden;
 }
 xone-view[role="main"].reveal xone-header h1{
     opacity: 0;
@@ -78,6 +79,7 @@ xone-view[role="sidebar"].show h1{
 xone-view[role="main"].reveal-sidebar,
 xone-view[role="main"].reveal-sidebar ~ xone-tabbar{
     transform: translate3d(80%, 0, 0);
+    backface-visibility: hidden;
 }
 xone-view[role="main"].reveal-sidebar xone-header h1{
     opacity: 0;
@@ -86,6 +88,7 @@ xone-view[role="main"].reveal-sidebar xone-header h1{
 xone-view[role="main"].show xone-shadow{
     transition: none;
     transform: translate3d(-28px, 0, 0);
+    backface-visibility: hidden;
 }
 
 /* Slide Bottom */
