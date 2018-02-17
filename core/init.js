@@ -66,7 +66,7 @@ goog.require('APP.MAIN');
 
                             for(var i = 0; i < versions.length; i++){
 
-                                if(compareVersions( versions[i], current_version)){
+                                if(compareVersions(versions[i], current_version)){
 
                                     APP.MIGRATE[versions[i]]();
 
@@ -81,7 +81,7 @@ goog.require('APP.MAIN');
                             //     'button': 'Close'
                             // });
 
-                            alert('Updates v' + versions[0] + ' has been installed successfully.');
+                            alert('Updates v' + last_version + ' has been installed successfully.');
                         }
 
                         migration_success = true;
@@ -938,7 +938,7 @@ goog.require('APP.MAIN');
                     }
 				}
 			},
-			stopBubble: false,
+			stopBubble: true,
 			preventDefault: false
 		});
 
@@ -1197,6 +1197,10 @@ goog.require('APP.MAIN');
         // }
     };
 
+    /**
+     * @param {string} href
+     */
+
     function handle_routes(href){
 
         if(href.substring(0, 2) === "#/" || href.substring(0, 2) === "#!"){
@@ -1229,7 +1233,7 @@ goog.require('APP.MAIN');
 
                 if(fn) {
 
-                    fn(params, CORE.query('a[href="' + part_route + '"]')[0]);
+                    fn(params);
                 }
             }
         }

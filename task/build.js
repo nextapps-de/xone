@@ -294,15 +294,20 @@ if(fs.existsSync(__dirname + '/build.js')){
             xone_manifest.dependencies.xone +'interface/view.js',
             xone_manifest.dependencies.xone +'core/interface.js',
             xone_manifest.dependencies.xone +'build/env.js',
-            xone_manifest.dependencies.xone +'core/core.js',
-            xone_manifest.dependencies.xone +'core/app.js',
             xone_manifest.dependencies.xone +'lib/debug.js',
+            xone_manifest.dependencies.xone +'core/core.js',
+            xone_manifest.dependencies.xone +'core/async.js',
+            xone_manifest.dependencies.xone +'core/app.js',
             xone_manifest.dependencies.xone +'lib/paint.js',
             xone_manifest.dependencies.xone +'lib/animate.js',
             xone_manifest.dependencies.xone +'lib/event.js',
             xone_manifest.dependencies.xone +'lib/retina.js',
             xone_manifest.dependencies.xone +'lib/compress.js',
             xone_manifest.dependencies.xone +'lib/storage.js',
+            xone_manifest.dependencies.xone +'lib/search.js',
+            xone_manifest.dependencies.xone +'lib/ajax.js',
+            xone_manifest.dependencies.xone +'lib/cache.js',
+            xone_manifest.dependencies.xone +'lib/console.js',
             xone_manifest.dependencies.xone +'core/model.js',
             xone_manifest.dependencies.xone +'core/controller.js',
             xone_manifest.dependencies.xone +'core/view.js',
@@ -357,6 +362,9 @@ if(fs.existsSync(__dirname + '/build.js')){
 
                 xone_config.closure_compiler_jar.options.js.push("'" + xone_manifest.dependencies.xone + "build/app.js'");
                 compiler_options.jsCode.push({path: xone_manifest.dependencies.xone + "build/app.js"});
+
+                xone_config.closure_compiler_jar.options.js.push("'" + xone_manifest.dependencies.xone + "build/util.js'");
+                compiler_options.jsCode.push({path: xone_manifest.dependencies.xone + "build/util.js"});
 
                 xone_config.closure_compiler_jar.options.js.push("'" + xone_manifest.dependencies.xone + "build/core.js'");
                 compiler_options.jsCode.push({path: xone_manifest.dependencies.xone + "build/core.js"});
@@ -489,7 +497,10 @@ if(fs.existsSync(__dirname + '/build.js')){
             }
 
             // xone injection
-            compiler_options.jsCode.push({path: path.resolve(xone_manifest.dependencies.xone + "core/init.js")});
+            //if(parameter !== 'bundle' && (parameter !== 'lib')){
+
+                compiler_options.jsCode.push({path: path.resolve(xone_manifest.dependencies.xone + "core/init.js")});
+            //}
 
             var tmp_code = "";
 
@@ -535,7 +546,10 @@ if(fs.existsSync(__dirname + '/build.js')){
             }
 
             // xone injection
-            xone_config.closure_compiler_jar.options.js.push("'" + xone_manifest.dependencies.xone + "core/init.js'");
+            //if(parameter !== 'bundle' && (parameter !== 'lib')){
+
+                xone_config.closure_compiler_jar.options.js.push("'" + xone_manifest.dependencies.xone + "core/init.js'");
+            //}
 
             var config_parameters = "";
 

@@ -456,7 +456,7 @@ if(fs.existsSync("app/css/build.less")) {
     lib.exec((
 
         //'node "' + path.resolve(path_to_lessc, 'node_modules/clean-css/bin/cleancss') + '" app/css/build.less --clean-css="-s1 --advanced --rebase" app/css/build.css'
-        'node "' + path.resolve(path_to_lessc, 'bin/lessc') + '" --clean-css="--s1 --advanced --rebase" --autoprefix app/css/build.less app/css/build.css'
+        'node "' + path.resolve(path_to_lessc, 'bin/lessc') + '" --clean-css="--s1 --advanced --rebase" app/css/build.less app/css/build.css' //--autoprefix
 
     ), function(){
 
@@ -489,7 +489,7 @@ else{
     lib.exec((
 
         //'node "' + path.resolve(path_to_lessc, 'node_modules/clean-css/bin/cleancss') + '" app/css/build.less --clean-css="-s1 --advanced --rebase" app/css/build.css'
-        'node "' + path.resolve(path_to_lessc, 'bin/lessc') + '" --clean-css="--s1 --advanced --rebase" --autoprefix app/tmp/build.less app/css/build.css'
+        'node "' + path.resolve(path_to_lessc, 'bin/lessc') + '" --clean-css="--s1 --advanced --rebase" app/tmp/build.less app/css/build.css' //--autoprefix
 
     ), function(){
 

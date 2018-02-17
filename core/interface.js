@@ -115,6 +115,29 @@ _cache_struct.prototype.clear;
 _cache_struct.caches;
 
 /**
+ * Search Interface
+ * @interface
+ * @this {_search_struct}
+ * @const
+ */
+
+function _search_struct(options) {}
+/** @type {Function} */
+_search_struct.register;
+/** @type {Function} */
+_search_struct.prototype.add;
+/** @type {Function} */
+_search_struct.prototype.update;
+/** @type {Function} */
+_search_struct.prototype.remove;
+/** @type {Function} */
+_search_struct.prototype.clear;
+/** @type {Function} */
+_search_struct.prototype.destroy;
+/** @type {Function} */
+_search_struct.prototype.search;
+
+/**
  * Application Storage Interface
  * @typedef {_storage_struct}
  * @const

@@ -13,6 +13,7 @@ body.no-transition xone-tabbar,
 vdom{
     will-change: contents;
     display: block;
+    height: 100%;
 }
 
 /* Main Components */
@@ -96,7 +97,7 @@ xone-view[role="sidebar"] h1{
     will-change: opacity;
 }
 xone-view[role="sidebar"]{
-    z-index: 0;
+    z-index: 0 !important;
 }
 
 /* Popup */

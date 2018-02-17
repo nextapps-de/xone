@@ -48,12 +48,21 @@ xone-view[role="main"].show xone-header h1{
     opacity: 1;
     transition: opacity 300ms ease-in;
 }
+xone-view.reveal,
+xone-view.reveal ~ xone-tabbar,
 xone-view[role="main"].reveal,
-xone-view[role="main"].reveal ~ xone-tabbar{
+xone-view[role="main"].reveal ~ xone-tabbar,
+xone-view[role="slide"].reveal,
+xone-view[role="slide"].reveal ~ xone-tabbar,
+xone-view[role="popup"].reveal,
+xone-view[role="popup"].reveal ~ xone-tabbar{
     transform: translate3d(-33%, 0, 0);
     backface-visibility: hidden;
 }
-xone-view[role="main"].reveal xone-header h1{
+xone-view.reveal xone-header h1,
+xone-view[role="main"].reveal xone-header h1,
+xone-view[role="slide"].reveal xone-header h1,
+xone-view[role="popup"].reveal xone-header h1{
     opacity: 0;
     transition: opacity 800ms @xone-animation-easing;
 }

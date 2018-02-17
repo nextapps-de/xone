@@ -15,16 +15,40 @@ var CONFIG_SUCCESSIVE_PAINT = false;
 var CONFIG_PRIORITIZE_PAINT = true;
 
 /**
- * @define {number}
+ * @define {boolean}
  */
 
-var CONFIG_MAX_RECURSION = CONFIG_PRIORITIZE_PAINT ? 200 : 1000;
+var CONFIG_PRIORITIZE_MAX_FPS = false;
 
 /**
  * @define {number}
  */
 
-var CONFIG_TICK_PROCESS_TIME = CONFIG_PRIORITIZE_PAINT ? 4 : 100;
+var CONFIG_MAX_RECURSION = (
+
+    CONFIG_PRIORITIZE_PAINT ?
+
+        200
+    :
+        1000
+);
+
+/**
+ * @define {number}
+ */
+
+var CONFIG_TICK_PROCESS_TIME = (
+
+    CONFIG_PRIORITIZE_PAINT ? (
+
+        CONFIG_PRIORITIZE_MAX_FPS ?
+
+            4
+        :
+            32
+
+    ) : 100
+);
 
 /**
  * Xone Non-blocking Processing Module
@@ -644,19 +668,19 @@ var CONFIG_TICK_PROCESS_TIME = CONFIG_PRIORITIZE_PAINT ? 4 : 100;
 
         var queue_length = PAINT_INDEX.length;
 
-        // if(CONFIG_PRIORITIZE_PAINT){
-        //
-        //     if(queue_length){
-        //
-        //         register_frames_idle_state = 0;
-        //     }
-        //     else{
-        //
-        //         register_frames_idle_state--;
-        //     }
-        // }
+        if(CONFIG_PRIORITIZE_PAINT){
 
-        if(queue_length /*|| (register_frames_idle_state >= 0)*/){
+            if(queue_length){
+
+                register_frames_idle_state = 1;
+            }
+            else{
+
+                register_frames_idle_state--;
+            }
+        }
+
+        if(queue_length || (register_frames_idle_state > 0)){
 
             requestAnimationFrame(runPaint);
 
@@ -751,7 +775,7 @@ var CONFIG_TICK_PROCESS_TIME = CONFIG_PRIORITIZE_PAINT ? 4 : 100;
 
                 if(timer === null){
 
-                    timer = window.setInterval(function(){
+                    timer = setInterval(function(){
 
                         if(!pause_state){
 
@@ -766,7 +790,7 @@ var CONFIG_TICK_PROCESS_TIME = CONFIG_PRIORITIZE_PAINT ? 4 : 100;
 
                 if(timer !== null) {
 
-                    window.clearInterval(timer);
+                    clearInterval(timer);
 
                     timer = null;
                 }

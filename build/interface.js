@@ -244,6 +244,21 @@ _storage_interface.prototype.keys;
 
 
 /** @export */
+_search_struct.prototype.add;
+/** @export */
+_search_struct.prototype.update;
+/** @export */
+_search_struct.prototype.remove;
+/** @export */
+_search_struct.prototype.clear;
+/** @export */
+_search_struct.prototype.reset;
+/** @export */
+_search_struct.prototype.search;
+
+
+
+/** @export */
 _fatjob_interface.prototype.animate;
 /** @export */
 _fatjob_interface.prototype.colorHandler;

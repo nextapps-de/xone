@@ -27,12 +27,12 @@ APP.VIEW = (function(){
 
         current_view: function(){
 
-            return current_view;
+            return history[0];
         },
 
         last_view: function(){
 
-            return current_view === view_index[0] ? view_index[1] : view_index[0];
+            return history[1];
         },
 
         history: function(){
@@ -136,7 +136,7 @@ APP.VIEW = (function(){
                         index = 0;
                     }
 
-                    //updateViewIndex(target_index, is_popup ? 10 : 0);
+                    updateViewIndex(target_index, is_popup ? 10 : 0);
 
                     // CORE.setStyle('#' + target_view, {
                     //
@@ -153,7 +153,12 @@ APP.VIEW = (function(){
                         sections[i].scrollLeft = 0;
                     }
 
-                    history.push(current_view = target_view);
+                    current_view = target_view;
+
+                    if(history[0] !== current_view) {
+
+                        history.unshift(current_view);
+                    }
 
                     // iOS overflow scrolling z-index fix
                     //if(PLATFORM === 'webapp' && CORE.System.isIOS){
@@ -241,7 +246,8 @@ APP.VIEW = (function(){
 
             if(is_popup){
 
-                history.splice(history.lastIndexOf(current_view), 1);
+                //history.splice(history.indexOf(current_view), 1);
+                history.splice(0, 1);
             }
 
             current_view = view_index[0];
@@ -250,7 +256,7 @@ APP.VIEW = (function(){
 
                 CORE.addClass('#' + to_view, 'show');
 
-                //updateViewIndex(target_index, is_popup ? 10 : 0);
+                updateViewIndex(target_index, is_popup ? 10 : 0);
 
                 // CORE.setStyle('#' + source_view, {
                 //
@@ -267,7 +273,7 @@ APP.VIEW = (function(){
             if(!to_view){
 
                 to_view = from_view;
-                from_view = view_index[0];
+                from_view = history[0];
             }
 
             CORE.addClass('#' + from_view, 'reveal');
@@ -279,7 +285,7 @@ APP.VIEW = (function(){
 
             if(!to_view){
 
-                to_view = view_index[0];
+                to_view = history[1];
             }
 
             CORE.removeClass('#' +  to_view, 'reveal');

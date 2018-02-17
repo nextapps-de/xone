@@ -93,3 +93,5 @@ CONFIG.ENABLE_ROUTE_CACHE = false;
 // todo
 /** @define {boolean} */
 CONFIG.ENABLE_VIEW_CACHE = false;
+
+var Debugger = function(){};

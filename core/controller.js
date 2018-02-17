@@ -755,7 +755,7 @@ goog.require('APP');
 
                 var local_render_id = render_items_ids[key];
 
-                CORE.queue(function(){
+                CORE.async(function(){
 
                     if(local_render_id === render_items_ids[key]){
 
