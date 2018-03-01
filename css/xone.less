@@ -10,9 +10,10 @@ html, body{
     height:100%;
     margin:0;
     padding:0;
-    background: #fff;
+    background-color: #fff;
     overflow: hidden;
     touch-action: none;
+    contain: none;
 }
 body {
     /* prevent callout to copy image, etc when tap to hold */
@@ -26,7 +27,8 @@ body {
     font-size: 100%;
     font-weight: 400;
 }
-body *{
+/*body *{*/
+body {
     /* make transparent link selection, adjust last value opacity 0 to 1.0 */
     -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
@@ -38,6 +40,7 @@ table{
     table-layout: fixed;
     width:100%;
     height: auto;
+    contain: none;
 }
 table, tr, td, th, thead, tbody{
     padding:0;
@@ -107,7 +110,7 @@ xone-header{
     /* NOTE: the border should be excluded from the opacity fade animation */
     /*border-bottom: 1px solid #dee3ed;*/
 }
-xone-view[statusbar] xone-header{
+xone-view[statusbar] > xone-header{
     padding-top: @xone-statusbar-height;
 }
 xone-tabbar{
@@ -120,7 +123,7 @@ xone-tabbar{
 xone-header,
 xone-tabbar{
     position: absolute;
-    width: 100%;
+    width: 100.1%;
     right: 0;
     left: 0;
     background-color: #fff;
@@ -132,10 +135,10 @@ xone-header{
     display: block;
     border-bottom: 1px solid @xone-border-color;
 }
-xone-view xone-header ~ xone-main{
+xone-view > xone-header ~ xone-main{
     top: @xone-navbar-height;
 }
-xone-view[statusbar] xone-header ~ xone-main{
+xone-view[statusbar] > xone-header ~ xone-main{
     top: @xone-navbar-height + @xone-statusbar-height;
 }
 xone-view[role="main"]{
@@ -185,7 +188,7 @@ hr{
     margin-bottom:10px;
     background: none;
 }
-xone-header h1{
+xone-header > h1{
     position: absolute;
     top:0;
     right:0;
@@ -199,14 +202,14 @@ xone-header h1{
     display: block;
     vertical-align: middle;
 }
-xone-view[statusbar] xone-header h1{
+xone-view[statusbar] > xone-header > h1{
     top: @xone-statusbar-height;
 }
-xone-view[role="sidebar"] xone-header h1{
+xone-view[role="sidebar"] > xone-header > h1{
     text-align: left;
     left:15px;
 }
-xone-header h1 img {
+xone-header > h1 > img {
     height: 17px;
     width: auto;
     position: relative;
@@ -215,61 +218,61 @@ xone-header h1 img {
 
 /* Navigation */
 
-xone-header nav,
-xone-tabbar nav{
+xone-header > nav,
+xone-tabbar > nav{
     display: table-row;
 }
-xone-header nav a,
-xone-tabbar nav a{
+xone-header > nav > a,
+xone-tabbar > nav > a{
     display: table-cell;
     background-repeat: no-repeat;
     background-position: center center;
     background-size: contain;
 }
-xone-header nav{
-    height: @xone-navbar-height - 1;
+xone-header > nav{
+    height: @xone-navbar-height;
     line-height: @xone-navbar-height;
 }
-xone-tabbar nav{
+xone-tabbar > nav{
     height: @xone-tabbar-height;
 }
-xone-header nav a{
+xone-header > nav > a{
     width: @xone-navbar-height;
     height: @xone-navbar-height;
 }
-xone-tabbar nav a{
+xone-tabbar > nav > a{
     width: auto;
     height: @xone-tabbar-height;
 }
-xone-header nav img{
+xone-header > nav > a > img{
     width: auto;
     height: @xone-navbar-height;
 }
-xone-tabbar nav img{
+xone-tabbar > nav > a > img{
     height: @xone-tabbar-height;
     width: auto;
     margin:0 auto;
 }
-nav a img:nth-of-type(1){
+nav > a > img:nth-of-type(1){
     display:block;
 }
-nav a img:nth-of-type(2){
+nav > a > img:nth-of-type(2){
     display:none;
 }
-nav a.active img:nth-of-type(1){
+nav > a.active > img:nth-of-type(1){
     display:none;
 }
-nav a.active img:nth-of-type(2){
+nav > a.active > img:nth-of-type(2){
     display:block;
 }
-xone-header nav,
-xone-header nav img{
+xone-header > nav,
+xone-header > nav > a > img{
     float: left;
     text-align: left;
 }
-xone-header h1 + nav,
-xone-header h1 + nav img,
-xone-header nav:nth-of-type(2){
+xone-header > h1 + nav,
+xone-header > h1 + nav > a > img,
+xone-header > nav:nth-of-type(2){
     float: right;
     text-align: right;
 }
@@ -324,7 +327,7 @@ xone-shadow {
     background-repeat: repeat-y;
     background-position: left center;
 }
-xone-view[statusbar] xone-shadow {
+xone-view[statusbar] > xone-shadow {
     top: @xone-navbar-height + @xone-statusbar-height;
 }
 
@@ -439,7 +442,7 @@ xone-swipe{
     left:0;
     bottom:0;
 }
-xone-view.reveal-sidebar xone-swipe-sidebar{
+xone-view.reveal-sidebar > xone-swipe-sidebar{
     width:100px;
 }
 xone-spinner{

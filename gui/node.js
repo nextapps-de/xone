@@ -29,6 +29,13 @@ var routes = {
                     shtml: fs.readFileSync('./app/lib/xone/gui/' + payload.shtml + '.shtml', 'utf8')
                 };
             }
+            else if(fs.existsSync('./node_modules/xone/gui/' + payload.shtml + '.shtml')){
+
+                return {
+
+                    shtml: fs.readFileSync('./node_modules/xone/gui/' + payload.shtml + '.shtml', 'utf8')
+                };
+            }
 
             return {};
         }

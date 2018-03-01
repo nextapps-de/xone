@@ -23,7 +23,7 @@ var customMatchers = {
 
                 return {
 
-                    pass: typeof actual[expected] === 'object', // true || false
+                    pass: actual[expected] && (typeof actual[expected] === 'object'), // true || false
                     message: "Expected " + actual.__name + " to have object '" + expected + "'"
                 };
             }

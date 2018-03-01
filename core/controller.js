@@ -107,10 +107,10 @@ goog.require('APP');
             if(route[0] === '#'){
 
                 // TODO: refactor
-                var data = params;
-                params = CORE.query('a[href="' + route + '"]')[0];
+                //var data = params;
+                //params = CORE.query('a[href="' + route + '"]')[0];
 
-                fn_success(data);
+                fn_success({'href': route.replace('#/', '').replace('#', '')});
                 return;
             }
 
@@ -227,7 +227,7 @@ goog.require('APP');
 
             CORE.ajax(/** @type {_ajax_struct}*/ ({
 
-                url: CONFIG.SERVER_HOST + (route_obj.url || route),
+                url: (route_obj.host || CONFIG.SERVER_HOST) + (route_obj.url || route),
                 params: params,
                 type: route_obj.type || request_type,
                 header: route_obj.header,
@@ -755,7 +755,7 @@ goog.require('APP');
 
                 var local_render_id = render_items_ids[key];
 
-                CORE.async(function(){
+                CORE.queue(function(){
 
                     if(local_render_id === render_items_ids[key]){
 
@@ -1213,27 +1213,29 @@ goog.require('APP');
                 target.callback.call(dest, target.data);
             }
         }
+
+        if(APP.CONFIG.LANG){
+
+            CONTROLLER.changeLanguage(APP.CONFIG.LANG, dest);
+        }
     }
 
     /**
      * @param {string=} lang
+     * @param {Element=} scope
      */
 
-    CONTROLLER.changeLanguage = function(lang){
+    CONTROLLER.changeLanguage = function(lang, scope){
 
-        var nodes = CORE.getByClass('i18n');
+        var nodes = (scope || document).querySelectorAll('[data-i18n]'); //CORE.getByClass('i18n', scope); //
 
         for(var i = 0; i < nodes.length; i++){
 
             var node = nodes[i];
 
-            CORE.setText(node, (APP.LANG[lang || 'en'] || APP.LANG['en'])[
+            CORE.setHTML(node, (APP.LANG[lang || 'en'] || APP.LANG['en'])[
 
-                node.classList ?
-
-                    node.classList[1]
-                :
-                    node.className.split(' ')[1]
+                node.dataset['i18n']
             ]);
         }
     };

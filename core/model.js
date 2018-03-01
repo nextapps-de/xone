@@ -64,7 +64,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
         /* Register model to the cache controller */
 
-        STORAGE.CACHE[key] || (STORAGE.CACHE[key] = /** @type {_cache_struct} */ (new Util.Cache(60 * 1000, false, true)));
+        STORAGE.CACHE[key] || (STORAGE.CACHE[key] = /** @type {_cache_struct} */ (Util.Cache.new(60 * 1000, false, true)));
 
         /* Create Helper Instance + Register the model */
 
@@ -381,7 +381,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
         if(typeof index === 'number') {
 
-            index = String(index);
+            index = '' + index;
         }
 
         if(force || !(cache = this.cache.get(index))){
@@ -865,7 +865,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
 
                                 has_object_keys = true;
                             }
-                            else if(data_field_index.constructor === Object) {
+                            else if(data_field_index && (data_field_index.constructor === Object)) {
 
                                 var recursive_value = compact_model_data(data_field_index, persistent);
 
@@ -918,7 +918,7 @@ APP.MODEL = (function(MAPPER, STORAGE){
             return this;
         }
 
-        id = String(this['id']);
+        id = '' + this['id'];
 
         if(persistent) {
 

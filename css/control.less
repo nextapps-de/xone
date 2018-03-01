@@ -1,11 +1,12 @@
 /* Disable Transitions */
-/* -------------------------------- */
-body.no-transition xone-view,
-body.no-transition xone-header,
-body.no-transition xone-main,
-body.no-transition xone-header h1,
-body.no-transition xone-shadow,
-body.no-transition xone-tabbar,
+/* ------------------- */
+
+body.no-transition > xone-view,
+body.no-transition > xone-view > xone-header,
+body.no-transition > xone-view > xone-main,
+body.no-transition > xone-view > xone-header > h1,
+body.no-transition > xone-view > xone-shadow,
+body.no-transition > xone-tabbar,
 .no-transition{
     transition: none !important;
 }
@@ -13,7 +14,11 @@ body.no-transition xone-tabbar,
 vdom{
     will-change: contents;
     display: block;
-    height: 100%;
+    height: auto;
+    contain: layout style;
+}
+vdom > *{
+    contain: layout style paint;
 }
 
 /* Main Components */
@@ -29,15 +34,22 @@ xone-view{
     pointer-events: none;
     touch-action: none;
     will-change: visibility;
-    z-index:1;
+    contain: layout style size;
+    z-index: -1;
 }
 xone-view.show{
     visibility: visible;
     z-index: 2;
+    touch-action: auto;
     pointer-events: auto;
+    contain: layout style size;
+}
+xone-header{
+    contain: layout style size;
 }
 xone-tabbar{
     visibility: hidden;
+    contain: layout style paint;
 }
 xone-header,
 xone-tabbar{
@@ -48,37 +60,31 @@ xone-tabbar{
 
 /* Main View Components */
 
-xone-view[role="main"]{
-    display: none;
-    visibility: visible;
-    will-change: display;
-}
 xone-view[role="main"].show{
-    display: block;
     z-index: 1;
 }
 xone-view[role="main"].show,
 xone-view[role="main"].show ~ xone-tabbar{
     will-change: transform;
 }
-xone-view[role="main"].show xone-header h1{
+xone-view[role="main"].show > xone-header > h1{
     will-change: transform, opacity;
 }
 
 /* Revealed View Components */
 
-xone-view.show.reveal,
-xone-view.show.reveal-sidebar xone-main{
+xone-view.reveal,
+xone-view.reveal-sidebar > xone-main{
     pointer-events: none;
 }
 
 /* Slider Components */
 
 xone-view[role="slide"],
-xone-view[role="slide"] xone-shadow{
+xone-view[role="slide"] > xone-shadow{
     will-change: transform;
 }
-xone-view[role="slide"] xone-header{
+xone-view[role="slide"] > xone-header{
     will-change: transform, opacity;
 }
 xone-view[role="slide"],
@@ -87,13 +93,13 @@ xone-view.slideBottom {
 }
 xone-view[role="slide"].show,
 xone-view.slideBottom.show {
-    z-index: 12;
+    z-index: 11;
 }
 
 /* Sidebar Components */
 
-xone-view[role="sidebar"] xone-main,
-xone-view[role="sidebar"] h1{
+xone-view[role="sidebar"] > xone-main,
+xone-view[role="sidebar"] > h1{
     will-change: opacity;
 }
 xone-view[role="sidebar"]{
@@ -118,6 +124,7 @@ xone-scroll-x,
 [scroll-x],
 [scroll="x"]{
     overflow: hidden;
+    contain: layout style size;
 }
 
 xone-view.show:not(.reveal):not(.reveal-sidebar) {

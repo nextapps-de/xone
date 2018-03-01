@@ -125,7 +125,7 @@ if(!CONFIG.NO_SCRIPT && CONFIG.ENV !== "production") (function() {
 
         if(MANIFEST.dependencies.calculate && window.DEPS){
 
-            DEPS.unshift(MANIFEST.dependencies.xone + 'lib/amd.js');
+            //DEPS.unshift(MANIFEST.dependencies.xone + 'lib/amd.js');
             MANIFEST.dependencies.js_deps = DEPS;
 
             html += load_deps(/* field: */ 'js_deps');

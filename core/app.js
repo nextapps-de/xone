@@ -9,6 +9,7 @@ goog.require('CORE');
  * @name APP
  * @namespace APP
  * @struct
+ * @const
  */
 
 var APP = {
@@ -213,7 +214,11 @@ var APP = {
      * @name APP.STATS
      * @namespace APP
      */
-    STATS: {},
+    STATS: {
+
+        count_dom: 0,
+        count_dom_cache: 0
+    },
 
     /**
      * @name APP.SETTINGS

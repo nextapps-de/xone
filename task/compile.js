@@ -376,7 +376,7 @@ if(status){
     var output = JSON.stringify(views).replace(/"data":/g, 'data:').replace(/"map":/g, 'map:').replace(/"if":/g, 'if:').replace(/"else":/g, 'else:').replace(/"include":/g, 'include:');
 
     lib.buildFolders('app/tmp/');
-    fs.writeFileSync('app/tmp/view.js', "/* AUTO GENERATED SCRIPT (DO NOT MODIFY) */\ngoog.provide('APP.TEMPLATE');\nAPP.TEMPLATE = " + output + ";\n", 'utf8');
+    fs.writeFileSync('app/tmp/view.js', "/* AUTO GENERATED SCRIPT (DO NOT MODIFY) */\ngoog.provide('APP.TEMPLATE');goog.require('APP');\nAPP.TEMPLATE = " + output + ";\n", 'utf8');
 }
 
 console.log(
@@ -433,7 +433,7 @@ if(status){
     var output = JSON.stringify(views).replace(/"data":/g, 'data:').replace(/"map":/g, 'map:').replace(/"if":/g, 'if:').replace(/"else":/g, 'else:').replace(/"include":/g, 'include:');
 
     lib.buildFolders('app/tmp');
-    fs.writeFileSync('app/tmp/layout.js', "/* AUTO GENERATED SCRIPT (DO NOT MODIFY) */\ngoog.provide('APP.HTML');\nAPP.HTML = " + output + ";\nAPP.CONFIG.LAYOUT = " + JSON.stringify(Object.keys(views)) + ";\n", 'utf8');
+    fs.writeFileSync('app/tmp/layout.js', "/* AUTO GENERATED SCRIPT (DO NOT MODIFY) */\ngoog.provide('APP.HTML');goog.require('APP');\nAPP.HTML = " + output + ";\nAPP.CONFIG.LAYOUT = " + JSON.stringify(Object.keys(views)) + ";\n", 'utf8');
 }
 
 console.log(

@@ -109,6 +109,7 @@ APP.VIEW = (function(){
                     // });
 
                     CORE.addClass('#' + target_view, 'show');
+                    //CORE.getById(target_view).classList.add('show');
 
                     // CORE.queue(function(){
                     //
@@ -177,6 +178,7 @@ APP.VIEW = (function(){
                         else{
 
                             CORE.removeClass('#' + source_view, 'show');
+                            //CORE.getById(source_view).classList.remove('show');
                         }
 
                         is_popup = CORE.getById(source_view).getAttribute('role') !== 'main';
@@ -234,6 +236,7 @@ APP.VIEW = (function(){
             else{
 
                 CORE.removeClass('#' + from_view, 'show');
+                //CORE.getById(from_view).classList.remove('show');
             }
 
             CORE.setStyle('#' + from_view, {
@@ -255,6 +258,7 @@ APP.VIEW = (function(){
             if(to_view){
 
                 CORE.addClass('#' + to_view, 'show');
+                //CORE.getById(to_view).classList.add('show');
 
                 updateViewIndex(target_index, is_popup ? 10 : 0);
 
@@ -276,9 +280,18 @@ APP.VIEW = (function(){
                 from_view = history[0];
             }
 
-            CORE.addClass('#' + from_view, 'reveal');
+            if(CORE.hasClass('#' + to_view, 'reveal')){
 
-            this.show(from_view, to_view);
+                this.slideOut(from_view, to_view);
+            }
+            else{
+
+                CORE.addClass('#' + from_view, 'reveal');
+
+                //CORE.getById(from_view).classList.add('reveal');
+
+                this.show(from_view, to_view);
+            }
         },
 
         slideOut: function(from_view, to_view){
@@ -288,9 +301,17 @@ APP.VIEW = (function(){
                 to_view = history[1];
             }
 
-            CORE.removeClass('#' +  to_view, 'reveal');
+            if(CORE.hasClass('#' + to_view, 'reveal')){
 
-            this.hide(from_view, to_view);
+                CORE.removeClass('#' +  to_view, 'reveal');
+                //CORE.getById(to_view).classList.remove('reveal');
+
+                this.hide(from_view, to_view);
+            }
+            else{
+
+                this.slideIn(from_view, to_view);
+            }
         },
 
         showSidebar: function(from_view, to_view){
@@ -302,6 +323,7 @@ APP.VIEW = (function(){
             }
 
             CORE.addClass('#' + from_view, 'reveal-sidebar');
+            //CORE.getById(from_view).classList.add('reveal-sidebar');
 
             this.show(from_view, to_view);
         },
@@ -314,6 +336,7 @@ APP.VIEW = (function(){
             }
 
             CORE.removeClass('#' +  to_view, 'reveal-sidebar');
+            //CORE.getById(to_view).classList.remove('reveal-sidebar');
 
             this.hide(from_view, to_view);
         },

@@ -13,11 +13,15 @@ goog.require('CONFIG');
  * Application Core
  * @name CORE
  * @namespace CORE
+ * @const
  */
 
-var CORE = (function(CORE){
+var CORE = (function(){
 
     "use strict";
+
+    /** @const */
+    var CORE = {};
 
     var capitalize = function(text){
 
@@ -28,7 +32,7 @@ var CORE = (function(CORE){
     CORE.ajax = Util.Ajax;
 
     /** @type {_cache_struct} */
-    var DOM_CACHE = new Util.Cache(3 * 60 * 1000, 1000, true);
+    var DOM_CACHE = Util.Cache.new(3 * 60 * 1000, 1000, true);
 
     /**
      * @type {Object<string, string>}
@@ -153,7 +157,7 @@ var CORE = (function(CORE){
 
     CORE.isObject = function(value){
 
-        return value && (value.constructor === Object) ? true : false;
+        return !!(value && (value.constructor === Object));
     };
 
     /**
@@ -1683,6 +1687,7 @@ var CORE = (function(CORE){
      * @returns {Array}
      */
 
+    /*
     CORE.move = function(array, from, to) {
 
         if(to >= array.length) {
@@ -1696,6 +1701,36 @@ var CORE = (function(CORE){
         }
 
         return array.splice(to, 0, array.splice(from, 1)[0]);
+    };
+    */
+
+    CORE.move = function move(array, from, to) {
+
+        if(from !== to) {
+
+            var tmp = array[from];
+
+            // move element down and shift other elements up
+            if(from < to) {
+
+                for(var i = from; i < to; i++) {
+
+                    array[i] = array[i + 1];
+                }
+            }
+            // move element up and shift other elements down
+            else {
+
+                for(var i = from; i > to; i--) {
+
+                    array[i] = array[i - 1];
+                }
+            }
+
+            array[to] = tmp;
+        }
+
+        return array;
     };
 
     /**
@@ -1732,7 +1767,7 @@ var CORE = (function(CORE){
 
     CORE.assign = function(target, source){
 
-        if(!source || typeof source !== 'object'){
+        if(!source || (typeof source !== 'object')){
 
             return target;
         }
@@ -2174,10 +2209,6 @@ var CORE = (function(CORE){
         /** @type {boolean} */
         isRetina: window['devicePixelRatio'] > 1,
         /** @type {boolean} */
-        //isOnline: function(){},
-        /** @type {boolean} */
-        //isOffline: !this.isOnline,
-        /** @type {boolean} */
         isTouch: (function(){
 
             try {
@@ -2272,4 +2303,4 @@ var CORE = (function(CORE){
 
     return CORE;
 
-})({});
+})();

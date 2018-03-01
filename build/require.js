@@ -1,7 +1,7 @@
 goog.provide('APP.REQUIRE');
 goog.require('INTERFACE');
 goog.require('POLYFILL');
-goog.require('AMD');
+//goog.require('AMD');
 //goog.require('CORE.COMPRESS');
 goog.require('APP.VALIDATE');
 goog.require('CORE.PAINT');

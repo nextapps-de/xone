@@ -18,7 +18,7 @@ var CONFIG_PRIORITIZE_PAINT = true;
  * @define {boolean}
  */
 
-var CONFIG_PRIORITIZE_MAX_FPS = false;
+var CONFIG_PRIORITIZE_MAX_FPS = true;
 
 /**
  * @define {number}

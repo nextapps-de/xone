@@ -36,3 +36,6 @@ _filesystem_struct.prototype.getPath;
 
 /** @type {Function} */
 _filesystem_struct.prototype.getFile;
+
+/** @type {Function} */
+_filesystem_struct.prototype.info;

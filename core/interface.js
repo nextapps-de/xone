@@ -9,7 +9,8 @@ goog.require('INTERFACE.STORAGE');
 goog.require('INTERFACE.TEMPLATE');
 goog.require('INTERFACE.VIEW');
 
-Util = {};
+/** @const */
+var Util = {};
 
 /**
  * Controller Interface
@@ -96,13 +97,18 @@ CacheItemInterface.prototype.clone;
 /**
  * Cache Interface
  * @interface
- * @template CACHE
  * @this {_cache_struct}
  * @param {number=} expiration
  * @const
  */
 
 function _cache_struct(expiration) {}
+/** @type {Function} */
+_cache_struct.prototype.new;
+/** @type {Function} */
+_cache_struct.prototype.create;
+/** @type {Function} */
+_cache_struct.prototype.register;
 /** @type {function(string, *, boolean=)} */
 _cache_struct.prototype.set;
 /** @type {function(string, boolean=):*} */
@@ -111,6 +117,12 @@ _cache_struct.prototype.get;
 _cache_struct.prototype.remove;
 /** @type {function()} */
 _cache_struct.prototype.clear;
+/** @type {Function} */
+_cache_struct.prototype.copy;
+/** @type {Function} */
+_cache_struct.prototype.add;
+/** @type {Function} */
+_cache_struct.prototype.clone;
 /** @type {function()} */
 _cache_struct.caches;
 
@@ -123,7 +135,7 @@ _cache_struct.caches;
 
 function _search_struct(options) {}
 /** @type {Function} */
-_search_struct.register;
+_search_struct.prototype.create;
 /** @type {Function} */
 _search_struct.prototype.add;
 /** @type {Function} */
@@ -131,7 +143,7 @@ _search_struct.prototype.update;
 /** @type {Function} */
 _search_struct.prototype.remove;
 /** @type {Function} */
-_search_struct.prototype.clear;
+_search_struct.prototype.reset;
 /** @type {Function} */
 _search_struct.prototype.destroy;
 /** @type {Function} */

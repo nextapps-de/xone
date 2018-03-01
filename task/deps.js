@@ -59,6 +59,7 @@ var file_map = {};
 var files = {};
 var order = [];
 var updates = [];
+var externs = [];
 
 var parse_dependencies = function(filePath, js, is_update){
 
@@ -68,14 +69,43 @@ var parse_dependencies = function(filePath, js, is_update){
     if(!js.length) return false;
 
     var pos = 0;
+    var start = 0;
     var valid = true;
     var update = false;
 
-    while((pos = js.indexOf("goog.require(", pos)) > -1){
+    while(((js.indexOf("goog.require(", start)) > -1) || ((js.indexOf(" require(", start)) > -1)){
 
-        pos += 14;
+        var pos_a = js.indexOf("goog.require(", start);
+        var pos_b = js.indexOf(" require(", start);
+
+        pos = ((pos_b === -1) || ((pos_a < pos_b) && (pos_a > -1)) ? pos_a : pos_b);
+
+        var is_require = (pos === pos_b);
+
+        if(is_require){
+
+            pos += 10;
+        }
+        else{
+
+            pos += 14;
+        }
+
+        start = pos;
+
 
         var key = js.substring(pos, js.indexOf(")", pos) - 1);
+        var old_key = key;
+
+        if(is_require){
+
+            if(key.lastIndexOf('\/') !== -1){
+
+                key = key.substring(key.lastIndexOf('\/') + 1);
+            }
+
+            key = key.replace('.js', '');
+        }
 
         if(!manifest[key]){
 
@@ -90,6 +120,11 @@ var parse_dependencies = function(filePath, js, is_update){
                 });
             }
 
+            if(is_require && (old_key.indexOf('node_modules/') !== -1)){
+
+                externs.push(old_key.substring(0, old_key.lastIndexOf('/') + 1));
+            }
+
             break;
         }
 
@@ -102,12 +137,35 @@ var parse_dependencies = function(filePath, js, is_update){
     if(valid){
 
         pos = 0;
+        start = 0;
 
-        while((pos = js.indexOf("goog.provide(", pos)) > -1){
+        while(((js.indexOf("goog.provide(", start)) > -1) || (js.indexOf(" provide(", start)) > -1){
 
-            pos += 14;
+            var pos_a = js.indexOf("goog.provide(", start);
+            var pos_b = js.indexOf(" provide(", start);
 
-            var key = js.substring(pos, js.indexOf(")", pos) - 1);
+            pos = ((pos_b === -1) || ((pos_a < pos_b) && (pos_a > -1)) ? pos_a : pos_b);
+
+            var is_require = (pos === pos_b);
+            var key;
+
+            if(is_require){
+
+                pos += 10;
+                key = js.substring(pos, js.indexOf(",", pos) - 1);
+            }
+            else{
+
+                pos += 14;
+                key = js.substring(pos, js.indexOf(")", pos) - 1);
+            }
+
+            start = pos;
+
+            if(is_require){
+
+                key = key.toLowerCase();
+            }
 
             file_map[key] = filePath;
 
@@ -182,6 +240,26 @@ walkSync('./app/js/', function(filePath){
     /*if(filePath.indexOf('app/js/main.js') === -1 && filePath.indexOf('app\\js\\main.js') === -1) */
     parse_dependencies(filePath, fs.readFileSync(filePath, 'utf8'));
 });
+
+for(var i = 0; i < externs.length; i++){
+
+    var tmp_path = path.normalize("./app/" + xone_manifest.dependencies.xone + externs[i]);
+
+    if((tmp_path.indexOf('app/lib/xone/node_modules') === -1) && (tmp_path.indexOf('app\\lib\\xone\\node_modules') === -1)){
+
+        tmp_path = path.normalize("./" + tmp_path.replace('xone/node_modules/', '').replace('xone\\node_modules\\', ''));
+    }
+
+    if(!fs.existsSync(tmp_path)){
+
+        tmp_path = path.normalize("./" + externs[i]);
+    }
+
+    walkSync(tmp_path, function(filePath){
+
+        parse_dependencies(filePath, fs.readFileSync(filePath, 'utf8'));
+    });
+}
 
 //parse_dependencies(path.normalize('app/js/main.js'), fs.readFileSync(path.normalize('app/js/main.js'), 'utf8'));
 
