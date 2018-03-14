@@ -38,6 +38,8 @@ Some breaking changes could possibly be introduced in upcoming versions. Do not 
 
 ---
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/nextapps-de/xone.svg)](https://greenkeeper.io/)
+
 ### Announcement Xone v1.0.0 stable
 
 Xone will get some major changes. This was required to open capabilities for upcoming features we are working now like __Xone Native__. The plan is to release a final architecture until v.1.0.0 and then also to be done with most of the breaking changes.
